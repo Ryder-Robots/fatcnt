@@ -18,10 +18,20 @@ set(fatctl_SOURCES
 )
 set(CPACK_DEBIAN_PACKAGE_DEPENDS "wiringpi, wiringpi (>= 3.2)")
 
-include_directories(include src /usr/include/libusb-1.0)
+include_directories(include src)
 pkg_search_module(DLIB REQUIRED dlib-1)
 
 # Create library outline
 add_library(fatctl SHARED  ${fatctl_SOURCES} )
 target_link_libraries(fatctl /usr/lib/libwiringPi.so)
 target_link_libraries(fatctl /lib/aarch64-linux-gnu/libusb-1.0.so)
+
+enable_testing()
+# include_directories(src)
+# add_executable(simpleusbtest test/simpleusbtest.cpp)
+# target_link_libraries(simpleusbtest fatctl)
+
+
+include_directories(src)
+add_executable(testarduinousb test/testarduinousb.cpp)
+target_link_libraries(testarduinousb fatctl)
