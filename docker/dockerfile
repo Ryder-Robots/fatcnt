@@ -1,11 +1,11 @@
 # docker volume create fatcnt
 # docker build -t fatcnt docker
-# docker container create --mount source=fatcnt,target=/opt/share/fatcnt -p 22:22 -i -t --name fatcnt_src fatcnt
-# docker container start --attach -i  fatcnt_src
+# docker run -dit --name=fatcnt_src --mount source=fatcnt,target=/opt/share/fatcnt fatcnt -p 22:22
+# docker attach fatcnt_src
 
 FROM dtcooper/raspberrypi-os:bookworm
 
-
+EXPOSE 22/tcp
 RUN apt-get update && apt-get upgrade
 RUN apt-get install -y git sudo openssh-server cmake gcc g++ gdb bzip2 \
     libopenblas-dev liblapack-dev ffmpeg pkg-config \
@@ -13,6 +13,9 @@ RUN apt-get install -y git sudo openssh-server cmake gcc g++ gdb bzip2 \
     libavcodec-dev libswresample-dev libswscale-dev \
     libavutil-dev gpg code net-tools vim
 
-RUN adduser fatcnt
-RUN passwd fatcnt
+RUN useradd -p password -d /opt/share/fatcnt fatcnt
+RUN chown -R fatcnt /opt/share/fatcnt
 RUN su fatcnt -c "git config --global user.name "Aaron" && git config --global user.email azzmosphere@gmail.com"
+RUN mkdir /run/sshd
+RUN nohup /usr/sbin/sshd -D &
+# CMD ["/usr/sbin/sshd","-D"]
