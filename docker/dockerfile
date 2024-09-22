@@ -11,7 +11,7 @@ RUN apt-get install -y git sudo openssh-server cmake gcc g++ gdb bzip2 \
     libopenblas-dev liblapack-dev ffmpeg pkg-config \
     libavdevice-dev libavfilter-dev libavformat-dev \
     libavcodec-dev libswresample-dev libswscale-dev \
-    libavutil-dev gpg code net-tools vim
+    libavutil-dev gpg code net-tools vim libcurlpp0
 
 RUN useradd -p password -d /opt/share/fatcnt fatcnt
 RUN chown -R fatcnt /opt/share/fatcnt
