@@ -11,7 +11,7 @@ RUN apt-get update && apt-get upgrade
 RUN apt-get install -y git sudo openssh-server cmake gcc g++ gdb bzip2 \
     libopenblas-dev liblapack-dev ffmpeg pkg-config \
     libavdevice-dev libavfilter-dev libavformat-dev \
-    libavcodec-dev libswresample-dev libswscale-dev \
+    libavcodec-dev libswresample-dev libswscale-dev autoconf libtool\
     libavutil-dev gpg code net-tools vim libmicrohttpd-dev telnet lsof
 
 RUN useradd -p password -d /opt/share/fatcnt fatcnt
