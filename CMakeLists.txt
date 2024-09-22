@@ -10,10 +10,10 @@ set(CPACK_PACKAGE_VERSION_MAJOR "1")
 set(CPACK_PACKAGE_VERSION_MINOR "0")
 set(CPACK_PACKAGE_VERSION_PATCH "1")
 set(CPACK_DEBIAN_PACKAGE_DEPENDS "wiringpi, wiringpi (>= 3.2)")
-set(PUBLIC_HEADER include/fatctl.h)
 set(VERSION ${CPACK_PACKAGE_VERSION_MAJOR}.${CPACK_PACKAGE_VERSION_MINOR}.${CPACK_PACKAGE_VERSION_PATCH})
 
 set(fatctl_SOURCES 
+    src/fatctl/fatctl.h
     src/fatctl/fatctl.cpp
     src/fatctl/ui/connection.hpp 
     src/fatctl/ui/server.hpp
