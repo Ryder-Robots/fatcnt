@@ -15,8 +15,10 @@ set(VERSION ${CPACK_PACKAGE_VERSION_MAJOR}.${CPACK_PACKAGE_VERSION_MINOR}.${CPAC
 set(fatctl_SOURCES 
     src/fatctl/fatctl.h
     src/fatctl/fatctl.cpp
-    src/fatctl/ui/connection.hpp 
+    src/fatctl/ui/connection.hpp
+    src/fatctl/ui/connection.cpp 
     src/fatctl/ui/server.hpp
+    src/fatctl/ui/server.cpp
 )
 set(CPACK_DEBIAN_PACKAGE_DEPENDS "wiringpi, wiringpi (>= 3.2)")
 
