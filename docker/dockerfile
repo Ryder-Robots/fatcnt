@@ -6,12 +6,13 @@
 FROM dtcooper/raspberrypi-os:bookworm
 
 EXPOSE 22/tcp
+EXPOSE 8081/tcp
 RUN apt-get update && apt-get upgrade
 RUN apt-get install -y git sudo openssh-server cmake gcc g++ gdb bzip2 \
     libopenblas-dev liblapack-dev ffmpeg pkg-config \
     libavdevice-dev libavfilter-dev libavformat-dev \
     libavcodec-dev libswresample-dev libswscale-dev \
-    libavutil-dev gpg code net-tools vim libmicrohttpd-dev telnet
+    libavutil-dev gpg code net-tools vim libmicrohttpd-dev telnet lsof
 
 RUN useradd -p password -d /opt/share/fatcnt fatcnt
 RUN chown -R fatcnt /opt/share/fatcnt
