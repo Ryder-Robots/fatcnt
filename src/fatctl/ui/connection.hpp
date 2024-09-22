@@ -16,8 +16,6 @@ namespace rrobot {
         rr_connection() {}
 
         std::shared_ptr<httpserver::http_response> render(const httpserver::http_request&);
-
-        void set_response_data(const std::string &s);
     
     private:
         std::string data;
