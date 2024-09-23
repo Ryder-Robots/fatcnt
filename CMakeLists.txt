@@ -15,10 +15,10 @@ set(VERSION ${CPACK_PACKAGE_VERSION_MAJOR}.${CPACK_PACKAGE_VERSION_MINOR}.${CPAC
 set(fatctl_SOURCES 
     src/fatctl/fatctl.h
     src/fatctl/fatctl.cpp
-    src/fatctl/ui/connection.hpp
-    src/fatctl/ui/connection.cpp 
     src/fatctl/ui/server.hpp
     src/fatctl/ui/server.cpp
+    src/fatctl/environment/state.hpp
+    src/fatctl/environment/state.cpp
 )
 set(CPACK_DEBIAN_PACKAGE_DEPENDS "wiringpi, wiringpi (>= 3.2)")
 
@@ -27,8 +27,10 @@ pkg_search_module(DLIB REQUIRED dlib-1)
 
 
 add_executable(fatctl ${fatctl_SOURCES})
-target_link_libraries(fatctl /usr/local/lib/libhttpserver.so)
 target_link_libraries(fatctl /usr/lib/libwiringPi.so)
+target_link_libraries(fatctl /usr/local/lib/libmicrohttpd_ws.so)
+target_link_libraries(fatctl /usr/local/lib/libmicrohttpd.so)
+
 
 # enable_testing()
 # include_directories(src)
