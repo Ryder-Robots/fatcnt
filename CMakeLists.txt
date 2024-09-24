@@ -42,7 +42,4 @@ enable_testing()
 # # target_link_libraries(simpleusbtest fatctl)
 
 include_directories(${json_SOURCE_DIR}/include include src)
-add_executable(simpleusbtest test/simplejwttest.cpp ${fatctl_SOURCES})
-target_link_libraries(simpleusbtest /usr/lib/libwiringPi.so)
-target_link_libraries(simpleusbtest /usr/local/lib/libmicrohttpd_ws.so)
-target_link_libraries(simpleusbtest /usr/local/lib/libmicrohttpd.so)
+add_executable(simplejwttest test/simplejwttest.cpp src/fatctl/ui/connection.hpp src/fatctl/ui/connection.cpp)
