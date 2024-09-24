@@ -2,14 +2,16 @@
  * TODO: add licence
  */
 
-#include <string>
-#include <microhttpd.h>
-#include <microhttpd_ws.h>
-#include <nlohmann/json.hpp>
+#ifndef CONNECTION_HPP
+#define CONNECTION_HPP
 
-#define ALG_HMAC   "HMAC"
-#define ALG_SHA256 "SHA256"
-#define ALG_RSA    "RSA"
+#include <string>
+#include <array>
+#include <map>
+#include <nlohmann/json.hpp>
+#include <openssl/sha.h>
+#include <openssl/hmac.h>
+#include "fatctl/ui/websocket_status_code.hpp"
 
 #define KEY_ALG "alg"
 #define KEY_TYP "typ"
@@ -22,9 +24,11 @@ using json = nlohmann::json;
  * Defines JWT format sent to UI to allow comminication with socket. Used for
  * authentication, and authorization.
  * 
- * reference: https://jwt.io/introduction/
- * reference: https://www.iana.org/assignments/jwt/jwt.xhtml
+ * references: 
+ * https://jwt.io/introduction/
+ * https://www.iana.org/assignments/jwt/jwt.xhtml
  * https://json.nlohmann.me/api/basic_json/contains/
+ * https://www.rfc-editor.org/rfc/rfc
  */
 using namespace std;
 namespace rrobot {
@@ -38,7 +42,8 @@ namespace rrobot {
          */
         connection_header(string alg = "HS256", string typ = "JWT"):
             _alg(alg),
-            _typ(typ)
+            _typ(typ),
+            _evp_md(EVP_sha256)
         {
             construct(alg, typ);
         }
@@ -49,7 +54,7 @@ namespace rrobot {
          */
         connection_header(string s) {
             if (!json::accept(s)) {
-                throw MHD_WEBSOCKET_STATUS_PARAMETER_ERROR;
+                throw RR_WS_STATUS_CANNOT_ACCEPT;
             }
 
             json j = json::parse(s);
@@ -70,6 +75,13 @@ namespace rrobot {
          */
         int hdrcmp(const connection_header &in);
 
+        /**
+         * @fn to_json
+         * @brief return JSON representation.
+         * @return json representation
+         */
+        json to_json();
+
     
     private:
         void construct(string alg, string typ);
@@ -77,5 +89,10 @@ namespace rrobot {
 
         string _alg;
         string _typ;
+        const EVP_MD* (*_evp_md) (void);
+        const map<string,  const EVP_MD *(*)()> _sup_algo{
+            {"HS256", EVP_sha256}
+        };
     };
 }
+#endif

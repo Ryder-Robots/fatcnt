@@ -13,7 +13,7 @@ RUN apt-get install -y git sudo openssh-server cmake gcc g++ gdb bzip2 \
     libavdevice-dev libavfilter-dev libavformat-dev \
     libavcodec-dev libswresample-dev libswscale-dev autoconf libtool\
     libavutil-dev gpg code net-tools vim libmicrohttpd-dev telnet lsof clang-tidy \
-    clang-format
+    clang-format libssl-dev
 
 RUN useradd -p password -d /opt/share/fatcnt fatcnt
 RUN chown -R fatcnt /opt/share/fatcnt
