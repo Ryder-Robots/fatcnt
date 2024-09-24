@@ -17,13 +17,17 @@
 #define PAGE_NOT_FOUND "404 Not Found"
 #define MHD_OPTS MHD_ALLOW_UPGRADE | MHD_USE_AUTO | MHD_USE_INTERNAL_POLLING_THREAD | MHD_USE_ERROR_LOG
 #define PORT 8081
-#define TIMEOUT (uint32_t) 120
+#define TIMEOUT (uint32_t)120
 
-namespace rrobot {
-    class fatcnt_server {
+// Create authorization header.
+#define CONNECTION_URL "/connection"
+
+namespace rrobot
+{
+    class fatcnt_server
+    {
     public:
-        fatcnt_server():
-            _ws(NULL){}
+        fatcnt_server() : _ws(NULL) {}
 
         void create();
         void close();
