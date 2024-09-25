@@ -16,8 +16,8 @@ set(JSON_VERSION v3.11.3)
 set(fatctl_SOURCES 
     src/fatctl/ui/server.hpp
     src/fatctl/ui/server.cpp
-    src/fatctl/ui/connection.hpp
-    src/fatctl/ui/connection.cpp
+    src/fatctl/ui/connection_request.hpp
+    src/fatctl/ui/connection_request.cpp
     src/fatctl/environment/state.hpp
     src/fatctl/environment/state.cpp
 )
@@ -42,4 +42,4 @@ enable_testing()
 # # target_link_libraries(simpleusbtest fatctl)
 
 include_directories(${json_SOURCE_DIR}/include include src)
-add_executable(simplejwttest test/simplejwttest.cpp src/fatctl/ui/connection.hpp src/fatctl/ui/connection.cpp)
+add_executable(simplejwttest test/simplejwttest.cpp src/fatctl/ui/connection_request.hpp src/fatctl/ui/connection_request.cpp)
