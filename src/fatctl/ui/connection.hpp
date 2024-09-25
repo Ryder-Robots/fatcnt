@@ -13,16 +13,14 @@
 #include <openssl/hmac.h>
 #include "fatctl/ui/websocket_status_code.hpp"
 
-#define KEY_ALG "alg"
-#define KEY_TYP "typ"
 
 using json = nlohmann::json;
 
 /*
  * @brief 
  *  
- * Defines JWT format sent to UI to allow comminication with socket. Used for
- * authentication, and authorization.
+ * Once connection has been established this response is sent to the UI client, it should give the client
+ * enough information in order to operate the drone given their level of entitlements.
  * 
  * references: 
  * https://jwt.io/introduction/
@@ -32,7 +30,7 @@ using json = nlohmann::json;
  */
 using namespace std;
 namespace rrobot {
-    class connection_header {
+    class connection_reponse {
     public:
         /** 
          * @fn connection_header
@@ -84,15 +82,46 @@ namespace rrobot {
 
     
     private:
-        void construct(string alg, string typ);
         void construct(string json);
 
-        string _alg;
-        string _typ;
-        const EVP_MD* (*_evp_md) (void);
-        const map<string,  const EVP_MD *(*)()> _sup_algo{
-            {"HS256", EVP_sha256}
-        };
+        // Value used to associate a Client session with an ID Token (MAY also be 
+        // used for nonce values in other applications of JWTs)
+        const string nonce;
+
+        // Time when the authentication occurred
+        const time_t auth_time;
+
+        // Access Token hash value, this key can will be regenerated and MUST be stored client side, and used for the 
+        // the next authentication attempt. 
+        const string at_hash;
+
+        // Client Identifier
+        const string client_id;
+
+        // The name of the software running in the entity
+        const string swname;
+
+        // The version of software running in the entity
+        const string swversion;
+
+        // Model identifier for hardware
+        const string hwmodel;
+
+        // Hardware Version Identifier
+        const string hwversion;
+
+        // Manifests describing the software installed on the entity
+        // also describes drone capabilities, such as gyroscope, acelometer etc.
+        const json manifests;
+
+        // Measurements of the drone, 
+        const json measurements;
+
+        // Geohash String or Array
+        const json geohash;
+
+        // Entitlements, what the client can do while running the drone.
+        const json entitlements;
     };
 }
 #endif
