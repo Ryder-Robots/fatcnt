@@ -10,13 +10,14 @@
 #include <stdint.h>
 #include <string.h>
 
-#include <iostream>
-#include <stdexcept>
 #include <ext/stdio_filebuf.h>
 #include <fstream>
+#include <iostream>
 #include <nlohmann/json.hpp>
+#include <stdexcept>
 
 #include "fatctl/environment/state.hpp"
+#include "fatctl/ui/connected_user.hpp"
 
 #define PAGE_NOT_FOUND "404 Not Found"
 #define MHD_OPTS MHD_ALLOW_UPGRADE | MHD_USE_AUTO | MHD_USE_INTERNAL_POLLING_THREAD | MHD_USE_ERROR_LOG
@@ -49,6 +50,7 @@ class fatcnt_server {
      * @brief stops the server
      */
     void close();
+
    protected:
     static void upgrade_handler(void *cls, struct MHD_Connection *connection, void *req_cls, const char *extra_in,
                                 size_t extra_in_size, MHD_socket fd, struct MHD_UpgradeResponseHandle *urh);
@@ -62,12 +64,13 @@ class fatcnt_server {
 
     static bool is_valid(struct MHD_Connection *connection, const char *version);
 
-    /** 
+    /**
      * @fn rr_env_communicator
-     * @brief use to communicate to enivoronment, actions are recieved from the UI, and observations and transmitted back to UI.
+     * @brief use to communicate to enivoronment, actions are recieved from the UI, and observations and transmitted
+     * back to UI.
      */
-    static void *rr_env_communicator(void* cu);
-   };
+    static void *rr_env_communicator(void *cu);
+};
 }  // namespace rrobot
 
 #endif
