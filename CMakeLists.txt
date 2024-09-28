@@ -43,3 +43,5 @@ enable_testing()
 
 include_directories(${json_SOURCE_DIR}/include include src)
 add_executable(simplejwttest test/simplejwttest.cpp src/fatctl/ui/connection_request.hpp src/fatctl/ui/connection_request.cpp)
+
+

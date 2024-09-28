@@ -9,8 +9,7 @@
  */
 
 #include "server.hpp"
-
-#include <iostream>
+// #include <iostream>
 
 using namespace std;
 using namespace rrobot;
@@ -118,18 +117,25 @@ void fatcnt_server::close() { MHD_stop_daemon(_ws); }
 void fatcnt_server::upgrade_handler(void *cls, struct MHD_Connection *connection, void *req_cls, const char *extra_in,
                                     size_t extra_in_size, MHD_socket fd, struct MHD_UpgradeResponseHandle *urh) {
     pthread_t pt;
-
-    __gnu_cxx::stdio_filebuf<char> filebuf(fd, std::ios::in);
-    istream ifs(&filebuf);
     try {
-        json j = json::parse(ifs);
+
+        string s_extra_in = "";
+        if (extra_in != NULL) {
+            s_extra_in = extra_in;
+        }
+
+        connected_user *cu = new connected_user(fd, urh, s_extra_in);
+        struct MHD_WebSocketStream *ws = cu->get_ws();
+
+        // create websocket,  this will allow communication.
+        int result = MHD_websocket_stream_init(&ws, MHD_WEBSOCKET_FLAG_SERVER | MHD_WEBSOCKET_FLAG_NO_FRAGMENTS, 0);
 
         // validate the username and password at this point.
 
     } catch (const std::exception &e) {
-        //TODO: throw an exception that 
-        struct MHD_Response *response = MHD_create_response_from_buffer_static(PAGE_INVALID_WEBSOCKET_REQUEST.dump().length(),
-                                                          PAGE_INVALID_WEBSOCKET_REQUEST.dump().c_str());
+        // TODO: throw an exception that
+        struct MHD_Response *response = MHD_create_response_from_buffer_static(
+            PAGE_INVALID_WEBSOCKET_REQUEST.dump().length(), PAGE_INVALID_WEBSOCKET_REQUEST.dump().c_str());
         MHD_queue_response(connection, MHD_HTTP_BAD_REQUEST, response);
         MHD_destroy_response(response);
         return;
@@ -139,9 +145,7 @@ void fatcnt_server::upgrade_handler(void *cls, struct MHD_Connection *connection
     // pthread_detach(pt);
 }
 
-/** 
- * Control the drone from this point, the user has been authenticated, so this should be considred safe. 
+/**
+ * Control the drone from this point, the user has been authenticated, so this should be considred safe.
  */
-void *fatcnt_server::rr_env_communicator(void* cu) {
-    return static_cast<void*>(cu);
-}
+void *fatcnt_server::rr_env_communicator(void *cu) { return static_cast<void *>(cu); }
