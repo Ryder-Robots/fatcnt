@@ -26,6 +26,7 @@
 
 // Create authorization header.
 #define CONNECTION_URL "/"
+using json = nlohmann::json;
 
 /**
  * @brief websocket server.
@@ -52,12 +53,25 @@ class fatcnt_server {
     void close();
 
    protected:
+    /**
+     * @fn upgrade_handler
+     * @brief upgrade connection from HTTP to WS.
+     * @param cls
+     * @param connection connection structure
+     * @param req_cls
+     * @param extra_in
+     * @param extra_in_size in bytes of extra_in
+     * @param fd file descriptor for websocket
+     * @param urh upgrade response handler
+     */
     static void upgrade_handler(void *cls, struct MHD_Connection *connection, void *req_cls, const char *extra_in,
                                 size_t extra_in_size, MHD_socket fd, struct MHD_UpgradeResponseHandle *urh);
 
     static enum MHD_Result access_handler(void *cls, struct MHD_Connection *connection, const char *url,
                                           const char *method, const char *version, const char *upload_data,
                                           size_t *upload_data_size, void **req_cls);
+    
+    static json* recieve_data(connected_user *cu, char *buf, size_t bufsz);
 
    private:
     struct MHD_Daemon *_ws;

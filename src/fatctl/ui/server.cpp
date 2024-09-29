@@ -9,7 +9,6 @@
  */
 
 #include "server.hpp"
-// #include <iostream>
 
 using namespace std;
 using namespace rrobot;
@@ -118,34 +117,75 @@ void fatcnt_server::upgrade_handler(void *cls, struct MHD_Connection *connection
                                     size_t extra_in_size, MHD_socket fd, struct MHD_UpgradeResponseHandle *urh) {
     pthread_t pt;
     try {
-
         string s_extra_in = "";
         if (extra_in != NULL) {
             s_extra_in = extra_in;
         }
-
         connected_user *cu = new connected_user(fd, urh, s_extra_in);
-        struct MHD_WebSocketStream *ws = cu->get_ws();
 
-        // create websocket,  this will allow communication.
-        int result = MHD_websocket_stream_init(&ws, MHD_WEBSOCKET_FLAG_SERVER | MHD_WEBSOCKET_FLAG_NO_FRAGMENTS, 0);
+        if (0 != pthread_create(&pt, NULL, &rr_env_communicator, cu)) abort();
+        pthread_detach(pt);
 
         // validate the username and password at this point.
 
     } catch (const std::exception &e) {
-        // TODO: throw an exception that
         struct MHD_Response *response = MHD_create_response_from_buffer_static(
             PAGE_INVALID_WEBSOCKET_REQUEST.dump().length(), PAGE_INVALID_WEBSOCKET_REQUEST.dump().c_str());
         MHD_queue_response(connection, MHD_HTTP_BAD_REQUEST, response);
         MHD_destroy_response(response);
         return;
     }
-
-    // if (0 != pthread_create(&pt, NULL, &rr_env_communicator, cu)) abort();
-    // pthread_detach(pt);
 }
 
 /**
  * Control the drone from this point, the user has been authenticated, so this should be considred safe.
  */
-void *fatcnt_server::rr_env_communicator(void *cu) { return static_cast<void *>(cu); }
+void *fatcnt_server::rr_env_communicator(void *cls) {
+    connected_user *cu = static_cast<connected_user *>(cls);
+    struct MHD_WebSocketStream *ws;
+
+    // create websocket,  this will allow communication.
+    int result = MHD_websocket_stream_init(&ws, MHD_WEBSOCKET_FLAG_SERVER | MHD_WEBSOCKET_FLAG_NO_FRAGMENTS, 0);
+    cu->set_ws(ws);
+    if (MHD_WEBSOCKET_STATUS_OK != result) {
+        MHD_upgrade_action(cu->get_urh(), MHD_UPGRADE_ACTION_CLOSE);
+        return  static_cast<void *>(cu);
+    }
+
+    return static_cast<void *>(cu);
+}
+
+/*
+ */
+json *fatcnt_server::recieve_data(connected_user *cu, char *buf_, size_t bufsz_) {
+    string s = "";
+    size_t buf_offset = 0;
+
+    size_t bufsz = BUFSIZ;
+    char *buf = static_cast<char *>(malloc(BUFSIZ));
+
+    while (buf_offset < bufsz) {
+        size_t new_offset = 0;
+        char *frame_data = NULL;
+        size_t frame_len = 0;
+
+        int status = MHD_websocket_decode(cu->get_ws(), buf, bufsz, &new_offset, &frame_data, &frame_len);
+
+        if (status < 0) {
+            // Error has occurred.
+            MHD_websocket_free(cu->get_ws(), frame_data);
+            return &PAGE_INVALID_WEBSOCKET_REQUEST;
+        }
+        buf_offset += new_offset;
+        if (status > 0) {
+            switch (status) {
+                case MHD_WEBSOCKET_STATUS_TEXT_FRAME:
+                case MHD_WEBSOCKET_STATUS_BINARY_FRAME:
+                    cout << "I get here";
+                    break;
+            }
+        }
+    }
+
+    return new json();
+}
