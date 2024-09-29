@@ -33,10 +33,7 @@ set(BUILD_SHARED_LIBS OFF CACHE INTERNAL "")
 set(BUILD_STATIC_LIBS ON CACHE INTERNAL "")
 FetchContent_MakeAvailable(llhttp)
 
-# Link with the llhttp_static target
-
-
-include_directories(${json_SOURCE_DIR}/include include src)
+include_directories(${json_SOURCE_DIR}/include include src restinio-0.7.2/dev ${llhttp_SOURCE_DIR}/include)
 pkg_search_module(DLIB REQUIRED dlib-1)
 
 

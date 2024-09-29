@@ -15,6 +15,10 @@
 #include <iostream>
 #include <nlohmann/json.hpp>
 #include <stdexcept>
+#include <iostream>
+
+#include <restinio/core.hpp>
+#include <restinio/websocket/websocket.hpp>
 
 #include "fatctl/environment/state.hpp"
 
