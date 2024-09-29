@@ -26,6 +26,16 @@ FetchContent_Declare(json URL https://github.com/nlohmann/json/releases/download
 FetchContent_MakeAvailable(json)
 list(APPEND CMAKE_MODULE_PATH ${nlohmann_json})
 
+FetchContent_Declare(llhttp
+  URL "https://github.com/nodejs/llhttp/archive/refs/tags/release/v8.1.0.tar.gz")
+
+set(BUILD_SHARED_LIBS OFF CACHE INTERNAL "")
+set(BUILD_STATIC_LIBS ON CACHE INTERNAL "")
+FetchContent_MakeAvailable(llhttp)
+
+# Link with the llhttp_static target
+
+
 include_directories(${json_SOURCE_DIR}/include include src)
 pkg_search_module(DLIB REQUIRED dlib-1)
 
@@ -34,6 +44,8 @@ add_executable(fatctl src/fatctl/fatctl.h src/fatctl/fatctl.cpp ${fatctl_SOURCES
 target_link_libraries(fatctl /usr/lib/libwiringPi.so)
 target_link_libraries(fatctl /usr/local/lib/libmicrohttpd_ws.so)
 target_link_libraries(fatctl /usr/local/lib/libmicrohttpd.so)
+target_link_libraries(fatctl  llhttp_static )
+
 
 
 enable_testing()

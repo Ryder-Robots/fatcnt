@@ -1,9 +1,10 @@
 #ifndef CONNECTION_REQUEST_HPP
 #define CONNECTION_REQUEST_HPP
 
-#include <string>
 #include <iostream>
 #include <nlohmann/json.hpp>
+#include <string>
+
 #include "fatctl/ui/websocket_status_code.hpp"
 
 using namespace std;
@@ -11,12 +12,11 @@ using json = nlohmann::json;
 
 namespace rrobot {
 
-
-#define KEY_at_hash    "at_hash"
-#define KEY_client_id  "client_id"
-#define KEY_swname     "swname"
-#define KEY_swversion  "swversion"
-#define KEY_hwmodel    "hwmodel"
+#define KEY_at_hash "at_hash"
+#define KEY_client_id "client_id"
+#define KEY_swname "swname"
+#define KEY_swversion "swversion"
+#define KEY_hwmodel "hwmodel"
 
 /**
  * @brief expected request from the client. This occurs after websokcet handshake has been performed,
@@ -58,13 +58,13 @@ class connection_request {
      */
     const string get_swversion();
 
-    /** 
+    /**
      *  @fn get_hwmodel
      *  @brief concerned with the monitor here, attributes are:
      *    pwidth  : width in pixals
-     *    pheight : height in pixals 
+     *    pheight : height in pixals
      */
-    const json get_hwmodel(); 
+    const json get_hwmodel();
 
    private:
     // Access Token hash value
