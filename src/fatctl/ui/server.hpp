@@ -5,25 +5,18 @@
 #ifndef SERVER_HPP
 #define SERVER_HPP
 
-#include <microhttpd.h>
-#include <microhttpd_ws.h>
+#include <netinet/in.h>
 #include <stdint.h>
 #include <string.h>
-
-#include <ext/stdio_filebuf.h>
-#include <fstream>
+#include <unistd.h> 
 #include <iostream>
 #include <nlohmann/json.hpp>
 #include <stdexcept>
-#include <iostream>
-
-#include <restinio/core.hpp>
-#include <restinio/websocket/websocket.hpp>
 
 #include "fatctl/environment/state.hpp"
+#include "fatctl/ui/websocket_status_code.hpp"
+#include "fatctl/ui/socket_env.hpp"
 
-#define PORT 8081
-#define TIMEOUT (uint32_t)120
 
 // Create authorization header.
 #define CONNECTION_URL "/"
@@ -45,14 +38,31 @@ class fatcnt_server {
      * @fn create
      * @brief creates an instance of the server.
      */
-    void create();
+    void create(int port);
 
     /**
-     * @fn close
+     * @fn despose
      * @brief stops the server
      */
-    void close();
+    void despose();
 
+   protected:
+   /**
+    * @fn recieve
+    * @brief recieves inbound messages (in its own thread)
+    * @param socket connection to environment
+    */
+    static void *recieve(void *senv);
+
+    /**
+     * @fn send
+     * @brief  outbound messages in its own thread.
+     * @param socket connection to environment
+     */
+    static void *send(void *senv);
+
+   private:
+    int _sockfd;
 };
 }  // namespace rrobot
 

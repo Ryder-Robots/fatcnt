@@ -11,7 +11,7 @@ int main() {
     fatcnt_server fs = fatcnt_server();
 
     // start server
-    fs.create();
+    //fs.create();
 
     while(1) {}
 
