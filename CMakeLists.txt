@@ -6,7 +6,7 @@ include(FindPkgConfig)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CPACK_PACKAGE_NAME "fatctl")
-set(CPACK_PACKAGE_VERSION_MAJOR "1")
+set(CPACK_PACKAGE_VERSION_MAJOR "0")
 set(CPACK_PACKAGE_VERSION_MINOR "0")
 set(CPACK_PACKAGE_VERSION_PATCH "1")
 set(CPACK_DEBIAN_PACKAGE_DEPENDS "wiringpi, wiringpi (>= 3.2)")
@@ -14,11 +14,8 @@ set(VERSION ${CPACK_PACKAGE_VERSION_MAJOR}.${CPACK_PACKAGE_VERSION_MINOR}.${CPAC
 set(JSON_VERSION v3.11.3)
 
 set(fatctl_SOURCES 
-    src/fatctl/ui/server.hpp
     src/fatctl/ui/server.cpp
-    src/fatctl/ui/connection_request.hpp
     src/fatctl/ui/connection_request.cpp
-    src/fatctl/environment/state.hpp
     src/fatctl/environment/state.cpp
 )
 set(CPACK_DEBIAN_PACKAGE_DEPENDS "wiringpi, wiringpi (>= 3.2)")
@@ -26,24 +23,15 @@ FetchContent_Declare(json URL https://github.com/nlohmann/json/releases/download
 FetchContent_MakeAvailable(json)
 list(APPEND CMAKE_MODULE_PATH ${nlohmann_json})
 
-FetchContent_Declare(llhttp
-  URL "https://github.com/nodejs/llhttp/archive/refs/tags/release/v8.1.0.tar.gz")
 
-set(BUILD_SHARED_LIBS OFF CACHE INTERNAL "")
-set(BUILD_STATIC_LIBS ON CACHE INTERNAL "")
-FetchContent_MakeAvailable(llhttp)
-
-include_directories(${json_SOURCE_DIR}/include include src restinio-0.7.2/dev ${llhttp_SOURCE_DIR}/include)
+include_directories(${json_SOURCE_DIR}/include include src ${llhttp_SOURCE_DIR}/include)
 pkg_search_module(DLIB REQUIRED dlib-1)
 
 
 add_executable(fatctl src/fatctl/fatctl.h src/fatctl/fatctl.cpp ${fatctl_SOURCES})
 target_link_libraries(fatctl /usr/lib/libwiringPi.so)
-target_link_libraries(fatctl /usr/local/lib/libmicrohttpd_ws.so)
 target_link_libraries(fatctl /usr/local/lib/libmicrohttpd.so)
-target_link_libraries(fatctl  llhttp_static )
-
-
+target_link_libraries(fatctl fmt)
 
 enable_testing()
 # include_directories(src)

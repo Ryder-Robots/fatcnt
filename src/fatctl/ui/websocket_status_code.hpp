@@ -33,5 +33,8 @@ namespace rrobot {
     // indicates that a server is terminating the connection because
     //  it encountered an unexpected condition that prevented it from
     //  fulfilling the request.
-    #define RR_WS_UNEXPECTED_COND      1011    
+    #define RR_WS_UNEXPECTED_COND      1011
+
+    // Occurs when we are unable to create a socket.
+    #define RR_WS_UNABLE_TO_CONNECT    1012
 }
