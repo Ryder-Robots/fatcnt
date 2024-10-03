@@ -20,18 +20,13 @@ using json = nlohmann::json;
  */
 void *fatcnt_server::recieve(void *in) {
     socket_env *senv = static_cast<socket_env*>(in);
-    uint8_t *buffer = static_cast<uint8_t *>(malloc(PTRDIFF_MAX)); 
+    char *buffer = static_cast<char *>(malloc(BUFSIZ * sizeof(char))); 
     
-    memset(buffer, 0, PTRDIFF_MAX);
+    memset(buffer, 0, BUFSIZ);
     struct sockaddr_in cliaddr;
     memset(&cliaddr, 0, sizeof(cliaddr));
-    socklen_t len;
-    size_t n = recvfrom(senv->get_sockfd(), buffer, PTRDIFF_MAX, MSG_WAITALL, (struct sockaddr *)senv->get_servaddr(), &len);
-
-    string s;
-    for (size_t i = 0;i < n; i++) {
-        s += buffer[i];
-    }
+    size_t n = recv(senv->get_socket(), buffer, BUFSIZ * sizeof(char), 0);
+    string s = buffer;
 
     // put the request into a queue so that it can be processed by something 
     // else.
@@ -61,7 +56,7 @@ socket_env* fatcnt_server::create(int port, rr_state_c *state) {
         struct sockaddr_in servaddr;
 
         // Creating socket file descriptor
-        if ((_sockfd = socket(AF_INET, SOCK_DGRAM, 0)) < 0) {
+        if ((_sockfd = socket(AF_INET, SOCK_STREAM, 0)) < 0) {
             throw RR_WS_UNABLE_TO_CONNECT;
         }
         memset(&servaddr, 0, sizeof(servaddr));
@@ -81,6 +76,7 @@ socket_env* fatcnt_server::create(int port, rr_state_c *state) {
         sockenv->set_servaddr(&servaddr);
         sockenv->set_state(state);
 
+        listen(_sockfd, _max_connections);
         
         state->get_observers();
 

@@ -31,6 +31,15 @@ class socket_env {
             return _sockfd;
         }
 
+
+        void set_socket(int socket) {
+            _socket = socket;
+        }
+
+        int get_socket() {
+            return _socket;
+        }
+
         /**
          * @fn set_serveraddr
          * @brief sets server address.
@@ -88,6 +97,9 @@ class socket_env {
 
     private:
         int                 _sockfd;
+
+        // an accepted socket by client.
+        int                 _socket;
         struct sockaddr_in *_servaddr;
         rr_state_c         *_state;
         json               *_event;
