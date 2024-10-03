@@ -22,14 +22,14 @@ void *fatcnt_server::recieve(void *in) {
     socket_env *senv = static_cast<socket_env*>(in);
     uint8_t *buffer = static_cast<uint8_t *>(malloc(PTRDIFF_MAX)); 
     
-    bzero(buffer, PTRDIFF_MAX);
+    memset(buffer, 0, PTRDIFF_MAX);
     struct sockaddr_in cliaddr;
     memset(&cliaddr, 0, sizeof(cliaddr));
     socklen_t len;
-    int n = recvfrom(senv->get_sockfd(), buffer, PTRDIFF_MAX, MSG_WAITALL, (struct sockaddr *)senv->get_servaddr(), &len);
+    size_t n = recvfrom(senv->get_sockfd(), buffer, PTRDIFF_MAX, MSG_WAITALL, (struct sockaddr *)senv->get_servaddr(), &len);
 
     string s;
-    for (int i = 0;i < n; i++) {
+    for (size_t i = 0;i < n; i++) {
         s += buffer[i];
     }
 
@@ -46,11 +46,17 @@ void *fatcnt_server::recieve(void *in) {
     return static_cast<void *>(result);
 }
 
-void *fatcnt_server::send(void *senv) {
-    return static_cast<void *>(0);
+/*
+ * Ideally read from a queue and perform required actions.
+ */
+void *fatcnt_server::send(void *in) {
+    socket_env *senv = static_cast<socket_env*>(in);
+    size_t n = 0; //sendto(senv->get_sockfd(), );
+    return reinterpret_cast<void *>(n);
 }
 
-void fatcnt_server::create(int port) {
+socket_env* fatcnt_server::create(int port, rr_state_c *state) {
+    socket_env *sockenv = new socket_env();
     try {
         struct sockaddr_in servaddr;
 
@@ -70,19 +76,19 @@ void fatcnt_server::create(int port) {
             throw RR_WS_UNABLE_TO_CONNECT;
         }
 
-        rrobot::rr_state_c *RR_STATE;
-        socket_env *sockenv = new socket_env();
+        
         sockenv->set_sockfd(_sockfd);
         sockenv->set_servaddr(&servaddr);
-        sockenv->set_state(RR_STATE);
+        sockenv->set_state(state);
 
         
-        RR_STATE->get_observers();
+        state->get_observers();
 
     } catch (const std::exception &ex) {
         std::cerr << "Error: " << ex.what() << std::endl;
         // return 1;
     }
+    return sockenv;
 }
 
 void fatcnt_server::despose() { close(_sockfd); }

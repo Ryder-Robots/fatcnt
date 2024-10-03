@@ -38,7 +38,7 @@ class fatcnt_server {
      * @fn create
      * @brief creates an instance of the server.
      */
-    void create(int port);
+    socket_env *create(int port, rr_state_c *state);
 
     /**
      * @fn despose
@@ -46,7 +46,6 @@ class fatcnt_server {
      */
     void despose();
 
-   protected:
    /**
     * @fn recieve
     * @brief recieves inbound messages (in its own thread)
