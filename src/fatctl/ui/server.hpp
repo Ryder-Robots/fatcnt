@@ -62,6 +62,7 @@ class fatcnt_server {
 
    private:
     int _sockfd;
+    int _max_connections = 5;
 };
 }  // namespace rrobot
 
