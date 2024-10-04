@@ -76,8 +76,7 @@ class socket_env {
         rr_state_c *get_state() {
             return _state;
         }
-
-    protected:
+        
         /**
          * @fn put_send_event
          * @param JSON event to send.
@@ -93,6 +92,14 @@ class socket_env {
             return _event;
         }
 
+        void set_is_exist(bool is_exit) {
+            _is_exit = is_exit;
+        }
+
+        bool is_exit() {
+            return _is_exit;
+        }
+
 
 
     private:
@@ -103,6 +110,7 @@ class socket_env {
         struct sockaddr_in *_servaddr;
         rr_state_c         *_state;
         json               *_event;
+        bool                _is_exit = false;
 };
 }
 

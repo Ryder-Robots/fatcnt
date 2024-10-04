@@ -18,40 +18,35 @@ using json = nlohmann::json;
  * Receives messages from the UDP/IP socket actions.
  *
  */
-void *fatcnt_server::recieve(void *in) {
-    socket_env *senv = static_cast<socket_env*>(in);
-    char *buffer = static_cast<char *>(malloc(BUFSIZ * sizeof(char))); 
-    
+dlib::logger dlog_ui("rr_robot_ui");
+json* fatcnt_server::recieve(socket_env *senv, char *buffer) {
     memset(buffer, 0, BUFSIZ);
-    struct sockaddr_in cliaddr;
-    memset(&cliaddr, 0, sizeof(cliaddr));
     size_t n = recv(senv->get_socket(), buffer, BUFSIZ * sizeof(char), 0);
     string s = buffer;
 
-    // put the request into a queue so that it can be processed by something 
+    // put the request into a queue so that it can be processed by something
     // else.
     if (!json::accept(s)) {
         // TODO: note that the requst was invalid and ignore
     }
     json j = json::parse(s);
     // TODO: perform some validation here.
-    json *result; 
+    json *result = static_cast<json *>(malloc(sizeof(char) * j.size()));
     memcpy(result, &j, j.size());
 
-    return static_cast<void *>(result);
+    return result;
 }
 
 /*
  * Ideally read from a queue and perform required actions.
  */
 void *fatcnt_server::send(void *in) {
-    socket_env *senv = static_cast<socket_env*>(in);
-    size_t n = 0; //sendto(senv->get_sockfd(), );
+    socket_env *senv = static_cast<socket_env *>(in);
+    size_t n = 0;  // sendto(senv->get_sockfd(), );
     return reinterpret_cast<void *>(n);
 }
 
-socket_env* fatcnt_server::create(int port, rr_state_c *state) {
-    socket_env *sockenv = new socket_env();
+socket_env *fatcnt_server::create(int port, rr_state_c *state) {
     try {
         struct sockaddr_in servaddr;
 
@@ -71,13 +66,12 @@ socket_env* fatcnt_server::create(int port, rr_state_c *state) {
             throw RR_WS_UNABLE_TO_CONNECT;
         }
 
-        
-        sockenv->set_sockfd(_sockfd);
-        sockenv->set_servaddr(&servaddr);
-        sockenv->set_state(state);
+        _sockenv->set_sockfd(_sockfd);
+        _sockenv->set_servaddr(&servaddr);
+        _sockenv->set_state(state);
 
         listen(_sockfd, _max_connections);
-        
+
         state->get_observers();
 
     } catch (const std::exception &ex) {
@@ -87,7 +81,40 @@ socket_env* fatcnt_server::create(int port, rr_state_c *state) {
         std::cerr << "Error: " << ex.what() << std::endl;
         // return 1;
     }
-    return sockenv;
+    return _sockenv;
 }
 
 void fatcnt_server::dispose() { close(_sockfd); }
+
+// Create the accept thread.
+pthread_t fatcnt_server::rr_accept() {
+    pthread_t ptid;
+    pthread_create(&ptid, NULL, &accept_conn, _sockenv);
+    return ptid;
+}
+
+void *fatcnt_server::accept_conn(void *in) {
+    pthread_detach(pthread_self());
+    socket_env *senv = static_cast<socket_env *>(in);
+
+    while (!senv->is_exit()) {
+        int clientSocket = accept(senv->get_sockfd(), nullptr, nullptr);
+        senv->set_socket(clientSocket);
+        dlog_ui << dlib::LINFO << "recieved connection";
+
+        char *buffer = static_cast<char *>(malloc(BUFSIZ * sizeof(char)));
+        struct sockaddr_in cliaddr;
+        memset(&cliaddr, 0, sizeof(cliaddr));
+        json *connection = recieve(senv, buffer);
+
+        //TODO: authorize here
+        dlog_ui << dlib::LINFO << "authorization successful";
+
+        free(buffer);
+        free(connection);
+
+        // create read and write threads, these threads will interact with the environment, 
+        // NN, and Renforcement Learning algoritm until program termination.
+    }
+    return static_cast<void *>(0);
+}

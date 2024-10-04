@@ -2,18 +2,29 @@
 
 using namespace rrobot;
 
+dlib::logger dlog_main("rr_robot_main");
 int main() {
+    dlog_main.set_level(dlib::LALL);
+
     // Create state first
-    rrobot::rr_state_c *RR_STATE = new rrobot::rr_state_c();
+    dlog_main << dlib::LINFO << "creating state";
+    rrobot::rr_state_c *rr_state = new rrobot::rr_state_c();
+     // perform state initlization.
 
-    //TODO: this should all come from an uploaded config
-    // Create webserver
+    // Create UX
+    dlog_main << dlib::LINFO << "starting user interface";
     fatcnt_server fs = fatcnt_server();
+    fs.create(DEFAULT_PORT, rr_state);
 
-    // start server
-    //fs.create();
+    // get ready to recieve connections
+    dlog_main << dlib::LINFO << "waiting to accept connections on port: " << DEFAULT_PORT;
+    pthread_t ptid_fs = fs.rr_accept();
 
-    while(1) {}
+    // spin up nerual network, if you can.
+
+    // keep running until we are told to shutdown.
+    pthread_join(ptid_fs, NULL);
+    fs.dispose();
 
     return 0;
 }

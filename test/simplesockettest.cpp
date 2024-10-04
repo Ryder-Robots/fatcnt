@@ -17,9 +17,11 @@ int main() {
     senv->set_socket(clientSocket);
 
     // create threads at this point.
-
-    server.recieve(senv);
-
+    char *buffer = static_cast<char *>(malloc(BUFSIZ * sizeof(char)));
+    struct sockaddr_in cliaddr;
+    memset(&cliaddr, 0, sizeof(cliaddr));
+    server.recieve(senv, buffer);
+    free(buffer);
     server.dispose();
     
     return 0;
