@@ -20,7 +20,7 @@ int main() {
 
     server.recieve(senv);
 
-    server.despose();
+    server.dispose();
     
     return 0;
 }
