@@ -81,10 +81,13 @@ socket_env* fatcnt_server::create(int port, rr_state_c *state) {
         state->get_observers();
 
     } catch (const std::exception &ex) {
+        if (_sockfd != -1) {
+            dispose();
+        }
         std::cerr << "Error: " << ex.what() << std::endl;
         // return 1;
     }
     return sockenv;
 }
 
-void fatcnt_server::despose() { close(_sockfd); }
+void fatcnt_server::dispose() { close(_sockfd); }

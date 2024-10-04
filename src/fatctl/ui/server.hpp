@@ -44,7 +44,7 @@ class fatcnt_server {
      * @fn despose
      * @brief stops the server
      */
-    void despose();
+    void dispose();
 
    /**
     * @fn recieve
