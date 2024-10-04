@@ -29,9 +29,9 @@ pkg_search_module(DLIB REQUIRED dlib-1)
 
 
 add_executable(fatctl src/fatctl/fatctl.h src/fatctl/fatctl.cpp ${fatctl_SOURCES})
-target_link_libraries(fatctl /usr/lib/libwiringPi.so)
-# target_link_libraries(fatctl /usr/local/lib/libmicrohttpd.so)
-# target_link_libraries(fatctl fmt)
+target_link_libraries(fatctl wiringPi)
+target_link_libraries(fatctl dlib)
+target_link_libraries(fatctl pthread)
 
 enable_testing()
 # include_directories(src)
@@ -43,3 +43,5 @@ add_executable(simplejwttest test/simplejwttest.cpp src/fatctl/ui/connection_req
 
 include_directories(${json_SOURCE_DIR}/include include src)
 add_executable(simplesockettest test/simplesockettest.cpp src/fatctl/ui/server.cpp)
+target_link_libraries(simplesockettest dlib)
+target_link_libraries(simplesockettest pthread)
