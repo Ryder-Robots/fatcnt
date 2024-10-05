@@ -57,7 +57,7 @@ class fatcnt_server {
     * @brief recieves inbound messages (in its own thread)
     * @param socket connection to environment
     */
-    static json* recieve(socket_env *senv, char *buffer);
+    static json recieve(socket_env *senv, char *buffer);
 
     /**
      * @fn send
@@ -73,7 +73,7 @@ class fatcnt_server {
     pthread_t rr_accept();
 
    private:
-    int _sockfd;
+    int _sockfd = 0;
     int _max_connections = 5;
     socket_env *_sockenv = new socket_env();
 

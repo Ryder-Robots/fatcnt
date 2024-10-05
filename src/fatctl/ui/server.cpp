@@ -19,7 +19,7 @@ using json = nlohmann::json;
  *
  */
 dlib::logger dlog_ui("rr_robot_ui");
-json* fatcnt_server::recieve(socket_env *senv, char *buffer) {
+json fatcnt_server::recieve(socket_env *senv, char *buffer) {
     memset(buffer, 0, BUFSIZ);
     size_t n = recv(senv->get_socket(), buffer, BUFSIZ * sizeof(char), 0);
     string s = buffer;
@@ -30,11 +30,8 @@ json* fatcnt_server::recieve(socket_env *senv, char *buffer) {
         // TODO: note that the requst was invalid and ignore
     }
     json j = json::parse(s);
-    // TODO: perform some validation here.
-    json *result = static_cast<json *>(malloc(sizeof(char) * j.size()));
-    memcpy(result, &j, j.size());
 
-    return result;
+    return j;
 }
 
 /*
@@ -63,6 +60,8 @@ socket_env *fatcnt_server::create(int port, rr_state_c *state) {
 
         // Bind the socket with the server address
         if (bind(_sockfd, (const struct sockaddr *)&servaddr, sizeof(servaddr)) < 0) {
+            dlog_ui << dlib::LFATAL << "fatal error occured: " << strerror(errno);
+
             throw RR_WS_UNABLE_TO_CONNECT;
         }
 
@@ -71,15 +70,12 @@ socket_env *fatcnt_server::create(int port, rr_state_c *state) {
         _sockenv->set_state(state);
 
         listen(_sockfd, _max_connections);
-
-        state->get_observers();
-
-    } catch (const std::exception &ex) {
+     } catch (const std::exception &ex) {
         if (_sockfd != -1) {
             dispose();
         }
-        std::cerr << "Error: " << ex.what() << std::endl;
-        // return 1;
+        dlog_ui << dlib::LFATAL << "fatal error occured: " << ex.what();
+        return _sockenv;
     }
     return _sockenv;
 }
@@ -98,23 +94,31 @@ void *fatcnt_server::accept_conn(void *in) {
     socket_env *senv = static_cast<socket_env *>(in);
 
     while (!senv->is_exit()) {
-        int clientSocket = accept(senv->get_sockfd(), nullptr, nullptr);
-        senv->set_socket(clientSocket);
-        dlog_ui << dlib::LINFO << "recieved connection";
+        try {
+            int clientSocket = accept(senv->get_sockfd(), nullptr, nullptr);
+            senv->set_socket(clientSocket);
+            dlog_ui << dlib::LINFO << "recieved connection";
 
-        char *buffer = static_cast<char *>(malloc(BUFSIZ * sizeof(char)));
-        struct sockaddr_in cliaddr;
-        memset(&cliaddr, 0, sizeof(cliaddr));
-        json *connection = recieve(senv, buffer);
+            char *buffer = static_cast<char *>(malloc(BUFSIZ * sizeof(char)));
+            struct sockaddr_in cliaddr;
+            memset(&cliaddr, 0, sizeof(cliaddr));
+            json manifest = recieve(senv, buffer);
 
-        //TODO: authorize here
-        dlog_ui << dlib::LINFO << "authorization successful";
+            // TODO: authorize here
+            dlog_ui << dlib::LINFO << "authorization successful";
+            client_manifest *ux_manifest = new  client_manifest(
+                manifest["client_id"], 
+                manifest["swname"], 
+                manifest["swversion"]);
+            senv->set_ux_manifest(ux_manifest);
 
-        free(buffer);
-        free(connection);
+            free(buffer);
 
-        // create read and write threads, these threads will interact with the environment, 
-        // NN, and Renforcement Learning algoritm until program termination.
+            // create read and write threads, these threads will interact with the environment,
+            // NN, and Renforcement Learning algoritm until program termination.
+        } catch (const std::exception &ex) {
+            dlog_ui << dlib::LFATAL << "fatal error occured: " << ex.what();
+        }
     }
     return static_cast<void *>(0);
 }

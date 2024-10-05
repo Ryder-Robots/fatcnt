@@ -16,6 +16,7 @@ set(JSON_VERSION v3.11.3)
 set(fatctl_SOURCES 
     src/fatctl/ui/server.cpp
     src/fatctl/ui/connection_request.cpp
+    src/fatctl/ui/client_manifest.hpp
     src/fatctl/environment/state.cpp
 )
 set(CPACK_DEBIAN_PACKAGE_DEPENDS "wiringpi, wiringpi (>= 3.2)")
