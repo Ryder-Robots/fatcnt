@@ -7,7 +7,7 @@
 
 #include <netinet/in.h>
 #include <stdint.h>
-#include <string.h>
+#include <string>
 #include <unistd.h> 
 #include <iostream>
 #include <nlohmann/json.hpp>
@@ -18,6 +18,7 @@
 #include "fatctl/environment/state.hpp"
 #include "fatctl/ui/websocket_status_code.hpp"
 #include "fatctl/ui/socket_env.hpp"
+#include "fatctl/ui/client_manifest.hpp"
 
 
 // Create authorization header.
