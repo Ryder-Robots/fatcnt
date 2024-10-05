@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include "fatctl/ui/client_manifest.hpp"
+#include "fatctl/ui/ux_manifest.hpp"
 
 using namespace std;
 using namespace rrobot;
@@ -8,7 +8,7 @@ using namespace rrobot;
 int main() {
     string request = R"({"at_hash": "a93fdd95612965ede0c1deae52ac85ec", "client_id":"00a1"})";
     cout << "request = " << request << "\n";
-    client_manifest hdr = client_manifest(request);
+    ux_manifest hdr = ux_manifest(request);
 
     assert("00a1" == hdr.get_client_id());
     assert("a93fdd95612965ede0c1deae52ac85ec" == hdr.get_at_hash());
@@ -18,10 +18,13 @@ int main() {
         "pheight": 2520
     }})";
     cout << "request = " << request << "\n";
-    hdr = client_manifest(request);
+    hdr = ux_manifest(request);
 
     assert("rr-client" == hdr.get_swname());
     assert("1.0.0" == hdr.get_swversion());
 
+    const char* c = "\"at_hash\": \"a93fdd95612965ede0c1deae52ac85ec\", \"client_id\":\"00a1\"";
+    string r = c;
+    ux_manifest *ux = new ux_manifest(r);
     return 0;
 }

@@ -2,7 +2,7 @@
  * include legal agreement.
  */
 
-#include "fatctl/ui/client_manifest.hpp"
+#include "fatctl/ui/ux_manifest.hpp"
 
 using namespace rrobot;
 
@@ -10,7 +10,7 @@ using namespace rrobot;
  * @brief concrete implementation of connection request.
  */
 
-client_manifest::client_manifest(string request)
+ux_manifest::ux_manifest(string request)
     : _at_hash(""), _client_id(""), _swname(""), _swversion(""), _hwmodel("") {
     if (!json::accept(request)) {
         throw RR_WS_STATUS_CANNOT_ACCEPT;
@@ -45,12 +45,12 @@ client_manifest::client_manifest(string request)
     }
 }
 
-const string client_manifest::get_client_id() { return _client_id; }
+const string ux_manifest::get_client_id() { return _client_id; }
 
-const string client_manifest::get_at_hash() { return _at_hash; }
+const string ux_manifest::get_at_hash() { return _at_hash; }
 
-const string client_manifest::get_swname() { return _swname; }
+const string ux_manifest::get_swname() { return _swname; }
 
-const string client_manifest::get_swversion() { return _swversion; }
+const string ux_manifest::get_swversion() { return _swversion; }
 
-const json client_manifest::get_hwmodel() { return _hwmodel; }
+const json ux_manifest::get_hwmodel() { return _hwmodel; }

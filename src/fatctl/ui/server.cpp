@@ -92,23 +92,23 @@ pthread_t fatcnt_server::rr_accept() {
 void *fatcnt_server::accept_conn(void *in) {
     pthread_detach(pthread_self());
     socket_env *senv = static_cast<socket_env *>(in);
-
+    
     while (!senv->is_exit()) {
         try {
             int clientSocket = accept(senv->get_sockfd(), nullptr, nullptr);
             senv->set_socket(clientSocket);
             dlog_ui << dlib::LINFO << "recieved connection";
-
             char *buffer = static_cast<char *>(malloc(BUFSIZ * sizeof(char)));
+            
             struct sockaddr_in cliaddr;
             memset(&cliaddr, 0, sizeof(cliaddr));
             json manifest = recieve(senv, buffer);
-            string request = buffer;
 
             // TODO: authorize here
             dlog_ui << dlib::LINFO << "authorization successful";
-            client_manifest *ux_manifest = new client_manifest(request);
-            //senv->set_ux_manifest(ux_manifest);
+            const std::string request = reinterpret_cast<const char*>(buffer);
+            ux_manifest *ui_manifest = new ux_manifest(request);
+            senv->set_ux_manifest(ui_manifest);
 
             free(buffer);
 

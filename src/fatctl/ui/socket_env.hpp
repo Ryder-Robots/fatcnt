@@ -6,7 +6,7 @@
 #include <nlohmann/json.hpp>
 
 #include "fatctl/environment/state.hpp"
-#include "fatctl/ui/client_manifest.hpp"
+#include "fatctl/ui/ux_manifest.hpp"
 
 using json = nlohmann::json;
 
@@ -91,9 +91,9 @@ class socket_env {
      */
     bool is_exit() { return _is_exit; }
 
-    void set_ux_manifest(client_manifest *ux_manifest) { _ux_manifest = ux_manifest; }
+    void set_ux_manifest(ux_manifest *ux) { _ux_manifest = ux; }
 
-    client_manifest *get_ux_manifest() { return _ux_manifest; }
+    ux_manifest *get_ux_manifest() { return _ux_manifest; }
 
    private:
     int _sockfd;
@@ -104,7 +104,7 @@ class socket_env {
     rr_state_c *_state;
     json *_event;
     bool _is_exit = false;
-    client_manifest *_ux_manifest;
+    ux_manifest *_ux_manifest;
 };
 }  // namespace rrobot
 
