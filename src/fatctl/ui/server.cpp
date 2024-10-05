@@ -103,16 +103,16 @@ void *fatcnt_server::accept_conn(void *in) {
             struct sockaddr_in cliaddr;
             memset(&cliaddr, 0, sizeof(cliaddr));
             json manifest = recieve(senv, buffer);
+            string request = buffer;
 
             // TODO: authorize here
             dlog_ui << dlib::LINFO << "authorization successful";
-            client_manifest *ux_manifest = new  client_manifest(
-                manifest["client_id"], 
-                manifest["swname"], 
-                manifest["swversion"]);
-            senv->set_ux_manifest(ux_manifest);
+            client_manifest *ux_manifest = new client_manifest(request);
+            //senv->set_ux_manifest(ux_manifest);
 
             free(buffer);
+
+            // send server manifest to client.
 
             // create read and write threads, these threads will interact with the environment,
             // NN, and Renforcement Learning algoritm until program termination.
