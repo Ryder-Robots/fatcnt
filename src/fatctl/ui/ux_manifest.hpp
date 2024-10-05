@@ -1,5 +1,5 @@
-#ifndef CLIENT_MANIFEST_HPP
-#define CLIENT_MANIFEST_HPP
+#ifndef UX_MANIFEST_HPP
+#define UX_MANIFEST_HPP
 
 #include <iostream>
 #include <nlohmann/json.hpp>
@@ -25,14 +25,14 @@ namespace rrobot {
  *
  * all attributes should comply with https://www.iana.org/assignments/jwt/jwt.xhtml
  */
-class client_manifest {
+class ux_manifest {
    public:
     /**
      * @fn connection_request
      * @brief class constructor
      * @param req inbound json string describing request
      */
-    client_manifest(const string req);
+    ux_manifest(const string req);
 
     /**
      * @fn get_at_hash

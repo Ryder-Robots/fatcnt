@@ -18,7 +18,7 @@
 #include "fatctl/environment/state.hpp"
 #include "fatctl/ui/websocket_status_code.hpp"
 #include "fatctl/ui/socket_env.hpp"
-#include "fatctl/ui/client_manifest.hpp"
+#include "fatctl/ui/ux_manifest.hpp"
 
 
 // Create authorization header.
