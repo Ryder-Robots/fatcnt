@@ -16,7 +16,7 @@ set(JSON_VERSION v3.11.3)
 set(fatctl_SOURCES 
     src/fatctl/ui/ux_manifest.cpp
     src/fatctl/ui/server.cpp
-    src/fatctl/environment/state.cpp
+    src/fatctl/environment/statefact.cpp
 )
 set(CPACK_DEBIAN_PACKAGE_DEPENDS "wiringpi, wiringpi (>= 3.2)")
 FetchContent_Declare(json URL https://github.com/nlohmann/json/releases/download/${JSON_VERSION}/json.tar.xz)
@@ -44,3 +44,8 @@ include_directories(${json_SOURCE_DIR}/include include src)
 add_executable(simplesockettest test/simplesockettest.cpp src/fatctl/ui/server.cpp)
 target_link_libraries(simplesockettest ctl)
 target_link_libraries(simplesockettest dlib)
+
+include_directories(${json_SOURCE_DIR}/include include src)
+add_executable(simpleteststate test/simpleteststate.cpp)
+target_link_libraries(simpleteststate ctl)
+target_link_libraries(simpleteststate dlib)

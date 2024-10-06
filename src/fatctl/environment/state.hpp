@@ -4,19 +4,31 @@
 #ifndef STATE_HPP
 #define STATE_HPP
 
+#include <nlohmann/json.hpp>
+
+
+using json = nlohmann::json;
+
 /**
  * @brief special shared object that will be used to transmit state to and from UI, Nueral networks, RL, and environment.
  */
 namespace rrobot {
     class rr_state_c {
         public:
-            rr_state_c(){}
+            /**
+             * get current manifest
+             */
+            virtual json get_manifest() {
+                return _manifest;
+            }
 
-            // TODO: this should do something
-            void get_observers() {}
+            virtual void set_manifest(json manifest) {
+                _manifest = manifest;
+            }
+
+        private:
+            json _manifest = json();
     };
 }
-
-extern rrobot::rr_state_c *RR_STATE; 
 
 #endif
