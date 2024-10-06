@@ -1,15 +1,32 @@
 #include "fatctl.h"
 
 using namespace rrobot;
+namespace po = boost::program_options;
 
 dlib::logger dlog_main("rr_robot_main");
-int main() {
+int main(int argc, char *argv[]) {
+    string manifest;
+    po::options_description desc("Allowed options");
+    desc.add_options()
+        ("manifest,m", po::value(&manifest), "manifest file to use")
+        ("help,h", "print usage message");
+
+    po::variables_map vm;
+    store(parse_command_line(argc, argv, desc), vm);
+
+    if (vm.count("help")) {
+        cout << desc << "\n";
+        return 0;
+    }
+
+    manifest = vm["manifest"].as<string>();
+
     dlog_main.set_level(dlib::LALL);
 
     // Create state first
-    dlog_main << dlib::LINFO << "creating state";
+    dlog_main << dlib::LINFO << "creating state using manifest " << manifest;
     rrobot::rr_state_c *rr_state = new rrobot::rr_state_c();
-     // perform state initlization.
+    // perform state initlization.
 
     // Create UX
     dlog_main << dlib::LINFO << "starting user interface";
