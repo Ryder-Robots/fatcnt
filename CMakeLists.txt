@@ -26,6 +26,8 @@ list(APPEND CMAKE_MODULE_PATH ${nlohmann_json})
 include_directories(${json_SOURCE_DIR}/include include src ${llhttp_SOURCE_DIR}/include)
 pkg_search_module(DLIB REQUIRED dlib-1)
 
+find_package(Boost 1.74.0 COMPONENTS program_options REQUIRED )
+
 add_library(ctl SHARED  ${fatctl_SOURCES})
 target_link_libraries(ctl wiringPi)
 target_link_libraries(ctl pthread)
@@ -33,6 +35,7 @@ target_link_libraries(ctl pthread)
 add_executable(fatctl src/fatctl/fatctl.h src/fatctl/fatctl.cpp  ${fatctl_SOURCES})
 target_link_libraries(fatctl ctl)
 target_link_libraries(fatctl dlib)
+target_link_libraries(fatctl ${Boost_LIBRARIES})
 
 enable_testing()
 
