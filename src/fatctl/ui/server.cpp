@@ -103,11 +103,12 @@ void *fatcnt_server::accept_conn(void *in) {
             struct sockaddr_in cliaddr;
             memset(&cliaddr, 0, sizeof(cliaddr));
             json manifest = recieve(senv, buffer);
-
-            // TODO: authorize here
             dlog_ui << dlib::LINFO << "authorization successful";
             const std::string request = reinterpret_cast<const char*>(buffer);
             ux_manifest *ui_manifest = new ux_manifest(request);
+
+            // TODO: authorize here
+
             senv->set_ux_manifest(ui_manifest);
 
             free(buffer);
@@ -118,6 +119,13 @@ void *fatcnt_server::accept_conn(void *in) {
             // NN, and Renforcement Learning algoritm until program termination.
         } catch (const std::exception &ex) {
             dlog_ui << dlib::LFATAL << "fatal error occured: " << ex.what();
+        } catch (int e) {
+            switch(e) {
+                case RR_WS_STATUS_CANNOT_ACCEPT:
+                    dlog_ui << dlib::LFATAL << "invalid request was recieved";
+            }
+        } catch (...) {
+            dlog_ui << dlib::LFATAL << "unhandled exception has occured: "; 
         }
     }
     return static_cast<void *>(0);
