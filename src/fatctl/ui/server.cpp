@@ -37,10 +37,8 @@ json fatcnt_server::recieve(socket_env *senv, char *buffer) {
 /*
  * Ideally read from a queue and perform required actions.
  */
-void *fatcnt_server::send(void *in) {
-    socket_env *senv = static_cast<socket_env *>(in);
-    size_t n = 0;  // sendto(senv->get_sockfd(), );
-    return reinterpret_cast<void *>(n);
+size_t fatcnt_server::sendto(socket_env *senv, json msg) {
+    return send(senv->get_socket(), msg.dump().c_str(), msg.dump().size() * sizeof(char), 0);
 }
 
 socket_env *fatcnt_server::create(int port, rr_state_c *state) {
@@ -90,7 +88,6 @@ pthread_t fatcnt_server::rr_accept() {
 }
 
 void *fatcnt_server::accept_conn(void *in) {
-    pthread_detach(pthread_self());
     socket_env *senv = static_cast<socket_env *>(in);
     
     while (!senv->is_exit()) {
@@ -110,10 +107,9 @@ void *fatcnt_server::accept_conn(void *in) {
             // TODO: authorize here
 
             senv->set_ux_manifest(ui_manifest);
-
             free(buffer);
 
-            // send server manifest to client.
+            sendto(senv, senv->get_state()->get_manifest());
 
             // create read and write threads, these threads will interact with the environment,
             // NN, and Renforcement Learning algoritm until program termination.
