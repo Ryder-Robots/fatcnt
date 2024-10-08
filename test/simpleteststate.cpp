@@ -11,6 +11,6 @@ int main() {
     getcwd(buffer, size);
     cout << "Current working directory: " << buffer << endl;
 
-    rr_state_c state = statefact::create_state("../resources/manifests", "virtual.json");
+    rr_state_c* state = statefact::create_state("../resources/manifests/virtual.json");
     return 0;
 }

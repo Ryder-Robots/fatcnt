@@ -6,9 +6,11 @@ namespace po = boost::program_options;
 dlib::logger dlog_main("rr_robot_main");
 int main(int argc, char *argv[]) {
     string manifest;
+    int port;
     po::options_description desc("Allowed options");
     desc.add_options()
-        ("manifest,m", po::value(&manifest), "manifest file to use")
+        ("manifest,m", po::value<string>()->default_value(DEFAULT_MANIFEST), "manifest file to use")
+        ("port,p", po::value<int>()->default_value(DEFAULT_PORT))
         ("help,h", "print usage message");
 
     po::variables_map vm;
@@ -20,21 +22,22 @@ int main(int argc, char *argv[]) {
     }
 
     manifest = vm["manifest"].as<string>();
+    port = vm["port"].as<int>();
 
     dlog_main.set_level(dlib::LALL);
 
     // Create state first
     dlog_main << dlib::LINFO << "creating state using manifest " << manifest;
-    rrobot::rr_state_c *rr_state = new rrobot::rr_state_c();
+    rrobot::rr_state_c *rr_state = statefact::create_state(manifest);
     // perform state initlization.
 
     // Create UX
     dlog_main << dlib::LINFO << "starting user interface";
     fatcnt_server fs = fatcnt_server();
-    fs.create(DEFAULT_PORT, rr_state);
+    fs.create(port, rr_state);
 
     // get ready to recieve connections
-    dlog_main << dlib::LINFO << "waiting to accept connections on port: " << DEFAULT_PORT;
+    dlog_main << dlib::LINFO << "waiting to accept connections on port: " << port;
     pthread_t ptid_fs = fs.rr_accept();
 
     // spin up nerual network, if you can.

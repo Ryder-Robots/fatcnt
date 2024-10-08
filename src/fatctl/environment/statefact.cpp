@@ -4,16 +4,11 @@ using namespace rrobot;
 namespace fs = std::filesystem;
 
 dlib::logger dlog_statef("rr_robot_state_factory");
-rr_state_c statefact::create_state(std::string path, std::string manifest) {
+rr_state_c* statefact::create_state(std::string path) {
     try {
-        const fs::path manifestp{path};
-        if (!exists(manifestp)) {
-             dlog_statef << dlib::LFATAL << path << ": is an invalid path";
-             throw std::runtime_error("invalid path");
-        }
-        fs::path filepath = manifestp / manifest; 
+        const fs::path filepath =  path; 
         if (!exists(filepath)) {
-            dlog_statef << dlib::LFATAL << manifest << ": is an invalid file";
+            dlog_statef << dlib::LFATAL << path << ": is an invalid file";
             throw std::runtime_error("invalid file");           
         }
 
@@ -21,11 +16,11 @@ rr_state_c statefact::create_state(std::string path, std::string manifest) {
         json manifest = json::parse(ifs);
         ifs.close();
 
-        rr_state_c state = rr_state_c();
-        state.set_manifest(manifest);
+        rr_state_c *state = new rr_state_c();
+        state->set_manifest(manifest);
         return state;
     } catch (const std::exception &ex) {
-        dlog_statef << dlib::LFATAL << "attempting to read " << manifest << ": fatal error occured: " << ex.what();
+        dlog_statef << dlib::LFATAL << "attempting to read " << path << ": fatal error occured: " << ex.what();
         throw ex;
     }
 }
