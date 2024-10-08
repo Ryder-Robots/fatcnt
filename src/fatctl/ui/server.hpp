@@ -61,11 +61,11 @@ class fatcnt_server {
     static json recieve(socket_env *senv, char *buffer);
 
     /**
-     * @fn send
+     * @fn sendto
      * @brief  outbound messages in its own thread.
      * @param socket connection to environment
      */
-    static void *send(void *senv);
+    static size_t sendto(socket_env *senv, json msg);
 
     /** 
      * @fn accept
