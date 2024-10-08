@@ -20,7 +20,7 @@ using json = nlohmann::json;
 namespace rrobot {
     class statefact {
     public:
-        static rr_state_c create_state(std::string path, std::string manifest);
+        static rr_state_c* create_state(std::string manifest);
     };
 }
 
