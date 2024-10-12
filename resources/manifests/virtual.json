@@ -7,21 +7,14 @@
             "description": "describes the type of drone, for example land, quad, virtual, or rov",
             "value": "virtual"
         },
-        "actions": {
-            "description": "what actions the client can send after connection",
-            "value": [
+        "actions": [
                 {
-                    "op": "RR_CMD_U1",
-                    "min": 0,
-                    "max": 1024
+                    "op": "OP_U1_MA_VCC"
                 },
                 {
-                    "op": "RR_CMD_U2",
-                    "min": 0,
-                    "max": 1024
+                    "op": "OP_U1_CMD"
                 }              
-            ]
-        },
-        "observers": {}
+        ],
+        "observers": []
     }
 }
