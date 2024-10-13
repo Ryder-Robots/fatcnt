@@ -95,8 +95,14 @@ class socket_env {
 
     ux_manifest *get_ux_manifest() { return _ux_manifest; }
 
+    pthread_mutex_t get_read_lock() {
+        return _read_lock;
+    }
+
    private:
     int _sockfd;
+
+    pthread_mutex_t _read_lock; 
 
     // an accepted socket by client.
     int _socket;

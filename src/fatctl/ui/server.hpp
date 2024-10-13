@@ -14,6 +14,7 @@
 #include <stdexcept>
 #include <dlib/logger.h>
 #include <dlib/misc_api.h>
+#include <sys/ioctl.h>
 
 #include "fatctl/environment/state.hpp"
 #include "fatctl/ui/websocket_status_code.hpp"
@@ -79,6 +80,7 @@ class fatcnt_server {
     socket_env *_sockenv = new socket_env();
 
     static void *accept_conn(void *senv);
+    static void *recieve_actions(void *in_senv);
 };
 }  // namespace rrobot
 

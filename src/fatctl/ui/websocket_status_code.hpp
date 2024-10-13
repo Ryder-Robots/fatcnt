@@ -37,4 +37,13 @@ namespace rrobot {
 
     // Occurs when we are unable to create a socket.
     #define RR_WS_UNABLE_TO_CONNECT    1012
+
+    // Occurs when actions can be created.
+    #define RR_UNABLE_TO_CREATE_ACTION_THREAD 1013
+
+    // Occurs when an invalid format is sent
+    #define RR_INVALID_FMT 1014
+
+    // Unable to create lock.
+    #define RR_MUTEX_ERR 1015
 }
