@@ -1,3 +1,7 @@
+* This code is under very active development,  and is not yet released.  Please be adviced that while there is not guarantee of correctness from all licences,  this is really really true at the moment!!!!!
+
+__YOU HAVE BEEN WARNED!!!__
+
 
 ```
 sudo apt-get install libusb-1.0-0-dev

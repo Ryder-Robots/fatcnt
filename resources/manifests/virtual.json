@@ -9,7 +9,7 @@
         },
         "actions": [
             "OP_U1_MA_VCC",
-            "OP_U1_CMD"         
+            "OP_DISCONNECT"        
         ],
         "observers": []
     }
