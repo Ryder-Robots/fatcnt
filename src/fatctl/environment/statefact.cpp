@@ -17,6 +17,7 @@ rr_state_c* statefact::create_state(std::string path) {
         ifs.close();
 
         rr_state_c *state = new rr_state_c();
+        state->init();
         state->set_manifest(manifest);
         return state;
     } catch (const std::exception &ex) {
