@@ -1,0 +1,16 @@
+{
+    "description": "manifest for use with virtial Raspberry Pi docker images",
+    "swname": "fatcnt",
+    "swversion": "0.0.1",
+    "hwmodel": {
+        "dtype": {
+            "description": "describes the type of drone, for example land, quad, virtual, or rov",
+            "value": "ldsku001"
+        },
+        "actions": [
+            "OP_U1_MA_VCC",
+            "OP_DISCONNECT"        
+        ],
+        "observers": []
+    }
+}
