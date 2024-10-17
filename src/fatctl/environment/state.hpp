@@ -42,7 +42,8 @@ class rr_state_c {
         } catch (...) {
             ex_thrown = true;
         }
-                // Release lock before throwing exception.
+        
+        // Release lock before throwing exception.
         pthread_mutex_unlock(&_event_lock);
         if (ex_thrown) {
             throw std::runtime_error("unable to add event to queue");
