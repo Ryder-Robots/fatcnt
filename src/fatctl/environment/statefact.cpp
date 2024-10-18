@@ -20,12 +20,10 @@ rr_state_c* statefact::create_state(std::string path) {
         state->init();
         state->set_manifest(manifest);
 
-        // setup the threads
-        skuld001_handler state_hdl = skuld001_handler();
-        state_hdl.init();
-
-        pthread_t pid = state->get_event_handler_thread();
-        pthread_create(&pid, NULL, &rrobot::skuld001_handler::handle_operations, state);
+        // detect the handler that needs to be used and place it here.
+        rr_handler *handler = new skuld001_handler();
+        handler->init();
+        state->set_handler(handler);
 
         return state;
     } catch (const std::exception &ex) {

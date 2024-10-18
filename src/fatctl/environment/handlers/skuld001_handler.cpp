@@ -4,6 +4,10 @@ using namespace rrobot;
 
  void skuld001_handler::init() {}
 
-void *skuld001_handler::handle_operations(void *state_in) {
-    return static_cast<void *>(0);
-}
+ int skuld001_handler::send_action(json action) {
+    return 0;
+ }
+
+ json skuld001_handler::recieve_observation() {
+    return json();
+ }

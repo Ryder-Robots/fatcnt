@@ -19,6 +19,7 @@ set(fatctl_SOURCES
     src/fatctl/environment/statefact.cpp
     src/fatctl/environment/state.cpp
     src/fatctl/environment/handlers/skuld001_handler.cpp
+    src/fatctl/nn/nn.cpp
 )
 set(CPACK_DEBIAN_PACKAGE_DEPENDS "wiringpi, wiringpi (>= 3.2)")
 FetchContent_Declare(json URL https://github.com/nlohmann/json/releases/download/${JSON_VERSION}/json.tar.xz)

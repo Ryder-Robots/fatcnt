@@ -1,14 +1,19 @@
 #ifndef SKULD001_HANDLER_HPP
 #define SKULD001_HANDLER_HPP
 
-#include "fatctl/environment/handlers/skuld001_handler.hpp"
+#include <string>
+#include "fatctl/environment/handlers/handler.hpp"
+
+using namespace std;
 
 namespace rrobot {
-    class skuld001_handler {
+    class skuld001_handler : public rr_handler {
     public:
-        void init();
+        void init() override;
 
-        static void *handle_operations(void *state_in);
+        int send_action(json action) override;
+
+        json recieve_observation() override;
     };
 }
 

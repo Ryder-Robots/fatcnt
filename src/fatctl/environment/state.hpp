@@ -9,6 +9,7 @@
 #include <stdexcept>
 #include <nlohmann/json.hpp>
 #include "fatctl/ui/websocket_status_code.hpp"
+#include "fatctl/environment/handlers/handler.hpp"
 
 using json = nlohmann::json;
 
@@ -51,13 +52,23 @@ class rr_state_c {
      */
     void init();
 
-    pthread_t get_event_handler_thread() {return _event_handler_t;}
+    void set_handler(rr_handler *handler) {
+        _handler = handler;
+    }
+
+    rr_handler *get_handler() {
+        return _handler;
+    }
+
+    bool events_empty() {
+        return _event_queue.empty();
+    }
 
    private:
     json _manifest = json();
     std::queue<std::string> _event_queue;
     pthread_mutex_t _event_lock;
-    pthread_t _event_handler_t;
+    rr_handler *_handler;
 };
 }  // namespace rrobot
 
