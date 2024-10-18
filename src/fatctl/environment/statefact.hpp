@@ -11,6 +11,8 @@
 #include <nlohmann/json.hpp>
 
 #include "fatctl/environment/state.hpp"
+#include "fatctl/environment/handlers/handler.hpp"
+#include "fatctl/environment/handlers/skuld001_handler.hpp"
 
 using json = nlohmann::json;
 

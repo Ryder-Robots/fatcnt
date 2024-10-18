@@ -63,6 +63,7 @@ void *fatcnt_server::recieve_actions(void *in_senv) {
                     try {
                         json action = recieve(senv, buffer);
                         dlog_ui << dlib::LDEBUG << "received action: adding to queue";
+                        senv->get_state()->put_event(action);
                     } catch (json::parse_error& ex) {
                         dlog_ui << dlib::LERROR << "recieved exception, going to handle it.";
                     }

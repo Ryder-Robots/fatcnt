@@ -41,9 +41,12 @@ int main(int argc, char *argv[]) {
     pthread_t ptid_fs = fs.rr_accept();
 
     // spin up nerual network, if you can.
+    nn *cnn = new nn();
+    pthread_t pid_hdl =  cnn->init(rr_state);
 
     // keep running until we are told to shutdown.
     pthread_join(ptid_fs, NULL);
+    pthread_join(pid_hdl, NULL);
     fs.dispose();
 
     return 0;

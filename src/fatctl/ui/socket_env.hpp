@@ -63,22 +63,6 @@ class socket_env {
     rr_state_c *get_state() { return _state; }
 
     /**
-     * @fn put_send_event
-     * @param JSON event to send.
-     */
-    /*
-     * at this stage plave event on a  buffer so it can be used later.
-     */
-    void put_event(json *event) { _event = event; }
-
-    /**
-     * @fn get_event
-     * @brief return last event from event queue
-     * @return last event as JSON
-     */
-    json *get_event() { return _event; }
-
-    /**
      * @fn set_is_exit
      * @brief set exit status to true.
      */
@@ -108,7 +92,6 @@ class socket_env {
     int _socket;
     struct sockaddr_in *_servaddr;
     rr_state_c *_state;
-    json *_event;
     bool _is_exit = false;
     ux_manifest *_ux_manifest;
 };

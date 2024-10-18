@@ -17,7 +17,14 @@ rr_state_c* statefact::create_state(std::string path) {
         ifs.close();
 
         rr_state_c *state = new rr_state_c();
+        state->init();
         state->set_manifest(manifest);
+
+        // detect the handler that needs to be used and place it here.
+        rr_handler *handler = new skuld001_handler();
+        handler->init();
+        state->set_handler(handler);
+
         return state;
     } catch (const std::exception &ex) {
         dlog_statef << dlib::LFATAL << "attempting to read " << path << ": fatal error occured: " << ex.what();
