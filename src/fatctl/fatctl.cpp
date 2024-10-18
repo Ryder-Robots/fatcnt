@@ -39,11 +39,13 @@ int main(int argc, char *argv[]) {
     // get ready to recieve connections
     dlog_main << dlib::LINFO << "waiting to accept connections on port: " << port;
     pthread_t ptid_fs = fs.rr_accept();
+    pthread_t pid_hdl = rr_state->get_event_handler_thread();
 
     // spin up nerual network, if you can.
 
     // keep running until we are told to shutdown.
     pthread_join(ptid_fs, NULL);
+    pthread_join(pid_hdl, NULL);
     fs.dispose();
 
     return 0;

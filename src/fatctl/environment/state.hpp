@@ -22,9 +22,12 @@ class rr_state_c {
     /**
      * get current manifest
      */
-    virtual json get_manifest() { return _manifest; }
+    json get_manifest();
 
-    virtual void set_manifest(json manifest) { _manifest = manifest; }
+    /**
+     * set manifest file
+     */
+    void set_manifest(json manifest);
 
     /**
      * @fn put_send_event
@@ -33,64 +36,28 @@ class rr_state_c {
     /*
      * at this stage plave event on a  buffer so it can be used later.
      */
-    void put_event(json event) { 
-        bool ex_thrown = false;
-        try {
-            std::string msg = event.dump();
-            pthread_mutex_lock(&_event_lock);
-            _event_queue.push(msg);
-        } catch (...) {
-            ex_thrown = true;
-        }
-        
-        // Release lock before throwing exception.
-        pthread_mutex_unlock(&_event_lock);
-        if (ex_thrown) {
-            throw std::runtime_error("unable to add event to queue");
-        }
-    }
+    void put_event(json event);
 
     /**
      * @fn get_event
      * @brief return last event from event queue
      * @return last event as JSON
      */
-    json get_event() {
-        bool ex_thrown = false;
-        json res = json();
-        try {
-            pthread_mutex_lock(&_event_lock);
-            if (!_event_queue.empty()) {
-                std::string front = _event_queue.front();
-                _event_queue.pop();
-                res = json::parse(front);
-            }
-        } catch(...) {
-            ex_thrown = true;
-        }
-
-        // Release lock before throwing exception.
-        pthread_mutex_unlock(&_event_lock);
-        if (ex_thrown) {
-            throw std::runtime_error("unable to retrieve event");
-        }
-        return res; 
-    }
+    json get_event();
 
     /**
      * @fn init
      * @brief performs any initilization tasks, must be called before using class.
      */
-    void init() {
-        if (pthread_mutex_init(&_event_lock, NULL) != 0) {
-            throw RR_MUTEX_ERR;
-        }
-    }
+    void init();
+
+    pthread_t get_event_handler_thread() {return _event_handler_t;}
 
    private:
     json _manifest = json();
     std::queue<std::string> _event_queue;
-    pthread_mutex_t _event_lock; 
+    pthread_mutex_t _event_lock;
+    pthread_t _event_handler_t;
 };
 }  // namespace rrobot
 

@@ -19,6 +19,14 @@ rr_state_c* statefact::create_state(std::string path) {
         rr_state_c *state = new rr_state_c();
         state->init();
         state->set_manifest(manifest);
+
+        // setup the threads
+        skuld001_handler state_hdl = skuld001_handler();
+        state_hdl.init();
+
+        pthread_t pid = state->get_event_handler_thread();
+        pthread_create(&pid, NULL, &rrobot::skuld001_handler::handle_operations, state);
+
         return state;
     } catch (const std::exception &ex) {
         dlog_statef << dlib::LFATAL << "attempting to read " << path << ": fatal error occured: " << ex.what();
