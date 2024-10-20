@@ -1,0 +1,369 @@
+{
+    "action": {
+        "op": "OP_U1_MA_VCC"
+    },
+    "payload": {
+        "ea": 0.058839686,
+        "eb": 0.058839686,
+        "in": "EN_BACKWARD"
+    }
+}
+
+{
+    "action": {
+        "op": "OP_U1_MA_VCC"
+    },
+    "payload": {
+        "ea": 0.043153174,
+        "eb": 0.043153174,
+        "in": "EN_BACKWARD"
+    }
+}
+
+{
+    "action": {
+        "op": "OP_U1_MA_VCC"
+    },
+    "payload": {
+        "ea": 0.05099643,
+        "eb": 0.05099643,
+        "in": "EN_BACKWARD"
+    }
+}
+
+{
+    "action": {
+        "op": "OP_U1_MA_VCC"
+    },
+    "payload": {
+        "ea": 0.043153174,
+        "eb": 0.043153174,
+        "in": "EN_BACKWARD"
+    }
+}
+
+{
+    "action": {
+        "op": "OP_U1_MA_VCC"
+    },
+    "payload": {
+        "ea": 0.027466659,
+        "eb": 0.027466659,
+        "in": "EN_BACKWARD"
+    }
+}{
+    "action": {
+        "op": "OP_U1_MA_VCC"
+    },
+    "payload": {
+        "ea": 0.043153174,
+        "eb": 0.043153174,
+        "in": "EN_BACKWARD"
+    }
+}{
+    "action": {
+        "op": "OP_U1_MA_VCC"
+    },
+    "payload": {
+        "ea": 0.058839686,
+        "eb": 0.058839686,
+        "in": "EN_BACKWARD"
+    }
+}{
+    "action": {
+        "op": "OP_U1_MA_VCC"
+    },
+    "payload": {
+        "ea": 0.043153174,
+        "eb": 0.043153174,
+        "in": "EN_BACKWARD"
+    }
+}{
+    "action": {
+        "op": "OP_U1_MA_VCC"
+    },
+    "payload": {
+        "ea": 0.035309914,
+        "eb": 0.035309914,
+        "in": "EN_BACKWARD"
+    }
+}{
+    "action": {
+        "op": "OP_U1_MA_VCC"
+    },
+    "payload": {
+        "ea": 0.043153174,
+        "eb": 0.043153174,
+        "in": "EN_BACKWARD"
+    }
+}{
+    "action": {
+        "op": "OP_U1_MA_VCC"
+    },
+    "payload": {
+        "ea": 0.05099643,
+        "eb": 0.05099643,
+        "in": "EN_BACKWARD"
+    }
+}{
+    "action": {
+        "op": "OP_U1_MA_VCC"
+    },
+    "payload": {
+        "ea": 0.043153174,
+        "eb": 0.043153174,
+        "in": "EN_BACKWARD"
+    }
+}{
+    "action": {
+        "op": "OP_U1_MA_VCC"
+    },
+    "payload": {
+        "ea": 0.058839686,
+        "eb": 0.058839686,
+        "in": "EN_BACKWARD"
+    }
+}{
+    "action": {
+        "op": "OP_U1_MA_VCC"
+    },
+    "payload": {
+        "ea": 0.043153174,
+        "eb": 0.043153174,
+        "in": "EN_BACKWARD"
+    }
+}{
+    "action": {
+        "op": "OP_U1_MA_VCC"
+    },
+    "payload": {
+        "ea": 0.027466659,
+        "eb": 0.027466659,
+        "in": "EN_BACKWARD"
+    }
+}{
+    "action": {
+        "op": "OP_U1_MA_VCC"
+    },
+    "payload": {
+        "ea": 0.043153174,
+        "eb": 0.043153174,
+        "in": "EN_BACKWARD"
+    }
+}{
+    "action": {
+        "op": "OP_U1_MA_VCC"
+    },
+    "payload": {
+        "ea": 0.035309914,
+        "eb": 0.035309914,
+        "in": "EN_BACKWARD"
+    }
+}{
+    "action": {
+        "op": "OP_U1_MA_VCC"
+    },
+    "payload": {
+        "ea": 0.043153174,
+        "eb": 0.043153174,
+        "in": "EN_BACKWARD"
+    }
+}{
+    "action": {
+        "op": "OP_U1_MA_VCC"
+    },
+    "payload": {
+        "ea": 0.058839686,
+        "eb": 0.058839686,
+        "in": "EN_BACKWARD"
+    }
+}{
+    "action": {
+        "op": "OP_U1_MA_VCC"
+    },
+    "payload": {
+        "ea": 0.043153174,
+        "eb": 0.043153174,
+        "in": "EN_BACKWARD"
+    }
+}{
+    "action": {
+        "op": "OP_U1_MA_VCC"
+    },
+    "payload": {
+        "ea": 0.05099643,
+        "eb": 0.05099643,
+        "in": "EN_BACKWARD"
+    }
+}{
+    "action": {
+        "op": "OP_U1_MA_VCC"
+    },
+    "payload": {
+        "ea": 0.043153174,
+        "eb": 0.043153174,
+        "in": "EN_BACKWARD"
+    }
+}{
+    "action": {
+        "op": "OP_U1_MA_VCC"
+    },
+    "payload": {
+        "ea": 0.058839686,
+        "eb": 0.058839686,
+        "in": "EN_BACKWARD"
+    }
+}{
+    "action": {
+        "op": "OP_U1_MA_VCC"
+    },
+    "payload": {
+        "ea": 0.043153174,
+        "eb": 0.043153174,
+        "in": "EN_BACKWARD"
+    }
+}{
+    "action": {
+        "op": "OP_U1_MA_VCC"
+    },
+    "payload": {
+        "ea": 0.027466659,
+        "eb": 0.027466659,
+        "in": "EN_BACKWARD"
+    }
+}{
+    "action": {
+        "op": "OP_U1_MA_VCC"
+    },
+    "payload": {
+        "ea": 0.043153174,
+        "eb": 0.043153174,
+        "in": "EN_BACKWARD"
+    }
+}{
+    "action": {
+        "op": "OP_U1_MA_VCC"
+    },
+    "payload": {
+        "ea": 0.035309914,
+        "eb": 0.035309914,
+        "in": "EN_BACKWARD"
+    }
+}{
+    "action": {
+        "op": "OP_U1_MA_VCC"
+    },
+    "payload": {
+        "ea": 0.043153174,
+        "eb": 0.043153174,
+        "in": "EN_BACKWARD"
+    }
+}{
+    "action": {
+        "op": "OP_U1_MA_VCC"
+    },
+    "payload": {
+        "ea": 0.035309914,
+        "eb": 0.035309914,
+        "in": "EN_BACKWARD"
+    }
+}{
+    "action": {
+        "op": "OP_U1_MA_VCC"
+    },
+    "payload": {
+        "ea": 0.043153174,
+        "eb": 0.043153174,
+        "in": "EN_BACKWARD"
+    }
+}{
+    "action": {
+        "op": "OP_U1_MA_VCC"
+    },
+    "payload": {
+        "ea": 0.027466659,
+        "eb": 0.027466659,
+        "in": "EN_BACKWARD"
+    }
+}{
+    "action": {
+        "op": "OP_U1_MA_VCC"
+    },
+    "payload": {
+        "ea": 0.043153174,
+        "eb": 0.043153174,
+        "in": "EN_BACKWARD"
+    }
+}{
+    "action": {
+        "op": "OP_U1_MA_VCC"
+    },
+    "payload": {
+        "ea": 0.027466659,
+        "eb": 0.027466659,
+        "in": "EN_BACKWARD"
+    }
+}{
+    "action": {
+        "op": "OP_U1_MA_VCC"
+    },
+    "payload": {
+        "ea": 0.043153174,
+        "eb": 0.043153174,
+        "in": "EN_BACKWARD"
+    }
+}{
+    "action": {
+        "op": "OP_U1_MA_VCC"
+    },
+    "payload": {
+        "ea": 0.05099643,
+        "eb": 0.05099643,
+        "in": "EN_BACKWARD"
+    }
+}{
+    "action": {
+        "op": "OP_U1_MA_VCC"
+    },
+    "payload": {
+        "ea": 0.043153174,
+        "eb": 0.043153174,
+        "in": "EN_BACKWARD"
+    }
+}{
+    "action": {
+        "op": "OP_U1_MA_VCC"
+    },
+    "payload": {
+        "ea": 0.027466659,
+        "eb": 0.027466659,
+        "in": "EN_BACKWARD"
+    }
+}{
+    "action": {
+        "op": "OP_U1_MA_VCC"
+    },
+    "payload": {
+        "ea": 0.043153174,
+        "eb": 0.043153174,
+        "in": "EN_BACKWARD"
+    }
+}{
+    "action": {
+        "op": "OP_U1_MA_VCC"
+    },
+    "payload": {
+        "ea": 0.058839686,
+        "eb": 0.058839686,
+        "in": "EN_BACKWARD"
+    }
+}{
+    "action": {
+        "op": "OP_U1_MA_VCC"
+    },
+    "payload": {
+        "ea": 0.043153174,
+        "eb": 0.043153174,
+        "in": "EN_BACKWARD"
+    }
+}
