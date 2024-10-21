@@ -14,7 +14,6 @@ using namespace std;
 using namespace rrobot;
 using json = nlohmann::json;
 
-
 /**
  * Receives messages from the UDP/IP socket actions.
  *
@@ -24,28 +23,39 @@ dlib::logger dlog_ui("rr_robot_ui");
 /**
  * read ingress and encode it.
  */
-json fatcnt_server::recieve(socket_env *senv, char *buffer) {
+vector<json> fatcnt_server::recieve(socket_env *senv, char *buffer) {
     memset(buffer, 0, BUFSIZ);
     size_t n = recv(senv->get_socket(), buffer, BUFSIZ * sizeof(char), 0);
     string s = buffer;
+    const char delimiter = 0x1E;
+    vector<json> tokens;
+    size_t pos = 0;
 
-    // put the request into a queue so that it can be processed by something
-    // else.
-    if (!json::accept(s)) {
-        throw RR_INVALID_FMT;
+    // multiple actions can be recieved at any time. Therefore separate this by using end of record
+    // character, this is something that needs to be implemented on the UI as well.
+    while ((pos = s.find(delimiter)) != string::npos) {
+        string token = s.substr(0, pos);
+        
+        // put the request into a queue so that it can be processed by something
+        // else.
+        if (!json::accept(token)) {
+            throw RR_INVALID_FMT;
+        }
+        json j = json::parse(token);
+        tokens.push_back(j);
+
+        s.erase(0, pos + sizeof(char));
     }
-    json j = json::parse(s);
 
-    return j;
+    return tokens;
 }
 
 // encode each action recieved from UI to something that can be used in
 // wiringPi.
 //
-// this thread will need to a pthread_cond_t to alert processing to do something with the 
+// this thread will need to a pthread_cond_t to alert processing to do something with the
 // request.
 void *fatcnt_server::recieve_actions(void *in_senv) {
-    
     // Control the flow of inbound requests.
     socket_env *senv = reinterpret_cast<socket_env *>(in_senv);
     pthread_mutex_t lock = senv->get_read_lock();
@@ -56,15 +66,17 @@ void *fatcnt_server::recieve_actions(void *in_senv) {
         size_t available = 0;
         int err = 0;
 
-        while(!senv->is_exit()) {
+        while (!senv->is_exit()) {
             available = 0;
             if ((err = ioctl(senv->get_socket(), FIONREAD, &available)) == 0) {
                 if (available) {
                     try {
-                        json action = recieve(senv, buffer);
-                        dlog_ui << dlib::LDEBUG << "received action: adding to queue";
-                        senv->get_state()->put_event(action);
-                    } catch (json::parse_error& ex) {
+                        vector<json> actions = recieve(senv, buffer);
+                        dlog_ui << dlib::LDEBUG << "received action(s): adding to queue";
+                        for (json action : actions) {
+                            senv->get_state()->put_event(action);
+                        }
+                    } catch (json::parse_error &ex) {
                         dlog_ui << dlib::LERROR << "recieved exception, going to handle it.";
                     }
                 }
@@ -79,7 +91,6 @@ void *fatcnt_server::recieve_actions(void *in_senv) {
 
     return static_cast<int *>(0);
 }
-
 
 /*
  * Ideally read from a queue and perform required actions.
@@ -126,7 +137,7 @@ socket_env *fatcnt_server::create(int port, rr_state_c *state) {
 
         listen(_sockfd, _max_connections);
 
-     } catch (const std::exception &ex) {
+    } catch (const std::exception &ex) {
         if (_sockfd != -1) {
             dispose();
         }
@@ -147,19 +158,19 @@ pthread_t fatcnt_server::rr_accept() {
 
 void *fatcnt_server::accept_conn(void *in) {
     socket_env *senv = static_cast<socket_env *>(in);
-    
+
     while (!senv->is_exit()) {
         try {
             int clientSocket = accept(senv->get_sockfd(), nullptr, nullptr);
             senv->set_socket(clientSocket);
             dlog_ui << dlib::LINFO << "recieved connection";
             char *buffer = static_cast<char *>(malloc(BUFSIZ * sizeof(char)));
-            
+
             struct sockaddr_in cliaddr;
             memset(&cliaddr, 0, sizeof(cliaddr));
             json manifest = recieve(senv, buffer);
             dlog_ui << dlib::LINFO << "authorization successful";
-            const std::string request = reinterpret_cast<const char*>(buffer);
+            const std::string request = reinterpret_cast<const char *>(buffer);
             ux_manifest *ui_manifest = new ux_manifest(request);
 
             // TODO: authorize here
@@ -172,18 +183,17 @@ void *fatcnt_server::accept_conn(void *in) {
             // create read and write threads, these threads will interact with the environment,
             // NN, and Renforcement Learning algoritm until program termination.
             pthread_t pt;
-            if (0 != pthread_create(&pt, NULL, &recieve_actions, senv))
-                throw RR_UNABLE_TO_CREATE_ACTION_THREAD;
-            
+            if (0 != pthread_create(&pt, NULL, &recieve_actions, senv)) throw RR_UNABLE_TO_CREATE_ACTION_THREAD;
+
         } catch (const std::exception &ex) {
             dlog_ui << dlib::LFATAL << "fatal error occured: " << ex.what();
         } catch (int e) {
-            switch(e) {
+            switch (e) {
                 case RR_WS_STATUS_CANNOT_ACCEPT:
                     dlog_ui << dlib::LFATAL << "invalid request was recieved";
             }
         } catch (...) {
-            dlog_ui << dlib::LFATAL << "unhandled exception has occured: "; 
+            dlog_ui << dlib::LFATAL << "unhandled exception has occured: ";
         }
     }
     return static_cast<void *>(0);

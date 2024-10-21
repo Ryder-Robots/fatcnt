@@ -2,6 +2,7 @@
 #define HANDLER_HPP
 
 #include <nlohmann/json.hpp>
+#include "fatctl/environment/handlers/pi_pin_layout.hpp"
 
 using namespace std;
 using json = nlohmann::json;

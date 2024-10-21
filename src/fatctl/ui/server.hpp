@@ -58,8 +58,10 @@ class fatcnt_server {
     * @fn recieve
     * @brief recieves inbound messages (in its own thread)
     * @param socket connection to environment
+    * @return returns vector containing found operations. Each operation MUST end with 
+    * 0x1E ASCII character, defined as end-of-record.
     */
-    static json recieve(socket_env *senv, char *buffer);
+    static vector<json> recieve(socket_env *senv, char *buffer);
 
     /**
      * @fn sendto
