@@ -43,15 +43,20 @@ bool skuld001_handler::validate(json operation) {
    }
    string num_check[] = {"ea", "eb", "in"};
    for (auto k : num_check) {
-      if (!payload[k].is_number()) {
+      if (!payload.contains(k)) {
+         return false;
+      } else if (!payload[k].is_number()) {
          return false;
       }
    }
+   _payload = payload;
    return true;
 }
 
 /*
  * recieve an action and do something with it. The something is send voltage to wheels.
+
+ * TODO: Want to set a mutex on this, so we do not try and execute two commands at the same time.
  */
 int skuld001_handler::send_action(json action) {
 
@@ -59,23 +64,23 @@ int skuld001_handler::send_action(json action) {
       return 1;
    }
 
-   json payload = json();
-   action["payalod"].get_to(payload);
-
    float ea, eb;
    int in1, in2, in3, in4, in;
-   ea = payload["ea"].template get<float>();
-   eb = payload["eb"].template get<float>();
-   in = payload["in"].template get<int>(); 
-   payload["in"].get_to(in);
+   ea = _payload["ea"].template get<float>();
+   eb = _payload["eb"].template get<float>();
+   in = _payload["in"].template get<int>(); 
 
    ea *= _multiplier;
    eb *= _multiplier;
 
-   in1 = in & 0b0001;
-   in2 = in & 0b0010;
-   in3 = in & 0b0100;
-   in4 = in & 0b1000;
+   if (ea > _multiplier || eb > _multiplier) {
+      return 2;
+   }
+
+   in1 = ((in & _IN1_ON) == _IN1_ON)? HIGH : LOW;
+   in2 = ((in & _IN2_ON) == _IN2_ON)? HIGH : LOW;
+   in3 = ((in & _IN3_ON) == _IN3_ON)? HIGH : LOW;
+   in4 = ((in & _IN4_ON) == _IN4_ON)? HIGH : LOW;
 
    drivewheels(in1, in2, in3, in4, ea, eb);
 
