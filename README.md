@@ -4,16 +4,32 @@ __YOU HAVE BEEN WARNED!!!__
 
 
 ```
-sudo apt-get install libusb-1.0-0-dev
 dlib
 wiringpi
 ```
 
+# Compiling
+
+```
+if [[ -z build ]]; mkdir build;fi && cmake -S . -B build && cmake --build build
+```
+
+# Related Projects
+
+https://github.com/Ryder-Robots/rr-schematic
+
+https://github.com/Ryder-Robots/rr-client
+
+https://github.com/Ryder-Robots/RrArduinoNanno33Ble
 
 # Arduino Nano Tech Details
 Bus 001 Device 003: ID 2341:805a Arduino SA Nano 33 BLE
 
 
-# Server Engine is libmicrohttpd
+# Server Custom Socket Server
 
-https://www.gnu.org/software/libmicrohttpd/manual/libmicrohttpd.html#microhttpd_002dresponse-headers
+JSON based commands sent from controller.
+
+# Ideas for Flight Controller
+
+https://github.com/iNavFlight/inav/wiki/INAV-Remote-Management%2C-Control-and-Telemetry
