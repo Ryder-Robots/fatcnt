@@ -15,9 +15,9 @@ namespace rrobot {
      */
     class Environment {
         public:
-            Environment(const HwModel hwmodel, const RrSerial rrSerial, const RrVersion rrVersion) :
+            Environment(const HwModel hwmodel, const RrSerial mc, const RrVersion rrVersion) :
                 _hwModel(hwmodel),
-                _rrSerial(rrSerial),
+                _mc(mc),
                 _version(rrVersion) {}
 
             const HwModel getHwModel() {return _hwModel;}
