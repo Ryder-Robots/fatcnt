@@ -2,8 +2,8 @@
 #define EVENT_HPP
 
 #include <stdlib.h>
-#include <fatcnt/protcols/common/MspDirection.hpp>
-#include <fatcnt/protcols/common/MspCommands.hpp>
+#include <fatcnt/protcols/common/mspdirection.hpp>
+#include <fatcnt/protcols/common/mspcommands.hpp>
 
 namespace rrobot {
 /**
@@ -11,13 +11,10 @@ namespace rrobot {
  */
 class Event {
    public:
-    Event(MspCommands command, MSDIRECTION direction, void* payload)
+    Event(MSPCOMMANDS command, MSPDIRECTION direction, void* payload)
         : _command(command), 
           _direction(_direction),
           _payload(payload) {}
-
-    ~Event() { free(_payload); }
-
 
     /**
      * @fn getPayload
@@ -30,9 +27,9 @@ class Event {
     }
 
    private:
-    const MspCommands _command;   // command
-    const MSPDIRCTION _direction; // direction of command
-    const void*       _payload;   // payload
+    const MSPCOMMANDS  _command;   // command
+    const MSPDIRECTION _direction; // direction of command
+    const void*        _payload;   // payload
 };
 }  // namespace rrobot
 

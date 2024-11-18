@@ -16,6 +16,61 @@ set(JSON_VERSION v3.11.3)
 set(fatcnt_SOURCES 
   src/fatcnt/eventprocessors/EventProcessor.cpp
 )
+configure_file(include/fatcnt/environment/version.hpp.in include/fatcnt/environment/version.hpp @ONLY)
+
+# Keys for valid multitype
+set(LOOP_CONTENT "")
+set(MULTITYPE_LIST TRI QUADP QUADX BI GIMBAL Y6 HEX6 FLYING_WING Y4 HEX6X OCTOX8 OCTOFLATP OCTOFLATX AIRPLANE HELI_120 HELI_90 VTAIL4 HEX6H SINGLECOPTER DUALCOPTER LANDDRONE_2M LANDDRONE_4W)
+foreach(item ${MULTITYPE_LIST})
+    string(APPEND LOOP_CONTENT "${item},\n")
+endforeach()
+
+foreach(item ${MULTITYPE_LIST})
+  string(APPEND VALID_MT "\{\"${item}\"\,${item}\},")
+endforeach()
+
+set(GENERATED_TYPE ${LOOP_CONTENT})
+set(VALID_MT ${VALID_MT})
+configure_file(include/fatcnt/protocols/common/multitype.hpp.in include/fatcnt/protocols/common/multitype.hpp  @ONLY)
+
+
+set(BAUD_RATES BAUD_9600 BAUD_19200 BAUD_38400 BAUD_57600 BAUD_115200 BAUD_DEFAULT)
+set(LOOP_CONTENT "")
+foreach(item ${BAUD_RATES})
+  string(APPEND LOOP_CONTENT "\{\"${item}\"\, LibSerial::BaudRate::${item}\},")
+endforeach()
+set(VALID_BAUDRATES ${LOOP_CONTENT})
+
+
+set(VALID_CHAR_SZ CHAR_SIZE_5 CHAR_SIZE_6 CHAR_SIZE_7 CHAR_SIZE_8 CHAR_SIZE_DEFAULT)
+set(LOOP_CONTENT "")
+foreach(item ${VALID_CHAR_SZ})
+  string(APPEND LOOP_CONTENT "\{\"${item}\"\, LibSerial::CharacterSize::${item}\},")
+endforeach()
+set(VALID_CHAR_SZ ${LOOP_CONTENT})
+
+set(VALID_FLOW_CNT FLOW_CONTROL_HARDWARE FLOW_CONTROL_SOFTWARE FLOW_CONTROL_NONE)
+set(LOOP_CONTENT "")
+foreach(item ${VALID_FLOW_CNT})
+  string(APPEND LOOP_CONTENT "\{\"${item}\"\, LibSerial::FlowControl::${item}\},")
+endforeach()
+set(VALID_FLOW_CNT ${LOOP_CONTENT})
+
+set(VALID_PARITY PARITY_EVEN PARITY_ODD PARITY_NONE)
+set(LOOP_CONTENT "")
+foreach(item ${VALID_PARITY})
+  string(APPEND LOOP_CONTENT "\{\"${item}\"\, LibSerial::Parity::${item}\},")
+endforeach()
+set(VALID_PARITY ${LOOP_CONTENT})
+
+set(VALID_STOPBIT STOP_BITS_1 STOP_BITS_2 STOP_BITS_DEFAULT)
+set(LOOP_CONTENT "")
+foreach(item ${VALID_STOPBIT})
+  string(APPEND LOOP_CONTENT "\{\"${item}\"\, LibSerial::StopBits::${item}\},")
+endforeach()
+set(VALID_STOPBIT ${LOOP_CONTENT})
+
+configure_file(include/fatcnt/environment/rrserial.hpp.in include/fatcnt/environment/rrserial.hpp @ONLY)
 
 FetchContent_Declare(json URL https://github.com/nlohmann/json/releases/download/${JSON_VERSION}/json.tar.xz)
 FetchContent_MakeAvailable(json)
@@ -23,7 +78,7 @@ list(APPEND CMAKE_MODULE_PATH ${nlohmann_json})
 
 pkg_check_modules(LIBSERIAL REQUIRED libserial)
 
-include_directories(${json_SOURCE_DIR}/include include src ${LIBSERIAL_INCLUDE_DIRS})
+include_directories(${json_SOURCE_DIR}/include include src ${LIBSERIAL_INCLUDE_DIRS} ${PROJECT_BINARY_DIR}/include)
 pkg_search_module(DLIB REQUIRED dlib-1)
 
 find_package(Boost 1.74.0 COMPONENTS program_options REQUIRED )

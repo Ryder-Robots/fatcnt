@@ -10,7 +10,7 @@ namespace rrobot {
  * http://www.multiwii.com/wiki/index.php?title=Multiwii_Serial_Protocol
  */
 
-enum MspCommands : uint8_t {
+enum MSPCOMMANDS : uint8_t {
 
     MSP_NONE = 0,
 

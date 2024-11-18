@@ -1,0 +1,29 @@
+#ifndef RRSERIAL_HPP
+#define RRSERIAL_HPP
+
+#include <string>
+#include <unordered_map>
+#include <libserial/SerialPort.h>
+
+using namespace std;
+
+namespace rrobot {
+    class RrSerial {
+        public:
+
+        private:
+            const string port;
+            const LibSerial::BaudRate baud;
+            const LibSerial::CharacterSize charsize;
+            const LibSerial::FlowControl flow_control;
+            const LibSerial::StopBits stop_bits;
+    };
+
+    const unordered_map<string, LibSerial::BaudRate> VALID_BAUDRATES = {@VALID_BAUDRATES@};
+    const unordered_map<string, LibSerial::CharacterSize> VALID_CHAR_SZ = {@VALID_CHAR_SZ@};
+    const unordered_map<string, LibSerial::FlowControl> VALID_FLOW_CNT = {@VALID_FLOW_CNT@};
+    const unordered_map<string, LibSerial::Parity> VALID_PARITY = {@VALID_PARITY@};
+    const unordered_map<string, LibSerial::StopBits> VALID_STOPBIT = {@VALID_STOPBIT@};
+}
+
+#endif // RRSERIAL_HPP
