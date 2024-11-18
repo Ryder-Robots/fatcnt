@@ -15,7 +15,6 @@ set(JSON_VERSION v3.11.3)
 
 set(fatcnt_SOURCES
   src/fatcnt/environment/environmentProcessor.cpp
-  src/fatcnt/eventprocessors/EventProcessor.cpp
 )
 configure_file(include/fatcnt/environment/version.hpp.in include/fatcnt/environment/version.hpp @ONLY)
 
@@ -89,9 +88,24 @@ endforeach()
 set(GENERATED_INCLUDES ${INCLUDE_CONTENT})
 configure_file(include/fatcnt/exceptions/exceptions.hpp.in include/fatcnt/exceptions/exceptions.hpp @ONLY)
 
+set(fatcnt_INCLUDE 
+  include/fatcnt/environment/environment.hpp
+  include/fatcnt/environment/hwmodel.hpp
+  include/fatcnt/events/Event.hpp
+  include/fatcnt/events/MspAuthKey.hpp
+  include/fatcnt/protocols/common/mspcommands.hpp
+  include/fatcnt/protocols/common/mspdirection.hpp
+  include/fatcnt/protocols/common/mspversion.hpp
+)
+foreach(item ${fatcnt_INCLUDE})
+  configure_file("${item}.in" ${item} @ONLY)
+endforeach()
+
+
+
 pkg_check_modules(LIBSERIAL REQUIRED libserial)
 
-include_directories(${json_SOURCE_DIR}/include include src ${LIBSERIAL_INCLUDE_DIRS} ${PROJECT_BINARY_DIR}/include)
+include_directories(${json_SOURCE_DIR}/include src ${LIBSERIAL_INCLUDE_DIRS} ${PROJECT_BINARY_DIR}/include)
 pkg_search_module(DLIB REQUIRED dlib-1)
 
 find_package(Boost 1.74.0 COMPONENTS program_options REQUIRED )

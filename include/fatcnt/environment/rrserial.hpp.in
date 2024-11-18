@@ -40,11 +40,11 @@ namespace rrobot {
             const LibSerial::Parity _parity;
     };
 
-    const unordered_map<string, LibSerial::BaudRate> VALID_BAUDRATES = {@VALID_BAUDRATES@};
-    const unordered_map<string, LibSerial::CharacterSize> VALID_CHAR_SZ = {@VALID_CHAR_SZ@};
-    const unordered_map<string, LibSerial::FlowControl> VALID_FLOW_CNT = {@VALID_FLOW_CNT@};
-    const unordered_map<string, LibSerial::Parity> VALID_PARITY = {@VALID_PARITY@};
-    const unordered_map<string, LibSerial::StopBits> VALID_STOPBIT = {@VALID_STOPBIT@};
+    #define VALID_BAUDRATES_INIT const unordered_map<string, LibSerial::BaudRate> VALID_BAUDRATES = {@VALID_BAUDRATES@}
+    #define VALID_CHAR_SZ_INIT   const  unordered_map<string, LibSerial::CharacterSize> VALID_CHAR_SZ = {@VALID_CHAR_SZ@}
+    #define VALID_FLOW_CNT_INIT  const unordered_map<string, LibSerial::FlowControl> VALID_FLOW_CNT = {@VALID_FLOW_CNT@}
+    #define VALID_PARITY_INIT    const unordered_map<string, LibSerial::Parity> VALID_PARITY = {@VALID_PARITY@}
+    #define VALID_STOPBIT_INIT   const  unordered_map<string, LibSerial::StopBits> VALID_STOPBIT = {@VALID_STOPBIT@}
 }
 
 #endif // RRSERIAL_HPP
