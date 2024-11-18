@@ -9,11 +9,12 @@ set(CPACK_PACKAGE_NAME "fatcnt")
 set(CPACK_PACKAGE_VERSION_MAJOR "0")
 set(CPACK_PACKAGE_VERSION_MINOR "0")
 set(CPACK_PACKAGE_VERSION_PATCH "1")
-set(CPACK_DEBIAN_PACKAGE_DEPENDS "libserial, libserial-dev")
+set(CPACK_DEBIAN_PACKAGE_DEPENDS "libserial")
 set(VERSION ${CPACK_PACKAGE_VERSION_MAJOR}.${CPACK_PACKAGE_VERSION_MINOR}.${CPACK_PACKAGE_VERSION_PATCH})
 set(JSON_VERSION v3.11.3)
 
-set(fatcnt_SOURCES 
+set(fatcnt_SOURCES
+  src/fatcnt/environment/environmentProcessor.cpp
   src/fatcnt/eventprocessors/EventProcessor.cpp
 )
 configure_file(include/fatcnt/environment/version.hpp.in include/fatcnt/environment/version.hpp @ONLY)

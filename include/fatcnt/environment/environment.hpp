@@ -6,6 +6,13 @@
 #include <fatcnt/environment/version.hpp>
 
 namespace rrobot {
+
+    /**
+     * @class Environment
+     * @brief
+     * Returns constants that are set either through environment variables, program manifest, or via command line options.
+     * These values should not change during the duration of the program.
+     */
     class Environment {
         public:
             Environment(const HwModel hwmodel, const RrSerial rrSerial, const RrVersion rrVersion) :
