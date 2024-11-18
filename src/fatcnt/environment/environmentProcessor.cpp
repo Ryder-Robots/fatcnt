@@ -1,22 +1,11 @@
 #include "environmentProcessor.hpp"
 
 using namespace rrobot;
-namespace fs = std::filesystem;
 
 dlib::logger dlog_envf("rr_environment_lg");
 
-Environment EnviromentProcessor::createEnvironment(string fin, po::variables_map vm) {
+Environment EnviromentProcessor::createEnvironment(json manifest) {
     dlog_envf.set_level(dlib::LALL);
-
-    const fs::path filepath = fin;
-    if (!exists(filepath)) {
-        dlog_envf << dlib::LFATAL << fin << ": is an invalid file";
-        throw InvalidManifestException("invalid file " + fin);
-    }
-
-    std::ifstream ifs(filepath);
-    json manifest = json::parse(ifs);
-    ifs.close();
 
     HwModel hwModel = createHwModel(manifest);
     RrSerial mc = createMc(manifest);

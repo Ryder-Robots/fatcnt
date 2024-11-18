@@ -1,7 +1,6 @@
 {
     "description": "manifest for use with Land Drone verion 2",
     "hwmodel": {
-        "version": 1,
         "multitype":"LANDDRONE_4W",
         "mspversion": "VIRTUAL",
         "capability": 0

@@ -4,12 +4,6 @@
 #include <boost/program_options.hpp>
 #include <nlohmann/json.hpp>
 #include <dlib/logger.h>
-
-#include <filesystem>
-#include <fstream>
-#include <iostream>
-#include <stdint.h>
-
 #include <fatcnt/environment/environment.hpp>
 #include <fatcnt/exceptions/exceptions.hpp>
 
@@ -28,7 +22,7 @@ namespace rrobot {
              *     - environment variables override manifest settings
              *     - command line options override environment variables
              */
-            static Environment createEnvironment(string manifest, po::variables_map vm);
+            static Environment createEnvironment(json manifest);
         
         private:
             static HwModel createHwModel(json manifest);

@@ -20,9 +20,9 @@ namespace rrobot {
                 _mc(mc),
                 _version(rrVersion) {}
 
-            const HwModel getHwModel() {return _hwModel;}
-            const RrSerial getMc() {return _mc;}
-            const RrVersion getVersion() { return _version;}
+            HwModel getHwModel() {return _hwModel;}
+            RrSerial getMc() {return _mc;}
+            RrVersion getVersion() { return _version;}
             
         private:
             const HwModel   _hwModel;
