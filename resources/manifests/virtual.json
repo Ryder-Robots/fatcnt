@@ -1,0 +1,16 @@
+{
+    "description": "manifest for use with Land Drone verion 2",
+    "hwmodel": {
+        "multitype":"LANDDRONE_4W",
+        "mspversion": "VIRTUAL",
+        "capability": 0
+    },
+    "mc": {
+        "port" : "/dev/ttyAMA0",
+        "baud": "BAUD_9600",
+        "charsize": "CHAR_SIZE_8",
+        "flow_control": "FLOW_CONTROL_NONE",
+        "stop_bits": "STOP_BITS_1",
+        "parity": "PARITY_NONE"
+    }
+}

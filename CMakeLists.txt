@@ -77,12 +77,22 @@ FetchContent_Declare(json URL https://github.com/nlohmann/json/releases/download
 FetchContent_MakeAvailable(json)
 list(APPEND CMAKE_MODULE_PATH ${nlohmann_json})
 
+set(EXCEPTIONS InvalidManifestException MissingRequiredAttributeException)
+set(INCLUDE_CONTENT "")
+foreach(item ${EXCEPTIONS})
+  set(EXCEPTION_NAME ${item})
+  set(OUTPUT_NAME "include/fatcnt/exceptions/${EXCEPTION_NAME}.hpp")
+  string(TOUPPER "${EXCEPTION_NAME}_HPP" EXCEPTION_HEADING)
+  configure_file(include/fatcnt/exceptions/exception.hpp.in ${OUTPUT_NAME} @ONLY)
+  string(APPEND INCLUDE_CONTENT "\#include <fatcnt/exceptions/${EXCEPTION_NAME}.hpp>\n")
+endforeach()
+set(GENERATED_INCLUDES ${INCLUDE_CONTENT})
+configure_file(include/fatcnt/exceptions/exceptions.hpp.in include/fatcnt/exceptions/exceptions.hpp @ONLY)
+
 pkg_check_modules(LIBSERIAL REQUIRED libserial)
 
 include_directories(${json_SOURCE_DIR}/include include src ${LIBSERIAL_INCLUDE_DIRS} ${PROJECT_BINARY_DIR}/include)
 pkg_search_module(DLIB REQUIRED dlib-1)
-
-find_package(Boost 1.74.0 COMPONENTS program_options REQUIRED )
 
 find_package(Boost 1.74.0 COMPONENTS program_options REQUIRED )
 
@@ -107,3 +117,8 @@ enable_testing()
 include(GoogleTest)
 include(Dart)
 
+add_executable(test_environmentprocessor test/test_environmentprocessor.cpp)
+target_link_libraries(test_environmentprocessor GTest::gtest_main)
+target_link_libraries(test_environmentprocessor ctl)
+target_link_libraries(test_environmentprocessor dlib)
+gtest_discover_tests(test_environmentprocessor  WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/resources")

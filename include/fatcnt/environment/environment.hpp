@@ -15,14 +15,14 @@ namespace rrobot {
      */
     class Environment {
         public:
-            Environment(const HwModel hwmodel, const RrSerial rrSerial, const RrVersion rrVersion) :
+            Environment(const HwModel hwmodel, const RrSerial mc, const RrVersion rrVersion) :
                 _hwModel(hwmodel),
-                _rrSerial(rrSerial),
+                _mc(mc),
                 _version(rrVersion) {}
 
-            const HwModel getHwModel() {return _hwModel;}
-            const RrSerial getMc() {return _mc;}
-            const RrVersion getVersion() { return _version;}
+            HwModel getHwModel() {return _hwModel;}
+            RrSerial getMc() {return _mc;}
+            RrVersion getVersion() { return _version;}
             
         private:
             const HwModel   _hwModel;

@@ -2,8 +2,8 @@
 #define HWMODEL_HPP
 
 #include <stdint.h>
-#include <fatcnt/protcols/common/mspversion.hpp>
-#include <fatcnt/protcols/common/multitype.hpp>
+#include <fatcnt/protocols/common/mspversion.hpp>
+#include <fatcnt/protocols/common/multitype.hpp>
 
 namespace rrobot {
     /**
@@ -30,4 +30,4 @@ namespace rrobot {
     };
 }
 
-#endif HWMODEL_HPP
+#endif // HWMODEL_HPP
