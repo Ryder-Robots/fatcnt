@@ -9,7 +9,7 @@ using namespace std;
 namespace rrobot {
     enum MULTITYPE_T { @GENERATED_TYPE@ };
 
-    unordered_map<string, MULTITYPE_T> VALID_MULTITYPE_KEYS = {@VALID_MT@};
+    #define VALID_MULTITYPE_KEYS_INIT  unordered_map<string, MULTITYPE_T> VALID_MULTITYPE_KEYS = {@VALID_MT@}
 }  // namespace rrobot
 
 #endif  // MULTITYPE_T_HPP

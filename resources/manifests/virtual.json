@@ -12,5 +12,8 @@
         "flow_control": "FLOW_CONTROL_NONE",
         "stop_bits": "STOP_BITS_1",
         "parity": "PARITY_NONE"
+    },
+    "server":{
+        "port": 8081
     }
 }

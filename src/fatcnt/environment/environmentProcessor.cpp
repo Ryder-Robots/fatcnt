@@ -25,6 +25,9 @@ HwModel EnviromentProcessor::createHwModel(json manifest) {
         }
     }
 
+    VALID_MULTITYPE_KEYS_INIT;
+    VALID_MSP_VERSION_KEYS_INIT;
+
     MULTITYPE_T multiType = VALID_MULTITYPE_KEYS.at(manifest["hwmodel"]["multitype"]);
     MSP_VERSION mspVersion = VALID_MSP_VERSION_KEYS.at(manifest["hwmodel"]["mspversion"]);
     uint32_t capability = static_cast<uint32_t>(manifest["hwmodel"]["capability"]);
@@ -43,6 +46,12 @@ RrSerial EnviromentProcessor::createMc(json manifest) {
             throw MissingRequiredAttributeException("missing required attribute " + key + " for mc");
         }
     }
+
+    VALID_BAUDRATES_INIT;
+    VALID_CHAR_SZ_INIT;
+    VALID_FLOW_CNT_INIT;
+    VALID_STOPBIT_INIT;
+    VALID_PARITY_INIT;
 
     LibSerial::BaudRate baudRate = VALID_BAUDRATES.at(manifest["mc"]["baud"]);
     LibSerial::CharacterSize charsize = VALID_CHAR_SZ.at(manifest["mc"]["charsize"]);
