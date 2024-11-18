@@ -5,22 +5,24 @@ namespace fs = std::filesystem;
 
 dlib::logger dlog_envf("rr_environment_lg");
 
-Environment EnviromentProcessor::createEnvironment(string manifest, po::variables_map vm) {
+Environment EnviromentProcessor::createEnvironment(string fin, po::variables_map vm) {
     dlog_envf.set_level(dlib::LALL);
-    try {
-        const fs::path filepath = manifest;
-        if (!exists(filepath)) {
-            dlog_envf << dlib::LFATAL << manifest << ": is an invalid file";
-            throw InvalidManifestException("invalid file " + manifest);
-        }
 
-        std::ifstream ifs(filepath);
-        json manifest = json::parse(ifs);
-        ifs.close();
-
-        HwModel hwModel = createHwModel(manifest);
-    } catch (const std::exception &ex) {
+    const fs::path filepath = fin;
+    if (!exists(filepath)) {
+        dlog_envf << dlib::LFATAL << fin << ": is an invalid file";
+        throw InvalidManifestException("invalid file " + fin);
     }
+
+    std::ifstream ifs(filepath);
+    json manifest = json::parse(ifs);
+    ifs.close();
+
+    HwModel hwModel = createHwModel(manifest);
+    RrSerial mc = createMc(manifest);
+    RrVersion version;
+
+    return Environment(hwModel, mc, version);
 }
 
 HwModel EnviromentProcessor::createHwModel(json manifest) {
@@ -59,5 +61,5 @@ RrSerial EnviromentProcessor::createMc(json manifest) {
     LibSerial::StopBits stopBits = VALID_STOPBIT.at(manifest["mc"]["stop_bits"]);
     LibSerial::Parity parity = VALID_PARITY.at(manifest["mc"]["parity"]);
 
-    return RrSerial();
+    return RrSerial(manifest["mc"]["port"], baudRate, charsize, flowControl, stopBits, parity);
 }

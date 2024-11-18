@@ -10,13 +10,34 @@ using namespace std;
 namespace rrobot {
     class RrSerial {
         public:
+            RrSerial(
+                const string port,
+                const LibSerial::BaudRate baud,
+                const LibSerial::CharacterSize charsize,
+                const LibSerial::FlowControl flow_control,
+                const LibSerial::StopBits stop_bits,
+                const LibSerial::Parity parity
+            ):
+                _port(port),
+                _baud(baud),
+                _charsize(charsize),
+                _flow_control(flow_control),
+                _stop_bits(stop_bits),
+                _parity(parity) {}
 
+            string getPort() {return _port;}
+            LibSerial::BaudRate getBaud() {return _baud;}
+            LibSerial::CharacterSize getCharsize() {return _charsize;}
+            LibSerial::FlowControl getFlowControl() {return _flow_control;}
+            LibSerial::StopBits getStopBits() {return _stop_bits;}
+            LibSerial::Parity getParity() {return _parity;}
         private:
-            const string port;
-            const LibSerial::BaudRate baud;
-            const LibSerial::CharacterSize charsize;
-            const LibSerial::FlowControl flow_control;
-            const LibSerial::StopBits stop_bits;
+            const string _port;
+            const LibSerial::BaudRate _baud;
+            const LibSerial::CharacterSize _charsize;
+            const LibSerial::FlowControl _flow_control;
+            const LibSerial::StopBits _stop_bits;
+            const LibSerial::Parity _parity;
     };
 
     const unordered_map<string, LibSerial::BaudRate> VALID_BAUDRATES = {@VALID_BAUDRATES@};
