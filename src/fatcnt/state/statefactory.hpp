@@ -1,13 +1,14 @@
 #ifndef STATEFACTORY_HPP
 #define STATEFACTORY_HPP
 
+#include <fatcnt/processorbase.hpp>
 #include <fatcnt/state/state.hpp>
 #include <fatcnt/environment/environment.hpp>
 
 namespace rrobot {
-    class StateFactory {
+    class StateFactory : ProcessorBase {
         public:
-            State createState(Environment environment);
+            static State createState(Environment environment);
     };
 }
 

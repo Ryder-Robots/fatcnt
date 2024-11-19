@@ -16,6 +16,7 @@ set(JSON_VERSION v3.11.3)
 set(fatcnt_SOURCES
   src/fatcnt/environment/environmentProcessor.cpp
   src/fatcnt/state/statefactory.cpp
+  src/fatcnt/processorbase.cpp
 )
 configure_file(include/fatcnt/environment/version.hpp.in include/fatcnt/environment/version.hpp @ONLY)
 
@@ -92,6 +93,7 @@ configure_file(include/fatcnt/exceptions/exceptions.hpp.in include/fatcnt/except
 set(fatcnt_INCLUDE 
   include/fatcnt/environment/environment.hpp
   include/fatcnt/environment/hwmodel.hpp
+  include/fatcnt/environment/queues.hpp
   include/fatcnt/events/Event.hpp
   include/fatcnt/events/MspAuthKey.hpp
   include/fatcnt/protocols/common/mspcommands.hpp

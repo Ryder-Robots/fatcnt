@@ -10,20 +10,14 @@ Environment EnviromentProcessor::createEnvironment(json manifest) {
     HwModel hwModel = createHwModel(manifest);
     RrSerial mc = createMc(manifest);
     RrVersion version;
+    Queues queues = createQueues(manifest);
 
-    return Environment(hwModel, mc, version);
+    return Environment(hwModel, mc, version, queues);
 }
 
 HwModel EnviromentProcessor::createHwModel(json manifest) {
-    if (!manifest.contains("hwmodel")) {
-        throw MissingRequiredAttributeException("missing required attribute for hwmodel");
-    }
-    string keys[] = {"multitype", "mspversion", "capability"};
-    for (auto key : keys) {
-        if (!manifest["hwmodel"].contains(key)) {
-            throw MissingRequiredAttributeException("missing required attribute " + key + " for hwmodel");
-        }
-    }
+    vector<string> keys = {"multitype", "mspversion", "capability"};
+    verify(manifest, keys, "hwmodel");
 
     VALID_MULTITYPE_KEYS_INIT;
     VALID_MSP_VERSION_KEYS_INIT;
@@ -36,16 +30,8 @@ HwModel EnviromentProcessor::createHwModel(json manifest) {
 }
 
 RrSerial EnviromentProcessor::createMc(json manifest) {
-    if (!manifest.contains("mc")) {
-        throw MissingRequiredAttributeException("missing required attribute for mc");
-    }
-
-    string keys[] = {"port", "baud", "charsize", "flow_control", "stop_bits", "parity"};
-    for (auto key : keys) {
-        if (!manifest["mc"].contains(key)) {
-            throw MissingRequiredAttributeException("missing required attribute " + key + " for mc");
-        }
-    }
+    vector<string> keys = {"port", "baud", "charsize", "flow_control", "stop_bits", "parity"};
+    verify(manifest, keys, "mc");
 
     VALID_BAUDRATES_INIT;
     VALID_CHAR_SZ_INIT;
@@ -60,4 +46,13 @@ RrSerial EnviromentProcessor::createMc(json manifest) {
     LibSerial::Parity parity = VALID_PARITY.at(manifest["mc"]["parity"]);
 
     return RrSerial(manifest["mc"]["port"], baudRate, charsize, flowControl, stopBits, parity);
+}
+
+
+Queues EnviromentProcessor::createQueues(json manifest) {
+    vector<string> keys = {"limit", "thread_wait_time", "thread_process_time"};
+    verify(manifest, keys, "queues");
+    return Queues(manifest["queues"]["limit"], 
+        manifest["queues"]["thread_wait_time"],  
+        manifest["queues"]["thread_process_time"]);
 }
