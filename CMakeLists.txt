@@ -15,6 +15,7 @@ set(JSON_VERSION v3.11.3)
 
 set(fatcnt_SOURCES
   src/fatcnt/environment/environmentProcessor.cpp
+  src/fatcnt/state/statefactory.cpp
 )
 configure_file(include/fatcnt/environment/version.hpp.in include/fatcnt/environment/version.hpp @ONLY)
 
@@ -96,6 +97,8 @@ set(fatcnt_INCLUDE
   include/fatcnt/protocols/common/mspcommands.hpp
   include/fatcnt/protocols/common/mspdirection.hpp
   include/fatcnt/protocols/common/mspversion.hpp
+  include/fatcnt/state/rrqueues.hpp
+  include/fatcnt/state/state.hpp
 )
 foreach(item ${fatcnt_INCLUDE})
   configure_file("${item}.in" ${item} @ONLY)
@@ -136,3 +139,9 @@ target_link_libraries(test_environmentprocessor GTest::gtest_main)
 target_link_libraries(test_environmentprocessor ctl)
 target_link_libraries(test_environmentprocessor dlib)
 gtest_discover_tests(test_environmentprocessor  WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/resources")
+
+add_executable(test_statefactory test/test_statefactory.cpp)
+target_link_libraries(test_statefactory GTest::gtest_main)
+target_link_libraries(test_statefactory ctl)
+target_link_libraries(test_statefactory dlib)
+gtest_discover_tests(test_statefactory  WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/resources")

@@ -1,0 +1,22 @@
+#ifndef STATE_HPP
+#define STATE_HPP
+
+#include <fatcnt/state/rrqueues.hpp>
+
+namespace rrobot {
+    class State {
+        public:
+            State(RrQueues queues):
+                _queues(queues) {}
+             
+            RrQueues getQueues() {return _queues;}
+            bool _is_running = false;
+            bool _is_authenticated = false;
+            pthread_mutex_t _lock;
+
+        private:
+            RrQueues _queues;
+    };
+}
+
+#endif // STATE_HPP

@@ -2,8 +2,8 @@
 #define EVENT_HPP
 
 #include <stdlib.h>
-#include <fatcnt/protcols/common/mspdirection.hpp>
-#include <fatcnt/protcols/common/mspcommands.hpp>
+#include <fatcnt/protocols/common/mspdirection.hpp>
+#include <fatcnt/protocols/common/mspcommands.hpp>
 
 namespace rrobot {
 /**
