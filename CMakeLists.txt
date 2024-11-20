@@ -15,8 +15,8 @@ set(JSON_VERSION v3.11.3)
 
 set(fatcnt_SOURCES
   src/fatcnt/environment/environmentProcessor.cpp
+  src/fatcnt/environment/processorbase.cpp
   src/fatcnt/state/statefactory.cpp
-  src/fatcnt/processorbase.cpp
 )
 configure_file(include/fatcnt/environment/version.hpp.in include/fatcnt/environment/version.hpp @ONLY)
 

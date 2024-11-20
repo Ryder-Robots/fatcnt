@@ -5,9 +5,9 @@
 #include <boost/program_options.hpp>
 #include <nlohmann/json.hpp>
 #include <dlib/logger.h>
-#include <fatcnt/processorbase.hpp>
 #include <fatcnt/environment/environment.hpp>
 #include <fatcnt/exceptions/exceptions.hpp>
+#include "processorbase.hpp"
 
 using namespace std;
 using json = nlohmann::json;
