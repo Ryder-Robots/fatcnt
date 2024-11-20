@@ -1,11 +1,16 @@
 #include <gtest/gtest.h>
 
+#include <filesystem>
+#include <fstream>
+#include <iostream>
+#include <stdint.h>
 #include <fatcnt/state/statefactory.hpp>
 #include <fatcnt/environment/environmentProcessor.hpp>
 #include <nlohmann/json.hpp>
 
 using namespace rrobot;
 using json = nlohmann::json;
+namespace fs = std::filesystem;
 
 class TestStateFactory : public ::testing::Test {
    protected:
@@ -19,7 +24,10 @@ class TestStateFactory : public ::testing::Test {
 };
 
 TEST(TestStateFactory, TestStateFactoryCreate) {
-    json manifest = {"queues" , {{"limit" , 100}, {"thread_wait_time", 500}, {"thread_process_time", 500}}};
+    const fs::path filepath = "manifests/virtual.json";
+    std::ifstream ifs(filepath);
+    json manifest = json::parse(ifs);
+    ifs.close();
     Environment environment = EnviromentProcessor::createEnvironment(manifest);
     State state = StateFactory::createState(environment);
 }
