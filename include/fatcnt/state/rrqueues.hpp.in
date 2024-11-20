@@ -7,17 +7,18 @@
 #include <chrono>
 #include <unordered_map>
 #include <fatcnt/events/Event.hpp>
+#include <fatcnt/state/statefactory.hpp>
 
 using namespace std;
 
 namespace rrobot {
-
     /**
      * @class RrQueues
      * @brief
      * Contains queues, and pthread conditions
      */
     class RrQueues {
+        friend class StateFactory;
         public:
             RrQueues(int queue_limit, chrono::milliseconds queue_wait_time, chrono::milliseconds queue_process_time):
                 QUEUE_LIMIT(queue_limit),
