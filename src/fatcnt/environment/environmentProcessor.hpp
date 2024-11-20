@@ -1,18 +1,19 @@
 #ifndef ENVIRONMENTPROCESSOR_HPP
 #define ENVIRONMENTPROCESSOR_HPP
 
+#include <vector>
 #include <boost/program_options.hpp>
 #include <nlohmann/json.hpp>
 #include <dlib/logger.h>
 #include <fatcnt/environment/environment.hpp>
 #include <fatcnt/exceptions/exceptions.hpp>
+#include "processorbase.hpp"
 
 using namespace std;
 using json = nlohmann::json;
-namespace po = boost::program_options;
 
 namespace rrobot {
-    class EnviromentProcessor {
+    class EnviromentProcessor : ProcessorBase {
         public:
 
             /**
@@ -25,8 +26,9 @@ namespace rrobot {
             static Environment createEnvironment(json manifest);
         
         private:
-            static HwModel createHwModel(json manifest);
+            static HwModel  createHwModel(json manifest);
             static RrSerial createMc(json manifest);
+            static Queues   createQueues(json manifest);
     };
 }
 

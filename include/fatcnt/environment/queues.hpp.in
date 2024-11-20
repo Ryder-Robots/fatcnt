@@ -1,0 +1,23 @@
+#ifndef QUEUES_HPP
+#define QUEUES_HPP
+
+namespace rrobot {
+    class Queues {
+        public:
+            Queues(int limit, int thread_wait_time, int thread_process_time) :
+                _limit(limit),
+                _thread_wait_time(thread_wait_time),
+                _thread_process_time(thread_process_time)
+            {}
+
+            int getLimit() {return _limit;}
+            int getThreadWaitTime() { return _thread_process_time;}
+            int getThreadProcessTime() {return _thread_process_time;}
+        private:
+            int _limit;
+            int _thread_wait_time;
+            int _thread_process_time;
+    };
+}
+
+#endif
