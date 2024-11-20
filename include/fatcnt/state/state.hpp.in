@@ -11,12 +11,32 @@ namespace rrobot {
                 _queues(queues) {}
              
             RrQueues* getQueues() {return _queues;}
-            bool   _is_running = false;
-            bool   _is_authenticated = false;
-            mutex  _lock;
+
+            bool isRunning() {
+                return _is_running;
+            }
+
+            void setIsRunning(bool isrunning) {
+                _lock.lock();
+                _is_running = isrunning;
+                _lock.unlock();
+            }
+
+            bool isAuthenticated() {
+                return _is_authenticated;
+            }
+
+            void setIsAuthenticated(bool isauthenticated) {
+                _lock.lock();
+                _is_authenticated = isauthenticated;
+                _lock.unlock();
+            }
 
         private:
             RrQueues* _queues;
+            bool   _is_running = true;
+            bool   _is_authenticated = false;
+            mutex  _lock;
     };
 }
 
