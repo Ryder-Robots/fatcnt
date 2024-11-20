@@ -29,7 +29,7 @@ TEST(TestStateFactory, TestStateFactoryCreate) {
     json manifest = json::parse(ifs);
     ifs.close();
     Environment environment = EnviromentProcessor::createEnvironment(manifest);
-    State state = StateFactory::createState(environment);
+    State* state = StateFactory::createState(environment);
 }
 
 int main(int argc, char **argv) {

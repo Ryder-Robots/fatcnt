@@ -1,21 +1,22 @@
 #ifndef STATE_HPP
 #define STATE_HPP
 
+#include <mutex>
 #include <fatcnt/state/rrqueues.hpp>
 
 namespace rrobot {
     class State {
         public:
-            State(RrQueues queues):
+            State(RrQueues* queues):
                 _queues(queues) {}
              
-            RrQueues getQueues() {return _queues;}
-            bool _is_running = false;
-            bool _is_authenticated = false;
-            pthread_mutex_t _lock;
+            RrQueues* getQueues() {return _queues;}
+            bool   _is_running = false;
+            bool   _is_authenticated = false;
+            mutex  _lock;
 
         private:
-            RrQueues _queues;
+            RrQueues* _queues;
     };
 }
 

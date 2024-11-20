@@ -8,7 +8,7 @@
 namespace rrobot {
     class StateFactory : ProcessorBase {
         public:
-            static State createState(Environment environment);
+            static State* createState(Environment environment);
     };
 }
 

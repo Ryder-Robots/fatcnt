@@ -1,6 +1,7 @@
 #ifndef RRQUEUE_HPP
 #define RRQUEUE_HPP
 
+#include <mutex>
 #include <string>
 #include <queue>
 #include <chrono>
@@ -29,25 +30,25 @@ namespace rrobot {
             chrono::milliseconds QUEUE_WAIT_TIME;    // time handler must wait after processing queue
             chrono::milliseconds QUEUE_PROCESS_TIME; // how long a queue can be processed for
             queue<Event> _q_events;    // events that are yet to be catorgrized.
-            pthread_mutex_t _l_events; // locak for inbound events
+            mutex _l_events; // locak for inbound events
 
-            queue<Event> getQueue(MSPDIRECTION direction) {
+            queue<Event>* getQueue(MSPDIRECTION direction) {
                 return _queues.at(direction);
             }
 
-            pthread_mutex_t getLock(MSPDIRECTION direction) {
+            mutex* getLock(MSPDIRECTION direction) {
                 return _locks.at(direction);
             }
         
         protected:
-            void setQueue(MSPDIRECTION direction, queue<Event> queue, pthread_mutex_t lock) {
-                _queues.insert({direction, queue});
-                _locks.insert({direction, lock});
+            void setQueue(MSPDIRECTION direction, queue<Event>* queue, mutex* lock) {
+                _queues.emplace(direction, queue);
+                _locks.emplace(direction, lock);
             }
 
         private:
-            unordered_map<MSPDIRECTION, queue<Event>>    _queues; // events to be sent to user interface
-            unordered_map<MSPDIRECTION, pthread_mutex_t> _locks;  // lock for UI queue
+            unordered_map<MSPDIRECTION, queue<Event>*>    _queues; // events to be sent to user interface
+            unordered_map<MSPDIRECTION, mutex*>           _locks;  // lock for UI queue
 
     };
 }
