@@ -102,6 +102,7 @@ set(fatcnt_INCLUDE
   include/fatcnt/protocols/common/mspversion.hpp
   include/fatcnt/state/rrqueues.hpp
   include/fatcnt/state/state.hpp
+  include/fatcnt/state/stateiface.hpp
 )
 foreach(item ${fatcnt_INCLUDE})
   configure_file("${item}.in" ${item} @ONLY)
@@ -144,3 +145,7 @@ gtest_discover_tests(test_environmentprocessor  WORKING_DIRECTORY "${CMAKE_CURRE
 add_executable(test_statefactory test/test_statefactory.cpp)
 target_link_libraries(test_statefactory GTest::gtest_main ctl dlib gmock)
 gtest_discover_tests(test_statefactory  WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/resources")
+
+add_executable(test_eventhandler test/test_eventhandler.cpp)
+target_link_libraries(test_eventhandler GTest::gtest_main ctl dlib gmock)
+gtest_discover_tests(test_eventhandler  WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/resources")

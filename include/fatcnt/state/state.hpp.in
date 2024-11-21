@@ -2,31 +2,32 @@
 #define STATE_HPP
 
 #include <mutex>
+#include <fatcnt/state/stateiface.hpp>
 #include <fatcnt/state/rrqueues.hpp>
 
 namespace rrobot {
-    class State {
+    class State : public  StateIface {
         public:
             State(RrQueues* queues):
                 _queues(queues) {}
              
-            RrQueues* getQueues() {return _queues;}
+            RrQueues* getQueues() override {return _queues;}
 
-            bool isRunning() {
+            bool isRunning() override {
                 return _is_running;
             }
 
-            void setIsRunning(bool isrunning) {
+            void setIsRunning(bool isrunning) override {
                 _lock.lock();
                 _is_running = isrunning;
                 _lock.unlock();
             }
 
-            bool isAuthenticated() {
+            bool isAuthenticated() override {
                 return _is_authenticated;
             }
 
-            void setIsAuthenticated(bool isauthenticated) {
+            void setIsAuthenticated(bool isauthenticated) override {
                 _lock.lock();
                 _is_authenticated = isauthenticated;
                 _lock.unlock();
