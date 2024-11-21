@@ -17,6 +17,7 @@ set(fatcnt_SOURCES
   src/fatcnt/environment/environmentProcessor.cpp
   src/fatcnt/environment/processorbase.cpp
   src/fatcnt/state/statefactory.cpp
+  src/fatcnt/events/eventhandler.cpp
 )
 configure_file(include/fatcnt/environment/version.hpp.in include/fatcnt/environment/version.hpp @ONLY)
 
