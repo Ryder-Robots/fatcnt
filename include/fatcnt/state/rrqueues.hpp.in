@@ -4,7 +4,6 @@
 #include <mutex>
 #include <string>
 #include <queue>
-#include <condition_variable>
 #include <chrono>
 #include <unordered_map>
 #include <fatcnt/events/Event.hpp>

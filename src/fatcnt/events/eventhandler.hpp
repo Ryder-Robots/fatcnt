@@ -4,7 +4,6 @@
 #include <chrono>
 #include <queue>
 #include <mutex>
-#include <condition_variable>
 #include <dlib/logger.h>
 #include <fatcnt/environment/environment.hpp>
 #include <fatcnt/state/statefactory.hpp>

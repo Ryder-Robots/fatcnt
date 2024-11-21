@@ -8,6 +8,7 @@
                 "${workspaceFolder}/include/**",
                 "${workspaceFolder}/build/_deps/json-src/include/**",
                 "${workspaceFolder}/build/_deps/googletest-src/googletest/include/**",
+                "${workspaceFolder}/build/_deps/googletest-src/googlemock/include/**",
                 "${workspaceFolder}/build/include"
             ],
             "defines": [],
