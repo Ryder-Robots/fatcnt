@@ -127,11 +127,12 @@ TEST(TestEventHandler, TestProduceEvent) {
         .Times(1)
         .WillOnce(Return(event));
     EXPECT_CALL(mockConcreteHandler, available())
-        .Times(1)
-        .WillOnce(Return(true));
+        .Times(2)
+        .WillOnce(Return(true))
+        .WillOnce(Return(false));
 
+    mockConcreteHandler.handleEvent(&mockConcreteHandler, &mockState);
     EXPECT_EQ(1, q2->size());
-    
 }
 
 int main(int argc, char **argv) {
