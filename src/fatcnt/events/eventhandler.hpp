@@ -8,6 +8,7 @@
 #include <fatcnt/events/Event.hpp>
 #include <fatcnt/state/stateiface.hpp>
 #include <fatcnt/state/statefactory.hpp>
+#include <fatcnt/exceptions/exceptions.hpp>
 #include <mutex>
 #include <queue>
 

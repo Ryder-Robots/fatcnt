@@ -7,6 +7,7 @@
 #include <chrono>
 #include <unordered_map>
 #include <fatcnt/events/Event.hpp>
+#include <fatcnt/exceptions/exceptions.hpp>
 
 using namespace std;
 
@@ -31,21 +32,30 @@ namespace rrobot {
             queue<Event> _q_events;    // events that are yet to be catorgrized.
             mutex _l_events; // locak for inbound events
 
-            queue<Event>* getQueue(MSPDIRECTION direction) {
-                return _queues.at(direction);
-            }
+            /**
+             * @fn getQueue
+             * @brief 
+             * retrieves queue based upon the relative direction.
+             * 
+             * @param direction queue that should be listened too.
+             * @return queue
+             */
+            queue<Event>* getQueue(MSPDIRECTION direction);
 
-            mutex* getLock(MSPDIRECTION direction) {
-                return _locks.at(direction);
-            }
+            /**
+             * @fn getLock
+             * @brief
+             * Gets a lock given a direction.
+             */
+            mutex* getLock(MSPDIRECTION direction);
         
-        protected:
             void setQueue(MSPDIRECTION direction, queue<Event>* queue, mutex* lock) {
                 _queues.emplace(direction, queue);
                 _locks.emplace(direction, lock);
             }
 
         private:
+
             unordered_map<MSPDIRECTION, queue<Event>*>       _queues;     // events to be sent to user interface
             unordered_map<MSPDIRECTION, mutex*>              _locks;      // lock for UI queue
     };

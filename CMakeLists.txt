@@ -17,6 +17,7 @@ set(fatcnt_SOURCES
   src/fatcnt/environment/environmentProcessor.cpp
   src/fatcnt/environment/processorbase.cpp
   src/fatcnt/state/statefactory.cpp
+  src/fatcnt/state/rrqueues.cpp
   src/fatcnt/events/eventhandler.cpp
 )
 configure_file(include/fatcnt/environment/version.hpp.in include/fatcnt/environment/version.hpp @ONLY)
@@ -79,7 +80,7 @@ FetchContent_Declare(json URL https://github.com/nlohmann/json/releases/download
 FetchContent_MakeAvailable(json)
 list(APPEND CMAKE_MODULE_PATH ${nlohmann_json})
 
-set(EXCEPTIONS InvalidManifestException MissingRequiredAttributeException)
+set(EXCEPTIONS InvalidManifestException MissingRequiredAttributeException QueueDoesNotExit)
 set(INCLUDE_CONTENT "")
 foreach(item ${EXCEPTIONS})
   set(EXCEPTION_NAME ${item})
@@ -100,7 +101,6 @@ set(fatcnt_INCLUDE
   include/fatcnt/protocols/common/mspcommands.hpp
   include/fatcnt/protocols/common/mspdirection.hpp
   include/fatcnt/protocols/common/mspversion.hpp
-  include/fatcnt/state/rrqueues.hpp
   include/fatcnt/state/state.hpp
   include/fatcnt/state/stateiface.hpp
 )
