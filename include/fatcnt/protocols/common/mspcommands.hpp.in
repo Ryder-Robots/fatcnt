@@ -40,6 +40,16 @@ enum MSPCOMMANDS : uint8_t {
      */
     MSP_SET_MOTOR = 214,
 };
+
+#define VALID_MSPCOMMANDS unordered_map<string, MSPCOMMANDS> VALID_MSPCOMMANDS_KEYS = { \
+   {"MSP_NONE", MSP_NONE}, \
+   {"MSP_AUTHKEY", MSP_AUTHKEY}, \
+   {"MSP_IDENT", MSP_IDENT}, \
+   {"MSP_STATUS", MSP_STATUS}, \
+   {"MSP_MOTOR", MSP_MOTOR}, \
+   {"MSP_SET_MOTOR", MSP_SET_MOTOR}, \
+}
+
 }  // namespace rrobot
 
 #endif  // MSPCOMMANDS_HPP
