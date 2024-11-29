@@ -1,0 +1,24 @@
+#ifndef STATEIFACE_HPP
+#define STATEIFACE_HPP
+
+#include <fatcnt/state/rrqueues.hpp>
+
+namespace rrobot {
+/**
+ * @class StateIface
+ * @brief
+ * Virtual interface state variable. Allows state to be passed in as a variable
+ */
+class StateIface {
+   public:
+    virtual RrQueues* getQueues() {return _queues;}
+    virtual bool isRunning() {return false;}
+    virtual bool isAuthenticated() {return false;}
+    virtual void setIsAuthenticated(bool isauthenticated) {}
+    virtual void setIsRunning(bool isrunning) {}
+
+    RrQueues* _queues;
+};
+}  // namespace rrobot
+
+#endif  // STATEIFACE_HPP

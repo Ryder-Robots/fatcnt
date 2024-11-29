@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <queue>
+#include <condition_variable>
 #include <fatcnt/state/state.hpp>
 #include <fatcnt/environment/environment.hpp>
 #include <fatcnt/protocols/common/mspdirection.hpp>
