@@ -14,7 +14,7 @@ State* StateFactory::createState(Environment environment, vector<MSPDIRECTION> d
 
     for (auto direction : directions) {
         mutex* lock = new mutex();
-        queue<Event>* q = new queue<Event>();
+        queue<Event*>* q = new queue<Event*>();
         queues->setQueue(direction, q, lock);
     }
 

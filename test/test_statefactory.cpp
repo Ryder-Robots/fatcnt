@@ -39,7 +39,7 @@ TEST(TestStateFactory, TestStateFactoryCreate) {
     EXPECT_EQ(true, state->isRunning());
     EXPECT_EQ(false, state->isAuthenticated());
 
-    queue<Event>* queueUserInterface = state->getQueues()->getQueue(MSPDIRECTION::USER_INTERFACE);
+    queue<Event*>* queueUserInterface = state->getQueues()->getQueue(MSPDIRECTION::USER_INTERFACE);
 }
 
 int main(int argc, char **argv) {

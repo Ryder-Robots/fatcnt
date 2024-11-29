@@ -29,8 +29,6 @@ namespace rrobot {
             const int QUEUE_LIMIT; 
             chrono::milliseconds QUEUE_WAIT_TIME;    // time handler must wait after processing queue
             chrono::milliseconds QUEUE_PROCESS_TIME; // how long a queue can be processed for
-            queue<Event> _q_events;    // events that are yet to be catorgrized.
-            mutex _l_events; // locak for inbound events
 
             /**
              * @fn getQueue
@@ -40,7 +38,7 @@ namespace rrobot {
              * @param direction queue that should be listened too.
              * @return queue
              */
-            queue<Event>* getQueue(MSPDIRECTION direction);
+            queue<Event*>* getQueue(MSPDIRECTION direction);
 
             /**
              * @fn getLock
@@ -49,14 +47,16 @@ namespace rrobot {
              */
             mutex* getLock(MSPDIRECTION direction);
         
-            void setQueue(MSPDIRECTION direction, queue<Event>* queue, mutex* lock) {
-                _queues.emplace(direction, queue);
-                _locks.emplace(direction, lock);
-            }
+            /**
+             * @fn setQueue
+             * @brief
+             * Used by stateFactory to create queues from configuration in drones manifest.
+             */
+            void setQueue(MSPDIRECTION direction, queue<Event*>* queue, mutex* lock);
 
         private:
 
-            unordered_map<MSPDIRECTION, queue<Event>*>       _queues;     // events to be sent to user interface
+            unordered_map<MSPDIRECTION, queue<Event*>*>      _queues;     // events to be sent to user interface
             unordered_map<MSPDIRECTION, mutex*>              _locks;      // lock for UI queue
     };
 }

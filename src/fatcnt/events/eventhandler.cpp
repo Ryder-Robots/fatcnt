@@ -33,7 +33,7 @@ void EventHandler::handleEvent(EventHandler* handler, StateIface* state) {
                     break;
                 }
 
-                Event event = handler->_queue->front();
+                Event* event = handler->_queue->front();
                 handler->consume(event, state);
                 handler->_queue->pop();
             }
@@ -59,6 +59,9 @@ void EventHandler::init(RrQueues* queues, MSPDIRECTION direction, MSPDIRECTION o
         dlog_hnd << dlib::LINFO << "setting up outbound queue and lock";
         _outbound_queue = queues->getQueue(outbound);
         _outbound_lock = queues->getLock(outbound);
+        dlog_hnd << dlib::LINFO << "setting up queue common configuration";
+        _thread_wait_time = queues->QUEUE_WAIT_TIME;
+        _limit = queues->QUEUE_LIMIT;
     } catch (const QueueDoesNotExit& e) {
         dlog_hnd << dlib::LFATAL << "could not setup inbound and outbound queues";
         throw e;
