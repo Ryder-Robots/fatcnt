@@ -33,17 +33,17 @@ class EventHandler {
      */
     void init(RrQueues* queues, MSPDIRECTION inbound, MSPDIRECTION outbound);
     static void handleEvent(EventHandler* handler, StateIface *state);
-    virtual void consume(Event event, StateIface* state) = 0;
-    virtual Event produce(StateIface* state) = 0;
+    virtual bool consume(Event* event, StateIface* state) = 0;
+    virtual Event* produce(StateIface* state) = 0;
     virtual bool available() = 0;
 
    private:
-    queue<Event>* _queue;
+    queue<Event*>* _queue;
     mutex* _lock;
 
     int _limit;
     chrono::milliseconds _thread_wait_time;
-    queue<Event>* _outbound_queue;
+    queue<Event*>* _outbound_queue;
     mutex* _outbound_lock;
 };
 }  // namespace rrobot
