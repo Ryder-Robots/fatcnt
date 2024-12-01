@@ -20,6 +20,7 @@ set(fatcnt_SOURCES
   src/fatcnt/state/rrqueues.cpp
   src/fatcnt/events/eventhandler.cpp
   src/fatcnt/events/uihandler.cpp
+  src/fatcnt/protocols/common/curators/rrp/msp_ident_curator.cpp
 )
 
 # Include directory

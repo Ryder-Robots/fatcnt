@@ -29,7 +29,7 @@ class Event {
    private:
     const MSPCOMMANDS  _command;   // command
     const MSPDIRECTION _direction; // direction of command
-    const void*        _payload;   // payload
+    void*              _payload;   // payload
 };
 }  // namespace rrobot
 
