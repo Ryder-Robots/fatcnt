@@ -1,0 +1,20 @@
+#ifndef @EVENT_HEADING@
+#define @EVENT_HEADING@
+
+#include <stdint.h>
+#include <string>
+#include <fatcnt/protocols/common/multitype.hpp>
+#include <fatcnt/protocols/common/mspversion.hpp>
+
+using namespace std;
+
+namespace rrobot {
+class @CLASS_NAME@{
+    public:
+@GETTERS@
+    private:
+@MEMBERS@
+};
+}
+
+#endif  // @EVENT_HEADING@

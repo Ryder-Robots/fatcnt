@@ -37,8 +37,8 @@ class MockState : public StateIface {
 };
 
 TEST(TestEventHandler, TestAbstractHandler) {
-     MockConcreteHandler* mockConcreteHandler = new MockConcreteHandler();
-     RrQueues* rrqueues = new RrQueues(100, chrono::milliseconds(500), chrono::milliseconds(500));
+    MockConcreteHandler* mockConcreteHandler = new MockConcreteHandler();
+    RrQueues* rrqueues = new RrQueues(100, chrono::milliseconds(500), chrono::milliseconds(500));
 
     mutex* lock1 = new mutex();
     queue<Event*>* q1 = new queue<Event*>();
