@@ -1,0 +1,40 @@
+#ifndef @CURATOR_HEADING@
+#define @CURATOR_HEADING@
+
+#include <string>
+#include <nlohmann/json.hpp>
+#include <fatcnt/events/Event.hpp>
+#include <fatcnt/protocols/common/curators/rrp/mspevent.hpp>
+#include <fatcnt/protocols/common/mspdirection.hpp>
+#include <fatcnt/exceptions/exceptions.hpp>
+
+using json = nlohmann::json;
+using namespace std;
+
+namespace rrobot {
+class @CURATOR_CLASS_NAME@{
+    public:
+        @CURATOR_CLASS_NAME@(MSPDIRECTION direction = MSPDIRECTION::@DIRECTION@):_direction(direction) {}
+
+        Event* deserialize(json in) {
+            @CLASS_NAME@* payload = new @CLASS_NAME@(); 
+            Event* event = new Event(@MSP_COMMAND@, _direction, payload);
+@CURATOR_SETTERS@
+            return event;
+        }
+
+        json serialize(Event *in) {
+            @CLASS_NAME@ payload = in->getPayload<@CLASS_NAME@>();
+        }
+
+    private:
+        MSPDIRECTION _direction;
+        void validate(string member, json in) {
+            if(!in.contains(member)) {
+                throw MissingRequiredAttributeException(member + " is a required attribute for @CLASS_NAME@");
+            }
+        }
+};
+}
+
+#endif // @CURATOR_HEADING@

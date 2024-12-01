@@ -69,3 +69,8 @@ gtest_discover_tests(test_statefactory  WORKING_DIRECTORY "${CMAKE_CURRENT_SOURC
 add_executable(test_eventhandler test/test_eventhandler.cpp)
 target_link_libraries(test_eventhandler GTest::gtest_main ctl dlib gmock)
 gtest_discover_tests(test_eventhandler  WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/resources")
+
+
+add_executable(test_rrpcurator test/test_rrpcurator.cpp)
+target_link_libraries(test_rrpcurator GTest::gtest_main ctl dlib gmock)
+gtest_discover_tests(test_rrpcurator  WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/resources")

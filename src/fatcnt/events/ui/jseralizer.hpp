@@ -17,7 +17,6 @@ namespace rrobot {
 
         private:
         VALID_MSPCOMMANDS;
-        MSPCOMMANDS_CURATORS;
     };
 }
 
