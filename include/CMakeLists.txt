@@ -56,7 +56,7 @@ configure_file(fatcnt/environment/rrserial.hpp.in fatcnt/environment/rrserial.hp
 # End Serial type configuration
 
 #Exceptions
-set(EXCEPTIONS InvalidManifestException MissingRequiredAttributeException QueueDoesNotExit ExceedMaxMessage InvalidMessageSent InvalidFormat InvalidCommand)
+set(EXCEPTIONS InvalidManifestException MissingRequiredAttributeException QueueDoesNotExit ExceedMaxMessage InvalidMessageSent InvalidFormat InvalidCommand UnsupportedAttribute)
 set(INCLUDE_CONTENT "")
 foreach(item ${EXCEPTIONS})
   set(EXCEPTION_NAME ${item})
@@ -72,34 +72,51 @@ configure_file(fatcnt/exceptions/exceptions.hpp.in fatcnt/exceptions/exceptions.
 
 
 # MSP COMMANDS
+# structure of hash is
+# 0 command
+# 1 command value
+# 2 if true then generate serializer
+# 3 if true then generate deseralizer
+# 4 direction (which queue to message should be directed to)
+# 5..n members in pairs, type [attribute]
 set(MSPCOMMANDS 
-  "MSP_NONE 0 INVALID" 
-  "MSP_AUTHKEY 7 USER_INTERFACE string key"
-  "MSP_IDENT 100 USER_INTERFACE uint8_t version MULTITYPE_T multitype MSP_VERSION msp_version uint32_t capability"
-  "MSP_STATUS 101 CATEGORIZER uint16_t cycletime uint16_t i2c_errors_count uint16_t sensor uint32_t flag uint8_t current_set"
-  "MSP_MOTOR 104 FLIGHT_CONTROLLER uint16_t motor1 uint16_t motor2 uint16_t motor3 uint16_t motor4 uint16_t motor5 uint16_t motor6 uint16_t motor7 uint16_t motor8"
-  "MSP_SET_MOTOR 214 FLIGHT_CONTROLLER uint16_t motor1 uint16_t motor2 uint16_t motor3 uint16_t motor4 uint16_t motor5 uint16_t motor6 uint16_t motor7 uint16_t motor8")
+  "MSP_NONE 0 INVALID 1 1" 
+  "MSP_AUTHKEY 7 USER_INTERFACE 1 1 string key"
+  "MSP_IDENT 100 USER_INTERFACE 0 0 uint8_t version MULTITYPE_T multitype MSP_VERSION msp_version uint32_t capability"
+  "MSP_STATUS 101 CATEGORIZER 1 1 uint16_t cycletime uint16_t i2c_errors_count uint16_t sensor uint32_t flag uint8_t current_set"
+  "MSP_MOTOR 104 FLIGHT_CONTROLLER 1 1 uint16_t motor1 uint16_t motor2 uint16_t motor3 uint16_t motor4 uint16_t motor5 uint16_t motor6 uint16_t motor7 uint16_t motor8"
+  "MSP_SET_MOTOR 214 FLIGHT_CONTROLLER 1 1 uint16_t motor1 uint16_t motor2 uint16_t motor3 uint16_t motor4 uint16_t motor5 uint16_t motor6 uint16_t motor7 uint16_t motor8")
 
 
 set(LOOP_CONTENT "")
 set(VALID_MSPCOMMANDS "")
 set(INCLUDE_CONTENT "")
+set(INCLUDE_CURATOR_CONTENT "")
 foreach(item ${MSPCOMMANDS})
   separate_arguments(_elements UNIX_COMMAND ${item})
   list(LENGTH _elements _length)
   list(GET _elements 0 _key)
   list(GET _elements 1 _value)
   list(GET _elements 2 _direction)
+  list(GET _elements 3 _serializer)
+  list(GET _elements 4 _deserializer)
+
+  set(CURATATOR_SERIALIZER ${_serializer})
+  set(CURATATOR_DESERIALIZER ${_deserializer})
+  string(TOUPPER "${_key}_MCURATATOR_SERIALIZER" MCURATATOR_SERIALIZER)
+  string(TOUPPER  "${_key}_MCURATATOR_DESERIALIZER" MCURATATOR_DESERIALIZER)
+
   string(APPEND LOOP_CONTENT "${_key} = ${_value},\n")
   string(APPEND VALID_MSPCOMMANDS "\{\"${_key}\"\, ${_key}\},\\\n")
 
   string(TOUPPER "${_key}_HPP" EVENT_HEADING)
-  string(TOUPPER "${_key}_HPP" CURATOR_HEADING)
+  string(TOUPPER "${_key}_CURATOR_HPP" CURATOR_HEADING)
   string(TOLOWER "${_key}" CLASS_NAME)
   string(TOLOWER "${_key}_curator" CURATOR_CLASS_NAME)
   string(TOLOWER "fatcnt/protocols/common/curators/rrp/${_key}.hpp" OUTPUT_NAME)
   string(TOLOWER "fatcnt/protocols/common/curators/rrp/${_key}_curator.hpp" OUTPUT_CURATOR_NAME)
   string(APPEND INCLUDE_CONTENT "\#include <${OUTPUT_NAME}>\n")
+  string(APPEND INCLUDE_CURATOR_CONTENT "\#include <${OUTPUT_CURATOR_NAME}>\n")
 
   set(MSP_COMMAND ${_key})
   set(GETTERS "")
@@ -107,15 +124,14 @@ foreach(item ${MSPCOMMANDS})
   set(CURATOR_SETTERS "")
   set(DIRECTION ${_direction})
   math(EXPR last_index "${_length} - 1")
-  if (${_length} GREATER 3)
-    set(start_index 3)
+  if (${_length} GREATER 5)
+    set(start_index 5)
     foreach(i RANGE ${start_index} ${last_index} 2)
       list(SUBLIST _elements ${i} 2 pair)
       list(GET pair 0 type)
       list(GET pair 1 member)
       string(APPEND GETTERS "    void set_${member}(${type} ${member})\{_${member} = ${member};\}\n    ${type} get_${member}()\{return _${member};\}\n")
       string(APPEND MEMBERS "    ${type} _${member};\n")
-
       string(APPEND CURATOR_SETTERS "            validate(\"${member}\", in);\n            payload->set_${member}(in[\"${member}\"]);\n")
     endforeach()
   endif()
@@ -124,6 +140,7 @@ foreach(item ${MSPCOMMANDS})
 endforeach()
 configure_file(fatcnt/protocols/common/mspcommands.hpp.in fatcnt/protocols/common/mspcommands.hpp @ONLY)
 configure_file(fatcnt/protocols/common/curators/rrp/mspevent.hpp.in fatcnt/protocols/common/curators/rrp/mspevent.hpp)
+configure_file(fatcnt/protocols/common/curators/rrp/rrpcurator.hpp.in fatcnt/protocols/common/curators/rrp/rrpcurator.hpp)
 
 
 # Generic header files

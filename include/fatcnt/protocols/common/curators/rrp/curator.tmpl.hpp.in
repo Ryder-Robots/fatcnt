@@ -11,21 +11,33 @@
 using json = nlohmann::json;
 using namespace std;
 
+#define @MCURATATOR_DESERIALIZER@ @CURATATOR_DESERIALIZER@
+#define @MCURATATOR_SERIALIZER@ @CURATATOR_SERIALIZER@
+
 namespace rrobot {
 class @CURATOR_CLASS_NAME@{
     public:
         @CURATOR_CLASS_NAME@(MSPDIRECTION direction = MSPDIRECTION::@DIRECTION@):_direction(direction) {}
 
+        #if @MCURATATOR_DESERIALIZER@ == 1
         Event* deserialize(json in) {
             @CLASS_NAME@* payload = new @CLASS_NAME@(); 
             Event* event = new Event(@MSP_COMMAND@, _direction, payload);
 @CURATOR_SETTERS@
             return event;
         }
+        #else
+        Event* deserialize(json in);
+        #endif
 
+        #if @MCURATATOR_SERIALIZER@ == 1
         json serialize(Event *in) {
             @CLASS_NAME@ payload = in->getPayload<@CLASS_NAME@>();
+            return json();
         }
+        #else
+        json serialize(Event *in);
+        #endif
 
     private:
         MSPDIRECTION _direction;

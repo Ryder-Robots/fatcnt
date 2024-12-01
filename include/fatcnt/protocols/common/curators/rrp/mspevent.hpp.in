@@ -3,4 +3,4 @@
 
 @INCLUDE_CONTENT@
 
-#endif MSPEVENT_HPP
+#endif // MSPEVENT_HPP
