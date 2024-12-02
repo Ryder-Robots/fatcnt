@@ -74,7 +74,7 @@ TEST(TestRrpCurator, TestSerialize) {
 }
 
 TEST(TestRrpCurator, TestGeneratedDeserialize) {
-    json inbound = {"key", "test"};
+    json inbound = {{"key", "test"}};
     msp_authkey_curator *curator = new msp_authkey_curator();
     Event* event = curator->deserialize(inbound);
 
