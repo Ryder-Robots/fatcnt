@@ -26,6 +26,14 @@ class Event {
         return *(reinterpret_cast<T*>(_payload));
     }
 
+    MSPCOMMANDS getCommand() {
+        return _command;
+    }
+
+    MSPDIRECTION getDirection() {
+        return _direction;
+    }
+
    private:
     const MSPCOMMANDS  _command;   // command
     const MSPDIRECTION _direction; // direction of command

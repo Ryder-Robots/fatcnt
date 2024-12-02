@@ -5,7 +5,7 @@
 #include <fatcnt/state/rrqueues.hpp>
 #include <fatcnt/state/stateiface.hpp>
 #include <fatcnt/exceptions/exceptions.hpp>
-#include <fatcnt/events/MspAuthKey.hpp>
+#include <fatcnt/protocols/common/curators/rrp/msp_authkey.hpp>
 
 using namespace rrobot;
 
@@ -95,7 +95,8 @@ TEST(TestEventHandler, TestConsumeEvent) {
         .Times(1)
         .WillOnce(Return(true));
 
-    MspAuthKey* payload = new MspAuthKey("test");
+    msp_authkey* payload = new msp_authkey();
+    payload->set_key("test");
     Event* event = new Event(MSP_AUTHKEY, MSPDIRECTION::USER_INTERFACE, payload);
     q1->emplace(event);
     mockConcreteHandler.handleEvent(&mockConcreteHandler, &mockState);
@@ -121,7 +122,8 @@ TEST(TestEventHandler, TestProduceEvent) {
     EXPECT_CALL(mockState, isAuthenticated())
         .WillOnce(Return(true));
 
-    MspAuthKey* payload = new MspAuthKey("test");
+    msp_authkey* payload = new msp_authkey();
+    payload->set_key("test");
     Event* event = new Event(MSP_AUTHKEY, MSPDIRECTION::USER_INTERFACE, payload);
     EXPECT_CALL(mockConcreteHandler, produce(_))
         .Times(1)
