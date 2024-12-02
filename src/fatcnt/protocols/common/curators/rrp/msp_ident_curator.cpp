@@ -4,7 +4,7 @@ using namespace rrobot;
 
 /**
  * @fn deserialize
- * @brief 
+ * @brief
  * deserialize inbound json.
  */
 Event* msp_ident_curator::deserialize(json in) {
@@ -21,8 +21,7 @@ Event* msp_ident_curator::deserialize(json in) {
     }
     payload->set_multitype(VALID_MULTITYPE_KEYS.at(in["multitype"]));
 
-   
-    //MSP_VERSION
+    // MSP_VERSION
     validate("msp_version", in);
     VALID_MSP_VERSION_KEYS_INIT;
     if (VALID_MSP_VERSION_KEYS.find(in["msp_version"]) == VALID_MSP_VERSION_KEYS.end()) {
@@ -30,9 +29,50 @@ Event* msp_ident_curator::deserialize(json in) {
     }
     payload->set_msp_version(VALID_MSP_VERSION_KEYS.at(in["msp_version"]));
 
-
     validate("capability", in);
     payload->set_capability(in["capability"]);
 
     return event;
+}
+
+/**
+ * @fn serialize
+ * @brief
+ * payload is defined as:
+ *   command: {}
+ *   payload: {}
+ */
+json msp_ident_curator::serialize(Event* in) {
+    string command = getCommandString();
+    msp_ident payload = in->getPayload<msp_ident>();
+
+    string multiType = "NOTDEFINED";
+    VALID_MULTITYPE_KEYS_INIT;
+    for (const auto& pair : VALID_MULTITYPE_KEYS) {
+        if (pair.second ==  payload.get_multitype()) {
+            multiType = pair.first;
+            break;
+        }
+    }
+
+    string mspVersion = "VIRTUAL";
+    VALID_MSP_VERSION_KEYS_INIT;
+    for (const auto& pair : VALID_MSP_VERSION_KEYS) {
+        if (pair.second ==  payload.get_msp_version()) {
+            mspVersion = pair.first;
+            break;
+        }
+    }
+
+    json j = {
+        {"command", command},
+        {"payload", {
+            {"multitype", multiType},
+            {"msp_version", mspVersion},
+            {"version", payload.get_version()},
+            {"capability", payload.get_capability()}
+        }}
+    };
+
+    return j;
 }

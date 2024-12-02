@@ -123,6 +123,7 @@ foreach(item ${MSPCOMMANDS})
   set(MEMBERS "")
   set(CURATOR_SETTERS "")
   set(DIRECTION ${_direction})
+  set(CURATOR_SERIALIZER_SETTERS "")
   math(EXPR last_index "${_length} - 1")
   if (${_length} GREATER 5)
     set(start_index 5)
@@ -133,6 +134,7 @@ foreach(item ${MSPCOMMANDS})
       string(APPEND GETTERS "    void set_${member}(${type} ${member})\{_${member} = ${member};\}\n    ${type} get_${member}()\{return _${member};\}\n")
       string(APPEND MEMBERS "    ${type} _${member};\n")
       string(APPEND CURATOR_SETTERS "            validate(\"${member}\", in);\n            payload->set_${member}(in[\"${member}\"]);\n")
+      string(APPEND CURATOR_SERIALIZER_SETTERS "                    \{\"${member}\", payload.get_${member}()\},\n")
     endforeach()
   endif()
   configure_file(fatcnt/protocols/common/curators/rrp/event.tmpl.hpp.in ${OUTPUT_NAME} @ONLY)
@@ -149,7 +151,6 @@ set(fatcnt_INCLUDE
   fatcnt/environment/hwmodel.hpp
   fatcnt/environment/queues.hpp
   fatcnt/events/Event.hpp
-  fatcnt/events/MspAuthKey.hpp
   fatcnt/protocols/common/mspdirection.hpp
   fatcnt/protocols/common/mspversion.hpp
   fatcnt/state/state.hpp
