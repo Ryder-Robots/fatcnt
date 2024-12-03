@@ -1,0 +1,24 @@
+#ifndef RRPCURATORABSTRACT_HPP
+#define RRPCURATORABSTRACT_HPP
+
+#include <nlohmann/json.hpp>
+#include <fatcnt/events/Event.hpp>
+
+using json = nlohmann::json;
+
+namespace rrobot {
+
+    /**
+     * @class RrpCuratorAbstract
+     * @brief
+     * interface for RRP Curators
+     */
+    class RrpCuratorAbstract {
+        public:
+        virtual Event* deserialize(json in) = 0;
+
+        virtual json serialize(Event *in) = 0;
+    };
+}
+
+#endif // RRPCURATORABSTRACT_HPP

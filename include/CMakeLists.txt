@@ -70,6 +70,23 @@ configure_file(fatcnt/exceptions/exceptions.hpp.in fatcnt/exceptions/exceptions.
 
 #end Exceptions
 
+# static header files
+set(fatcnt_INCLUDE 
+  fatcnt/environment/environment.hpp
+  fatcnt/environment/hwmodel.hpp
+  fatcnt/environment/queues.hpp
+  fatcnt/events/Event.hpp
+  fatcnt/protocols/common/mspdirection.hpp
+  fatcnt/protocols/common/mspversion.hpp
+  fatcnt/state/state.hpp
+  fatcnt/state/stateiface.hpp
+  fatcnt/protocols/common/curators/rrp/rrpcuratorabstract.hpp
+)
+foreach(item ${fatcnt_INCLUDE})
+  configure_file("${item}.in" ${item} @ONLY)
+endforeach()
+# these are copied straight accross without much change
+
 
 # MSP COMMANDS
 # structure of hash is
@@ -92,6 +109,7 @@ set(LOOP_CONTENT "")
 set(VALID_MSPCOMMANDS "")
 set(INCLUDE_CONTENT "")
 set(INCLUDE_CURATOR_CONTENT "")
+set(CURATOR_PAIR "")
 foreach(item ${MSPCOMMANDS})
   separate_arguments(_elements UNIX_COMMAND ${item})
   list(LENGTH _elements _length)
@@ -117,6 +135,7 @@ foreach(item ${MSPCOMMANDS})
   string(TOLOWER "fatcnt/protocols/common/curators/rrp/${_key}_curator.hpp" OUTPUT_CURATOR_NAME)
   string(APPEND INCLUDE_CONTENT "\#include <${OUTPUT_NAME}>\n")
   string(APPEND INCLUDE_CURATOR_CONTENT "\#include <${OUTPUT_CURATOR_NAME}>\n")
+  string(APPEND CURATOR_PAIR "\{${_key}, new ${CURATOR_CLASS_NAME}()\},")
 
   set(MSP_COMMAND ${_key})
   set(GETTERS "")
@@ -124,6 +143,7 @@ foreach(item ${MSPCOMMANDS})
   set(CURATOR_SETTERS "")
   set(DIRECTION ${_direction})
   set(CURATOR_SERIALIZER_SETTERS "")
+  
   math(EXPR last_index "${_length} - 1")
   if (${_length} GREATER 5)
     set(start_index 5)
@@ -145,17 +165,3 @@ configure_file(fatcnt/protocols/common/curators/rrp/mspevent.hpp.in fatcnt/proto
 configure_file(fatcnt/protocols/common/curators/rrp/rrpcurator.hpp.in fatcnt/protocols/common/curators/rrp/rrpcurator.hpp)
 
 
-# Generic header files
-set(fatcnt_INCLUDE 
-  fatcnt/environment/environment.hpp
-  fatcnt/environment/hwmodel.hpp
-  fatcnt/environment/queues.hpp
-  fatcnt/events/Event.hpp
-  fatcnt/protocols/common/mspdirection.hpp
-  fatcnt/protocols/common/mspversion.hpp
-  fatcnt/state/state.hpp
-  fatcnt/state/stateiface.hpp
-)
-foreach(item ${fatcnt_INCLUDE})
-  configure_file("${item}.in" ${item} @ONLY)
-endforeach()
