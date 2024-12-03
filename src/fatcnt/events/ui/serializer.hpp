@@ -6,7 +6,8 @@
 namespace rrobot {
     template <typename T> class Serializer {
         public:
-        virtual Event* serialize(T event);
+        virtual T serialize(Event* event) = 0;
+        virtual Event* deserialize(T event) = 0;
     };
 }
 

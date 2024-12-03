@@ -8,6 +8,8 @@
 #include <fatcnt/protocols/common/mspdirection.hpp>
 #include <fatcnt/exceptions/exceptions.hpp>
 
+#include <fatcnt/protocols/common/curators/rrp/rrpcuratorabstract.hpp>
+
 using json = nlohmann::json;
 using namespace std;
 
@@ -15,23 +17,23 @@ using namespace std;
 #define @MCURATATOR_SERIALIZER@ @CURATATOR_SERIALIZER@
 
 namespace rrobot {
-class @CURATOR_CLASS_NAME@{
+class @CURATOR_CLASS_NAME@ : public RrpCuratorAbstract {
     public:
         @CURATOR_CLASS_NAME@(MSPDIRECTION direction = MSPDIRECTION::@DIRECTION@):_direction(direction) {}
 
         #if @MCURATATOR_DESERIALIZER@ == 1
-        Event* deserialize(json in) {
+        Event* deserialize(json in) override {
             @CLASS_NAME@* payload = new @CLASS_NAME@(); 
             Event* event = new Event(@MSP_COMMAND@, _direction, payload);
 @CURATOR_SETTERS@
             return event;
         }
         #else
-        Event* deserialize(json in);
+        Event* deserialize(json in) override;
         #endif
 
         #if @MCURATATOR_SERIALIZER@ == 1
-        json serialize(Event *in) {
+        json serialize(Event *in) override {
             string command = getCommandString();
             @CLASS_NAME@ payload = in->getPayload<@CLASS_NAME@>();
             json j = {
@@ -43,7 +45,7 @@ class @CURATOR_CLASS_NAME@{
             return j;
         }
         #else
-        json serialize(Event *in);
+        json serialize(Event *in) override;
         #endif
 
     private:
