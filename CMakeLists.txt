@@ -21,6 +21,7 @@ set(fatcnt_SOURCES
   src/fatcnt/events/eventhandler.cpp
   src/fatcnt/events/uihandler.cpp
   src/fatcnt/protocols/common/curators/rrp/msp_ident_curator.cpp
+  src/fatcnt/events/ui/jserializer.cpp
 )
 
 # Include directory
@@ -75,3 +76,7 @@ gtest_discover_tests(test_eventhandler  WORKING_DIRECTORY "${CMAKE_CURRENT_SOURC
 add_executable(test_rrpcurator test/test_rrpcurator.cpp)
 target_link_libraries(test_rrpcurator GTest::gtest_main ctl dlib gmock)
 gtest_discover_tests(test_rrpcurator  WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/resources")
+
+add_executable(test_jserializer test/test_jserializer.cpp)
+target_link_libraries(test_jserializer GTest::gtest_main ctl dlib gmock)
+gtest_discover_tests(test_jserializer  WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/resources")
