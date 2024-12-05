@@ -35,7 +35,6 @@ Event* UiHandler::produce(StateIface* state) {
     size_t pos = 0;
     memset(_buffer, 0, BUFSIZ);
 
-
     while (pos != BUFSIZ) {
         if (pos == BUFSIZ) {
             dlog_ui << dlib::LERROR << "excessively large message has been recieved";

@@ -17,6 +17,7 @@ namespace fs = std::filesystem;
 
 using ::testing::Return;
 using ::testing::_;
+using ::testing::AnyNumber;
 
 class TestUiHandler : public ::testing::Test {
    protected:
@@ -103,18 +104,19 @@ TEST(TestUiHandler, TestInBoundEvents) {
     MockExternal external = MockExternal();
     uihandler.init(&external, state, serializer);
 
-
     EXPECT_CALL(external, available())
-        .WillOnce(Return(external._response.size()));
-
+        .Times(AnyNumber())
+        .WillOnce(Return(external._response.size()))
+        .WillOnce(Return(1))
+        .WillOnce(Return(0))
+        .WillOnce(Return(0));
+        
     thread t(&UiHandler::handleEvent, &uihandler, state);
     // if (t.joinable()) {
     //     t.detach();
     // }
     std::this_thread::sleep_for(std::chrono::milliseconds(1000));
     state->setIsRunning(false);
-
-    cout << "before join call\n";
 
     while (!t.joinable()) {
         std::this_thread::sleep_for(std::chrono::milliseconds(10));
@@ -127,7 +129,9 @@ TEST(TestUiHandler, TestInBoundEvents) {
     queue<Event*>* thisQueue = state->getQueues()->getQueue(MSPDIRECTION::CATEGORIZER);
     size_t sz = thisQueue->size();
 
-    cout << "Queue size = " + to_string(sz) + "\n";
+    EXPECT_EQ(2, sz);
+
+    //TODO: verify that the content of the queue is correct,
 }
 
 int main(int argc, char **argv) {
