@@ -9,13 +9,14 @@ json Jseralizer::serialize(Event* event) {
 
  Event* Jseralizer::deserialize(json j) {
     if(!(
-        j.contains("command") && (_validMspCommands.find("command") != _validMspCommands.end()) &&
+        j.contains("command") && (_validMspCommands.find(j["command"]) != _validMspCommands.end()) &&
         j.contains("payload")
     
     )) {
         throw MissingRequiredAttributeException("command and payload are required attributes");
     }
 
-    RrpCuratorAbstract* curator = _curatorMap.at(j["command"]);
-    return curator->deserialize(j["payload"]);
+    RrpCuratorAbstract* curator = _curatorMap.at(_validMspCommands.at(j["command"]));
+    json payload = j["payload"];
+    return curator->deserialize(payload);
  }

@@ -12,11 +12,6 @@ dlib::logger dlog_hnd("rr_robot_eventhandler");
 void EventHandler::handleEvent(EventHandler* handler, StateIface* state) {
     // isRunning can be considered a kill switch if it is hit, then stop
     while (state->isRunning()) {
-        if (!state->isAuthenticated()) {
-            dlog_hnd << dlib::LWARN << "attempt to read or write to queue while not authenticated";
-            return;
-        }
-
         try {
             handler->_outbound_lock->lock();
             for (int i = 0; i < handler->_limit; i++) {

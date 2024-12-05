@@ -6,7 +6,7 @@ using json = nlohmann::json;
 
 dlib::logger dlog_ui("rr_robot_ui");
 
-void UiHandler::init(Authenticator *authenticator, External *external, RrQueues* queues, StateIface* state) {
+void UiHandler::init(Authenticator *authenticator, External *external, StateIface* state, Serializer<json> serializer) {
     try {
         /**
          * forwards messages from USER_INTERFACE to catagorizer, if they are authenticated
@@ -15,11 +15,14 @@ void UiHandler::init(Authenticator *authenticator, External *external, RrQueues*
         dlog_ui.set_level(dlib::LALL);
 
         dlog_ui << dlib::LINFO << "configurating queues";
-        EventHandler::init(queues, MSPDIRECTION::USER_INTERFACE, MSPDIRECTION::CATEGORIZER);
+
+        
+        EventHandler::init(state->getQueues(), MSPDIRECTION::USER_INTERFACE, MSPDIRECTION::CATEGORIZER);
 
         _authenticator = authenticator;
         _external = external;
         _buffer = static_cast<char *>(malloc(BUFSIZ * sizeof(char)));
+        _serializer = serializer;
 
         dlog_ui << dlib::LINFO << "waiting to authenicate";
         while(!state->isAuthenticated() && state->isRunning()) {
@@ -66,20 +69,26 @@ Event* UiHandler::recieve() {
     }
 
     json j = json::parse(token);
-
-    // TODO deserialize.
-    // search for required parts
     if (!(j.contains("action") && j.contains("payload"))) {
         dlog_ui << dlib::LERROR << "action and payload are required acttributes";
         throw MissingRequiredAttributeException("action and payload are required acttributes");
     }
+
+    Event* event = _serializer.deserialize(j);
+    return event;
 }
 
 bool UiHandler::consume(Event* event, StateIface* state) {
+    json out = _serializer.serialize(event);
+    string output = out.dump();
+    _external->send_rr(output.c_str(),  output.length() * sizeof(char));
+    return true;
 }
 
 Event* UiHandler::produce(StateIface* state) {
     return recieve();
 }
 
-bool UiHandler::available() {return true;}
+bool UiHandler::available() {
+    return _external->available();
+}

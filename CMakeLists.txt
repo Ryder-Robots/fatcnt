@@ -80,3 +80,7 @@ gtest_discover_tests(test_rrpcurator  WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_
 add_executable(test_jserializer test/test_jserializer.cpp)
 target_link_libraries(test_jserializer GTest::gtest_main ctl dlib gmock)
 gtest_discover_tests(test_jserializer  WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/resources")
+
+add_executable(test_uihandler test/test_uihandler.cpp)
+target_link_libraries(test_uihandler GTest::gtest_main ctl dlib gmock)
+gtest_discover_tests(test_uihandler  WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/resources")

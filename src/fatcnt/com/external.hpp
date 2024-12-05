@@ -28,7 +28,7 @@ namespace rrobot {
          * @param max amount of bytes that can be saved
          * @return actual bytes written to buffer, -1 if no bytes are available.
          */
-        virtual ssize_t recv_rr(void* buffer, size_t bufsz);
+        virtual ssize_t recv_rr(void* buffer, size_t bufsz) {return 0;}
 
         /**
          * @fn accept_rr
@@ -40,7 +40,7 @@ namespace rrobot {
          * @param accept the connection or reject.
          * @return file descriptor.
          */
-        virtual int accept_rr(bool accept);
+        virtual int accept_rr(bool accept) {return 0;}
 
         /**
          * @fn close_rr
@@ -48,7 +48,7 @@ namespace rrobot {
          * closes the connection that is getting used, this must the last call done after a connection, or when shutting down.
          * It may also indicate failed authentication.
          */
-        virtual void close_rr();
+        virtual void close_rr() {return;}
 
         /**
          * @fn send_rr
@@ -58,14 +58,14 @@ namespace rrobot {
          * @param bufsz the bytes to send
          * @return actual size of bytes sent.
          */
-        virtual ssize_t send_rr(const void *buf, size_t bufsz);
+        virtual ssize_t send_rr(const void *buf, size_t bufsz) {return 0;}
 
         /**
          * @fn available
          * @brief 
          * returns how many bytes are available.
          */
-        virtual size_t available();
+        virtual size_t available() {return 0;}
     };
 }
 

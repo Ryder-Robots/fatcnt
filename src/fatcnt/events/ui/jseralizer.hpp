@@ -4,11 +4,10 @@
 #include <unordered_map>
 #include <nlohmann/json.hpp>
 #include <fatcnt/events/Event.hpp>
+#include <fatcnt/events/serializer.hpp>
 #include <fatcnt/protocols/common/curators/rrp/rrpcurator.hpp>
 #include <fatcnt/protocols/common/mspversion.hpp>
 #include <fatcnt/exceptions/exceptions.hpp>
-
-#include "serializer.hpp"
 
 using json = nlohmann::json;
 
