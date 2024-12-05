@@ -97,12 +97,14 @@ endforeach()
 # 4 direction (which queue to message should be directed to)
 # 5..n members in pairs, type [attribute]
 set(MSPCOMMANDS 
+  "MSP_SONAR_ALTITUDE 58 USER_INTERFACE 1 1  uint32_t distance uint32_t temperature" 
   "MSP_NONE 0 INVALID 1 1" 
   "MSP_AUTHKEY 7 USER_INTERFACE 1 1 string key"
   "MSP_IDENT 100 USER_INTERFACE 0 0 uint8_t version MULTITYPE_T multitype MSP_VERSION msp_version uint32_t capability"
   "MSP_STATUS 101 CATEGORIZER 1 1 uint16_t cycletime uint16_t i2c_errors_count uint16_t sensor uint32_t flag uint8_t current_set"
   "MSP_MOTOR 104 FLIGHT_CONTROLLER 1 1 uint16_t motor1 uint16_t motor2 uint16_t motor3 uint16_t motor4 uint16_t motor5 uint16_t motor6 uint16_t motor7 uint16_t motor8"
-  "MSP_SET_MOTOR 214 FLIGHT_CONTROLLER 1 1 uint16_t motor1 uint16_t motor2 uint16_t motor3 uint16_t motor4 uint16_t motor5 uint16_t motor6 uint16_t motor7 uint16_t motor8")
+  "MSP_SET_MOTOR 214 FLIGHT_CONTROLLER 1 1 uint16_t motor1 uint16_t motor2 uint16_t motor3 uint16_t motor4 uint16_t motor5 uint16_t motor6 uint16_t motor7 uint16_t motor8"
+  "MSP_SET_MOTOR_HBRIDGE 215 MICROCONTROLLER 1 1 uint16_t motor1 uint16_t motor2 uint16_t motor3 uint16_t motor4 uint8_t in")
 
 
 set(LOOP_CONTENT "")

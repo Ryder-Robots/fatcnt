@@ -8,27 +8,53 @@
 #include <fatcnt/exceptions/exceptions.hpp>
 
 #include "eventhandler.hpp"
-#include "ui/authenticator.hpp"
 
 using json = nlohmann::json;
 
 namespace rrobot {
+
+    /**
+     * @class UiHandler
+     * 
+     * @brief
+     * Handles network requests, this is inteneded for WIFI, WAN,  but could possibly could be used for 
+     * radio controller events.
+     */
     class UiHandler : public EventHandler {
 
         public:
-            void init(Authenticator *authenticator, External *external, StateIface* state, Serializer<json> serializer);
+            /**
+             * @fn init
+             * @brief
+             * initlize handler.
+             */
+            void init(External *external, StateIface* state, Serializer<json>* serializer);
+
+            /**
+             * @fn consume
+             * @brief
+             * serialize events sent from other processors and send them to connection.
+             */
             bool consume(Event* event, StateIface* state) override;
+
+            /**
+             * @fn produce
+             * @brief
+             * recieve events from connection, deserialize and return the deserialized event.
+             */
             Event* produce(StateIface* state) override;
+
+            /**
+             * process is available for operation.
+             */
             bool available() override;
 
         private:
-            Event*          recieve();
-
-            Authenticator*   _authenticator;
-            External*        _external;
-            const char       _delimiter = 0x1E;
-            char*            _buffer;
-            Serializer<json> _serializer;
+            External*         _external;
+            const char        _delimiter = 0x1E;
+            char*             _buffer;
+            Serializer<json>* _serializer;
+            bool              _available = true;
     };
 }
 
