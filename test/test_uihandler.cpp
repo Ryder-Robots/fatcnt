@@ -32,12 +32,6 @@ class TestUiHandler : public ::testing::Test {
 
 class MockExternal : public External {
     public:
-    //  ssize_t recv_rr(void* buffer, size_t bufsz)
-    //  int accept_rr(bool accept);
-    // void close_rr();
-    // ssize_t send_rr(const void *buf, size_t bufsz);
-    //  size_t available();
-
     MockExternal() {
         json inbound;
         inbound["command"] = "MSP_SET_MOTOR_HBRIDGE";
@@ -130,8 +124,26 @@ TEST(TestUiHandler, TestInBoundEvents) {
     size_t sz = thisQueue->size();
 
     EXPECT_EQ(2, sz);
+    Event* event1 = thisQueue->front();
+    thisQueue->pop();
+    Event* event2 = thisQueue->front();
+    thisQueue->pop();
 
-    //TODO: verify that the content of the queue is correct,
+    msp_set_motor_hbridge payload1 = event1->getPayload<msp_set_motor_hbridge>(), 
+        payload2 = event2->getPayload<msp_set_motor_hbridge>();
+
+
+    EXPECT_EQ(500, payload1.get_motor1());
+    EXPECT_EQ(600, payload1.get_motor2());
+    EXPECT_EQ(500, payload1.get_motor3());
+    EXPECT_EQ(600, payload1.get_motor4());
+    EXPECT_EQ(0b01010101, payload1.get_in());
+
+    EXPECT_EQ(500, payload2.get_motor1());
+    EXPECT_EQ(600, payload2.get_motor2());
+    EXPECT_EQ(500, payload2.get_motor3());
+    EXPECT_EQ(600, payload2.get_motor4());
+    EXPECT_EQ(0b01010101, payload2.get_in());
 }
 
 int main(int argc, char **argv) {
