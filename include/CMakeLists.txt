@@ -56,7 +56,7 @@ configure_file(fatcnt/environment/rrserial.hpp.in fatcnt/environment/rrserial.hp
 # End Serial type configuration
 
 #Exceptions
-set(EXCEPTIONS InvalidManifestException MissingRequiredAttributeException QueueDoesNotExit ExceedMaxMessage InvalidMessageSent InvalidFormat InvalidCommand UnsupportedAttribute)
+set(EXCEPTIONS InvalidManifestException MissingRequiredAttributeException QueueDoesNotExit ExceedMaxMessage InvalidMessageSent InvalidFormat InvalidCommand UnsupportedAttribute BadConnectionException)
 set(INCLUDE_CONTENT "")
 foreach(item ${EXCEPTIONS})
   set(EXCEPTION_NAME ${item})

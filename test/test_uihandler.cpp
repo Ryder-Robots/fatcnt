@@ -60,7 +60,7 @@ class MockExternal : public External {
         return 1;
     }
 
-    MOCK_METHOD(int, accept_rr, (bool accept), (override));
+    MOCK_METHOD(int, accept_rr, (), (override));
     MOCK_METHOD(ssize_t, send_rr, (const void *buf, size_t bufsz), (override));
     MOCK_METHOD(size_t, available, (), (override));
 

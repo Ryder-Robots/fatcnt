@@ -55,12 +55,15 @@ namespace rrobot {
 
             void reload() override;
 
+            void shutDown() override;
+
         private:
             External*         _external;
             const char        _delimiter = 0x1E;
             char*             _buffer;
             Serializer<json>* _serializer;
             bool              _available = true;
+            RRP_STATUS        _status = RRP_STATUS::INITILIZING;
     };
 }
 

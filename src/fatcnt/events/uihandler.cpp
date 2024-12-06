@@ -6,7 +6,7 @@ using json = nlohmann::json;
 
 dlib::logger dlog_ui("rr_robot_ui");
 
-void UiHandler::init(External *external, StateIface* state, Serializer<json>* serializer) {
+void UiHandler::init(External* external, StateIface* state, Serializer<json>* serializer) {
     /**
      * forwards messages from USER_INTERFACE to catagorizer, if they are authenticated
      * messages from catagorizer are sent to socket.
@@ -16,7 +16,7 @@ void UiHandler::init(External *external, StateIface* state, Serializer<json>* se
 
     EventHandler::init(state->getQueues(), MSPDIRECTION::USER_INTERFACE, MSPDIRECTION::CATEGORIZER);
     _external = external;
-    _buffer = static_cast<char *>(malloc(BUFSIZ * sizeof(char)));
+    _buffer = static_cast<char*>(malloc(BUFSIZ * sizeof(char)));
     _serializer = serializer;
 }
 
@@ -24,7 +24,12 @@ bool UiHandler::consume(Event* event, StateIface* state) {
     _available = false;
     json out = _serializer->serialize(event);
     string output = out.dump();
-    _external->send_rr(output.c_str(),  output.length() * sizeof(char));
+    if (_external->send_rr(output.c_str(), output.length() * sizeof(char)) == -1) {
+        dlog_ui << dlib::LFATAL
+            << "sommething went wrong when accepting connection: " + to_string(errno) + ": " + strerror(errno);
+        throw BadConnectionException("sommething went wrong when accepting connection: " + to_string(errno) + ": " +
+            strerror(errno));        
+    }
     _available = true;
     return true;
 }
@@ -70,17 +75,29 @@ Event* UiHandler::produce(StateIface* state) {
     return event;
 }
 
-bool UiHandler::available() {
-    return _external->available() && _available;
+bool UiHandler::available() { return _external->available() && _available; }
+
+RRP_STATUS UiHandler::status() { return _status; }
+
+void UiHandler::startUp() {
+    RRP_STATUS lstatus = RRP_STATUS::ACTIVE;
+    if (_external->accept_rr() == -1) {
+        dlog_ui << dlib::LFATAL
+            << "sommething went wrong when accepting connection: " + to_string(errno) + ": " + strerror(errno);
+        throw BadConnectionException("sommething went wrong when accepting connection: " + to_string(errno) + ": " +
+            strerror(errno));
+    }
+    dlog_ui << dlib::LINFO << " established successful connection";
+    _status = lstatus;
 }
 
-//TODO: this needs to be implemented.
- RRP_STATUS UiHandler::status() {
-    return RRP_STATUS::ACTIVE;
- }
+void UiHandler::shutDown() {
+    dlog_ui << dlib::LINFO << "connecton is closed";
+    _external->close_rr();
+}
 
- //TODO: this needs to be implemented
-  void UiHandler::startUp() {}
-
-//TODO: this needs to be implemented,
-void UiHandler::reload() {}
+void UiHandler::reload() {
+    dlog_ui << dlib::LERROR << "attempting to stop and re-establish connection";
+    shutDown();
+    startUp();
+}

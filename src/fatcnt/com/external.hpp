@@ -40,7 +40,7 @@ namespace rrobot {
          * @param accept the connection or reject.
          * @return file descriptor.
          */
-        virtual int accept_rr(bool accept) {return 0;}
+        virtual int accept_rr() {return 0;}
 
         /**
          * @fn close_rr
