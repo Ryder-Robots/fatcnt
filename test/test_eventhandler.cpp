@@ -28,6 +28,10 @@ class MockConcreteHandler : public EventHandler {
     MOCK_METHOD(bool, available, (), (override));
     MOCK_METHOD(bool, consume, (Event*, StateIface*), (override));
     MOCK_METHOD(Event*, produce, (StateIface*), (override));
+
+    RRP_STATUS status() {
+        return RRP_STATUS::ACTIVE;
+    }
 };
 
 class MockState : public StateIface {

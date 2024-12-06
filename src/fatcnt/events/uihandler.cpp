@@ -73,3 +73,14 @@ Event* UiHandler::produce(StateIface* state) {
 bool UiHandler::available() {
     return _external->available() && _available;
 }
+
+//TODO: this needs to be implemented.
+ RRP_STATUS UiHandler::status() {
+    return RRP_STATUS::ACTIVE;
+ }
+
+ //TODO: this needs to be implemented
+  void UiHandler::startUp() {}
+
+//TODO: this needs to be implemented,
+void UiHandler::reload() {}

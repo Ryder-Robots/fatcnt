@@ -4,40 +4,57 @@ using namespace rrobot;
 
 dlib::logger dlog_hnd("rr_robot_eventhandler");
 
+
+void EventHandler::handleProduceEvents(EventHandler* handler, StateIface* state) {
+    const std::lock_guard<std::mutex> lock(*handler->_outbound_lock);
+    for (int i = 0; i < handler->_limit; i++) {
+        if (!handler->available()) {
+            break;
+        }
+        handler->_outbound_queue->push(handler->produce(state));
+    }    
+}
+
+void EventHandler::handleConsumeEvents(EventHandler* handler, StateIface* state) {
+    const std::lock_guard<std::mutex> lock(*handler->_lock);
+    for (int i = 0; i < handler->_limit; i++) {
+        if (handler->_queue->empty()) {
+            break;
+        }
+        Event* event = handler->_queue->front();
+        handler->consume(event, state);
+        handler->_queue->pop();
+    }
+}
+
 /**
  * @fn handleEvent
  * @brief
  * Uses FIFO queueing to consume and produce events.
  */
 void EventHandler::handleEvent(EventHandler* handler, StateIface* state) {
+    handler->startUp();
+    // Get initial status from handler
+    RRP_STATUS status = handler->status();
+
     // isRunning can be considered a kill switch if it is hit, then stop
     while (state->isRunning()) {
         try {
-            handler->_outbound_lock->lock();
-            for (int i = 0; i < handler->_limit; i++) {
-                if (!handler->available()) {
-                    break;
-                }
-                handler->_outbound_queue->push(handler->produce(state));
-            }
-            handler->_outbound_lock->unlock();
+            if (status == RRP_STATUS::ACTIVE) {
+                handleProduceEvents(handler, state);
+                handleConsumeEvents(handler, state);
 
-            handler->_lock->lock();
-            for (int i = 0; i < handler->_limit; i++) {
-                if (handler->_queue->empty()) {
-                    break;
-                }
-
-                Event* event = handler->_queue->front();
-                handler->consume(event, state);
-                handler->_queue->pop();
+            } else if (handler->status() == RRP_STATUS::ERROR) {
+                handler->reload();
             }
-            handler->_lock->unlock();
 
         } catch (const std::exception& e) {
+            status = RRP_STATUS::ERROR;
+            handler->reload();
             dlog_hnd << dlib::LERROR << "error occured while handling event " << e.what();
         }
         this_thread::sleep_for(handler->_thread_wait_time);
+        status = handler->status();
     }
 }
 

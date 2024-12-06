@@ -81,6 +81,7 @@ set(fatcnt_INCLUDE
   fatcnt/state/state.hpp
   fatcnt/state/stateiface.hpp
   fatcnt/protocols/common/curators/rrp/rrpcuratorabstract.hpp
+  fatcnt/protocols/rrp/rrpstatus.hpp
 )
 foreach(item ${fatcnt_INCLUDE})
   configure_file("${item}.in" ${item} @ONLY)

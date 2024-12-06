@@ -49,6 +49,12 @@ namespace rrobot {
              */
             bool available() override;
 
+            RRP_STATUS status() override;
+
+            void startUp() override;
+
+            void reload() override;
+
         private:
             External*         _external;
             const char        _delimiter = 0x1E;
