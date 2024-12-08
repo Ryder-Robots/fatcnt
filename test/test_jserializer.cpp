@@ -29,14 +29,15 @@ TEST(TestJserializer, TestSerialize) {
 
 TEST(TestJserializer, TestDeserialize) {
     json in = {
-        {"command", "MSP_AUTHKEY"},
-        {"payload", {"key", "test"}}
+        {"command", "MSP_AUTHKEY"}
     };
+    in["payload"]["key"] = "test";
+
+    cout << "json in = " + in.dump() << "\n";
 
     Jseralizer jserializer = Jseralizer();
     Event* event = jserializer.deserialize(in);
     msp_authkey payload = event->getPayload<msp_authkey>();
-
 
     EXPECT_EQ(MSPCOMMANDS::MSP_AUTHKEY, event->getCommand());
     EXPECT_EQ("test", payload.get_key());

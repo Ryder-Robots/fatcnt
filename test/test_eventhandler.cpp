@@ -28,12 +28,15 @@ class MockConcreteHandler : public EventHandler {
     MOCK_METHOD(bool, available, (), (override));
     MOCK_METHOD(bool, consume, (Event*, StateIface*), (override));
     MOCK_METHOD(Event*, produce, (StateIface*), (override));
+
+    RRP_STATUS status() {
+        return RRP_STATUS::ACTIVE;
+    }
 };
 
 class MockState : public StateIface {
     public:
     MOCK_METHOD(bool, isRunning, (), (override));
-    MOCK_METHOD(bool, isAuthenticated, (), (override));
 };
 
 TEST(TestEventHandler, TestAbstractHandler) {
@@ -54,8 +57,6 @@ TEST(TestEventHandler, TestAbstractHandler) {
     EXPECT_CALL(mockState, isRunning())
         .WillOnce(Return(true))
         .WillOnce(Return(false));
-    EXPECT_CALL(mockState, isAuthenticated())
-        .WillOnce(Return(true));
 
     mockConcreteHandler->handleEvent(mockConcreteHandler, &mockState);
 }
@@ -89,8 +90,6 @@ TEST(TestEventHandler, TestConsumeEvent) {
     EXPECT_CALL(mockState, isRunning())
         .WillOnce(Return(true))
         .WillOnce(Return(false));
-    EXPECT_CALL(mockState, isAuthenticated())
-        .WillOnce(Return(true));
     EXPECT_CALL(mockConcreteHandler, consume(_, _))
         .Times(1)
         .WillOnce(Return(true));
@@ -119,8 +118,6 @@ TEST(TestEventHandler, TestProduceEvent) {
     EXPECT_CALL(mockState, isRunning())
         .WillOnce(Return(true))
         .WillOnce(Return(false));
-    EXPECT_CALL(mockState, isAuthenticated())
-        .WillOnce(Return(true));
 
     msp_authkey* payload = new msp_authkey();
     payload->set_key("test");
