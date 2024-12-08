@@ -33,7 +33,7 @@ void EventHandler::handleConsumeEvents(EventHandler* handler, StateIface* state)
  * Uses FIFO queueing to consume and produce events.
  */
 void EventHandler::handleEvent(EventHandler* handler, StateIface* state) {
-    handler->startUp();
+    handler->setUp();
     // Get initial status from handler
     RRP_STATUS status = handler->status();
 
@@ -56,6 +56,7 @@ void EventHandler::handleEvent(EventHandler* handler, StateIface* state) {
         this_thread::sleep_for(handler->_thread_wait_time);
         status = handler->status();
     }
+    handler->tearDown();
 }
 
 /**

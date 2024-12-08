@@ -51,11 +51,11 @@ namespace rrobot {
 
             RRP_STATUS status() override;
 
-            void startUp() override;
+            void setUp() override;
 
             void reload() override;
 
-            void shutDown() override;
+            void tearDown() override;
 
         private:
             External*         _external;

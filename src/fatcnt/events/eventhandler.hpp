@@ -76,18 +76,18 @@ class EventHandler {
     virtual RRP_STATUS status() = 0;
 
     /**
-     * @fn startUp
+     * @fn setUp
      * @brief
      * if defined by the handler performs any start up routine necessary
      */
-    virtual void startUp() {}
+    virtual void setUp() {}
 
     /**
      * @fn shutDown
      * @brief
      * called when isRunning() == false and when defined by handler indicates that the drone should be taken offline.
      */
-    virtual void shutDown() {}
+    virtual void tearDown() {}
 
     /**
      * @fn reload

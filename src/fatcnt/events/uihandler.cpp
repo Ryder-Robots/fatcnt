@@ -23,7 +23,7 @@ void UiHandler::init(External* external, StateIface* state, Serializer<json>* se
 bool UiHandler::consume(Event* event, StateIface* state) {
     _available = false;
     json out = _serializer->serialize(event);
-    string output = out.dump();
+    string output = out.dump() + _delimiter;
     if (_external->send_rr(output.c_str(), output.length() * sizeof(char)) == -1) {
         dlog_ui << dlib::LFATAL
             << "sommething went wrong when accepting connection: " + to_string(errno) + ": " + strerror(errno);
@@ -79,7 +79,7 @@ bool UiHandler::available() { return _external->available() && _available; }
 
 RRP_STATUS UiHandler::status() { return _status; }
 
-void UiHandler::startUp() {
+void UiHandler::setUp() {
     RRP_STATUS lstatus = RRP_STATUS::ACTIVE;
     if (_external->accept_rr() == -1) {
         dlog_ui << dlib::LFATAL
@@ -91,13 +91,13 @@ void UiHandler::startUp() {
     _status = lstatus;
 }
 
-void UiHandler::shutDown() {
+void UiHandler::tearDown() {
     dlog_ui << dlib::LINFO << "connecton is closed";
     _external->close_rr();
 }
 
 void UiHandler::reload() {
     dlog_ui << dlib::LERROR << "attempting to stop and re-establish connection";
-    shutDown();
-    startUp();
+    setUp();
+    tearDown();
 }

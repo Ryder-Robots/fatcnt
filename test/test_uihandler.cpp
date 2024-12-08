@@ -9,6 +9,7 @@
 #include <fatcnt/environment/environmentProcessor.hpp>
 #include <fatcnt/events/ui/jseralizer.hpp>
 #include <fatcnt/events/uihandler.hpp>
+#include <fatcnt/protocols/common/mspcommands.hpp>
 
 using namespace std;
 using namespace rrobot;
@@ -54,11 +55,16 @@ class MockExternal : public External {
         return 1;
     }
 
+    ssize_t send_rr(const void *buf, size_t bufsz) {
+        _outbound = string(reinterpret_cast<const char*>(buf));
+        return bufsz;
+    }
+
     MOCK_METHOD(int, accept_rr, (), (override));
-    MOCK_METHOD(ssize_t, send_rr, (const void *buf, size_t bufsz), (override));
     MOCK_METHOD(size_t, available, (), (override));
 
     string _response;
+    string _outbound = "";
 
     private:
     int _pointer = 0;
@@ -144,6 +150,56 @@ TEST(TestUiHandler, TestInBoundEvents) {
     EXPECT_EQ(500, payload2.get_motor3());
     EXPECT_EQ(600, payload2.get_motor4());
     EXPECT_EQ(0b01010101, payload2.get_in());
+}
+
+TEST(TestUiHandler, TestOutBoundEvents) {
+    msp_set_motor_hbridge* payload = new  msp_set_motor_hbridge();
+    payload->set_motor1(500);
+    payload->set_motor2(600);
+    payload->set_motor3(700);
+    payload->set_motor4(800);
+    payload->set_in(0b10101010);
+
+    Event* event = new Event(MSPCOMMANDS::MSP_SET_MOTOR_HBRIDGE, MSPDIRECTION::USER_INTERFACE, payload);
+
+    UiHandler uihandler = UiHandler();
+    const fs::path filepath = "manifests/virtual.json";
+    ifstream ifs(filepath);
+    json manifest = json::parse(ifs);
+    ifs.close();
+
+    vector<MSPDIRECTION> directions = {MSPDIRECTION::USER_INTERFACE, MSPDIRECTION::CATEGORIZER};
+    Environment environment = EnviromentProcessor::createEnvironment(manifest);
+    State* state = StateFactory::createState(environment, directions);
+    Serializer<json>* serializer = new Jseralizer();
+
+    MockExternal external = MockExternal();
+    uihandler.init(&external, state, serializer);
+
+    EXPECT_CALL(external, available())
+        .Times(AnyNumber());
+
+    queue<Event*>* thisQueue = state->getQueues()->getQueue(MSPDIRECTION::USER_INTERFACE);
+    thisQueue->emplace(event);
+
+    thread t(&UiHandler::handleEvent, &uihandler, state);
+    std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+    state->setIsRunning(false);
+
+    while (!t.joinable()) {
+        std::this_thread::sleep_for(std::chrono::milliseconds(10));
+    }
+    if (t.joinable()) {
+        t.join();
+    }
+
+    json j = json::parse(external._outbound.substr(0, external._outbound.length() - 1));
+    EXPECT_EQ(500, j["payload"]["motor1"]);
+    EXPECT_EQ(600, j["payload"]["motor2"]);
+    EXPECT_EQ(700, j["payload"]["motor3"]);
+    EXPECT_EQ(800, j["payload"]["motor4"]);
+    EXPECT_EQ(0b10101010, j["payload"]["in"]);
+    EXPECT_EQ("MSP_SET_MOTOR_HBRIDGE", j["command"]);
 }
 
 int main(int argc, char **argv) {
