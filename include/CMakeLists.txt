@@ -55,6 +55,15 @@ set(VALID_STOPBIT ${LOOP_CONTENT})
 configure_file(fatcnt/environment/rrserial.hpp.in fatcnt/environment/rrserial.hpp @ONLY)
 # End Serial type configuration
 
+# Catagorizer CMODES
+set(LOOP_CONTENT "")
+set(CMODES CMODE_MANUAL_FLIGHT)
+foreach(item CMODES)
+  string(APPEND LOOP_CONTENT "${item},\n")
+endforeach()
+configure_file(fatcnt/events/catagorizer/cmodes.hpp.in fatcnt/events/catagorizer/cmodes.hpp @ONLY)
+# end catagorizers
+
 #Exceptions
 set(EXCEPTIONS InvalidManifestException MissingRequiredAttributeException QueueDoesNotExit ExceedMaxMessage InvalidMessageSent InvalidFormat InvalidCommand UnsupportedAttribute BadConnectionException)
 set(INCLUDE_CONTENT "")

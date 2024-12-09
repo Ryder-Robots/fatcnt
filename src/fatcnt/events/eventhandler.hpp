@@ -96,17 +96,27 @@ class EventHandler {
      */
     virtual void reload() {}
 
+    /**
+     * @fn onError
+     * @brief 
+     * when in implmented called when an error has occured within handler.
+     * @param exception that has occured.
+     */
+    virtual void onError(const std::exception& e) {}
+
+   protected:
+    queue<Event*>* _queue;
+    mutex* _lock;
+    queue<Event*>* _outbound_queue;
+    mutex* _outbound_lock;
+
    private:
 
     static void handleProduceEvents(EventHandler* handler, StateIface* state);
     static void handleConsumeEvents(EventHandler* handler, StateIface* state);
 
-    queue<Event*>* _queue;
-    mutex* _lock;
     int _limit;
     chrono::milliseconds _thread_wait_time;
-    queue<Event*>* _outbound_queue;
-    mutex* _outbound_lock;
 };
 }  // namespace rrobot
 
