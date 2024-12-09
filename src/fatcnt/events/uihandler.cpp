@@ -70,7 +70,7 @@ Event* UiHandler::produce(StateIface* state) {
         throw MissingRequiredAttributeException("command and payload are required acttributes");
     }
 
-    Event* event = _serializer->deserialize(j);
+    Event* event = _serializer->deserialize(j, MSPDIRECTION::EXTERNAL_IN);
     _available = true;
     return event;
 }
