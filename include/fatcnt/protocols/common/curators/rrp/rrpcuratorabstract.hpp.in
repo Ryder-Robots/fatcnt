@@ -15,9 +15,27 @@ namespace rrobot {
      */
     class RrpCuratorAbstract {
         public:
+
+        /**
+         * @fn deserialize
+         * @brief
+         * desialize event with payload.
+         */
         virtual Event* deserialize(json in) = 0;
 
+        /**
+         * @fn serialize
+         * @brief
+         * serialize outbound event.
+         */
         virtual json serialize(Event *in) = 0;
+
+        /**
+         * @fn deserialize
+         * @brief
+         * desialize event without a payload.
+         */
+        virtual Event* deserialize(MSPDIRECTION direction) = 0;
     };
 }
 

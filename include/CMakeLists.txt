@@ -55,6 +55,15 @@ set(VALID_STOPBIT ${LOOP_CONTENT})
 configure_file(fatcnt/environment/rrserial.hpp.in fatcnt/environment/rrserial.hpp @ONLY)
 # End Serial type configuration
 
+# Catagorizer CMODES
+set(LOOP_CONTENT "")
+set(CMODES CMODE_MANUAL_FLIGHT)
+foreach(item CMODES)
+  string(APPEND LOOP_CONTENT "${item},\n")
+endforeach()
+configure_file(fatcnt/events/catagorizer/cmodes.hpp.in fatcnt/events/catagorizer/cmodes.hpp @ONLY)
+# end catagorizers
+
 #Exceptions
 set(EXCEPTIONS InvalidManifestException MissingRequiredAttributeException QueueDoesNotExit ExceedMaxMessage InvalidMessageSent InvalidFormat InvalidCommand UnsupportedAttribute BadConnectionException)
 set(INCLUDE_CONTENT "")
@@ -156,7 +165,7 @@ foreach(item ${MSPCOMMANDS})
       list(GET pair 1 member)
       string(APPEND GETTERS "    void set_${member}(${type} ${member})\{_${member} = ${member};\}\n    ${type} get_${member}()\{return _${member};\}\n")
       string(APPEND MEMBERS "    ${type} _${member};\n")
-      string(APPEND CURATOR_SETTERS "            validate(\"${member}\", in);\n            payload->set_${member}(in[\"${member}\"]);\n")
+      string(APPEND CURATOR_SETTERS "                validate(\"${member}\", in);\n                payload->set_${member}(in[\"${member}\"]);\n")
       string(APPEND CURATOR_SERIALIZER_SETTERS "                    \{\"${member}\", payload.get_${member}()\},\n")
     endforeach()
   endif()

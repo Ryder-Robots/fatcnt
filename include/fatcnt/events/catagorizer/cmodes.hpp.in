@@ -1,0 +1,15 @@
+#ifndef CMODES_HPP
+#define CMODES_HPP
+
+namespace rrobot {
+    /**
+     * @enum RR_CMMODES
+     * @brief
+     * RR_CMODES are used by catagorizer to define which mode to use.
+     */
+    enum RR_CMMODES {
+        @LOOP_CONTENT@
+    };
+}
+
+#endif // CMODES_HPP

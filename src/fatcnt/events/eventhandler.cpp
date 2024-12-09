@@ -52,6 +52,7 @@ void EventHandler::handleEvent(EventHandler* handler, StateIface* state) {
             status = RRP_STATUS::ERROR;
             handler->reload();
             dlog_hnd << dlib::LERROR << "error occured while handling event " << e.what();
+            handler->onError(e);
         }
         this_thread::sleep_for(handler->_thread_wait_time);
         status = handler->status();

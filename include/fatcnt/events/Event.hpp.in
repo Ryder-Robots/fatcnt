@@ -11,10 +11,27 @@ namespace rrobot {
  */
 class Event {
    public:
+    // constructor for outbound, or requests with a payload.
     Event(MSPCOMMANDS command, MSPDIRECTION direction, void* payload)
         : _command(command), 
           _direction(_direction),
-          _payload(payload) {}
+          _payload(payload) {
+        
+        _hasPayload = true;
+    }
+
+    // constructor for inbound request, payload is not set.
+    Event(MSPCOMMANDS command, MSPDIRECTION direction)        
+        : _command(command), 
+          _direction(_direction) {}
+
+    /**
+     * @fn hasPayload
+     * @brief
+     * returns true if payload has been set (this usually indicates outbound), false if not this will usually indicate
+     * inbound.
+     */
+    bool hasPayload() {return _hasPayload;}
 
     /**
      * @fn getPayload
@@ -38,6 +55,7 @@ class Event {
     const MSPCOMMANDS  _command;   // command
     const MSPDIRECTION _direction; // direction of command
     void*              _payload;   // payload
+    bool               _hasPayload = false;    
 };
 }  // namespace rrobot
 

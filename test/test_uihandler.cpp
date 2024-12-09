@@ -47,7 +47,26 @@ class MockExternal : public External {
         payload["in"] = 0b01010101;
 
         inbound["payload"] = payload;
-        _response = inbound.dump() + string(1, 0x1E) + inbound.dump();
+
+        // second message
+        json inbound2;
+        inbound2["command"] = "MSP_SET_MOTOR_HBRIDGE";
+        json payload2;
+        payload2["motor1"] = 500;
+        payload2["motor2"] = 600;
+
+        payload2["motor3"] = 500;
+        payload2["motor4"] = 600;
+
+        // set polarity of motors
+        payload2["in"] = 0b01010101;
+
+        inbound2["payload"] = payload;
+
+        // test an ident request.
+        json msp_ident;
+        msp_ident["command"] = "MSP_IDENT";
+        _response = inbound.dump() + string(1, 0x1E) + inbound2.dump() + string(1, 0x1E) + msp_ident.dump() +  string(1, 0x1E);
     }
 
     ssize_t recv_rr(void* buffer, size_t bufsz) override {
@@ -60,15 +79,18 @@ class MockExternal : public External {
         return bufsz;
     }
 
+    size_t available() {
+        return _response.size() - _pointer;
+    }
+
     MOCK_METHOD(int, accept_rr, (), (override));
-    MOCK_METHOD(size_t, available, (), (override));
+    // MOCK_METHOD(size_t, available, (), (override));
 
     string _response;
     string _outbound = "";
 
     private:
-    int _pointer = 0;
-   
+    int _pointer = 0;   
 };
 
 TEST(TestUniHandler, TestInit) {
@@ -103,13 +125,6 @@ TEST(TestUiHandler, TestInBoundEvents) {
 
     MockExternal external = MockExternal();
     uihandler.init(&external, state, serializer);
-
-    EXPECT_CALL(external, available())
-        .Times(AnyNumber())
-        .WillOnce(Return(external._response.size()))
-        .WillOnce(Return(1))
-        .WillOnce(Return(0))
-        .WillOnce(Return(0));
         
     thread t(&UiHandler::handleEvent, &uihandler, state);
     // if (t.joinable()) {
@@ -129,10 +144,12 @@ TEST(TestUiHandler, TestInBoundEvents) {
     queue<Event*>* thisQueue = state->getQueues()->getQueue(MSPDIRECTION::CATEGORIZER);
     size_t sz = thisQueue->size();
 
-    EXPECT_EQ(2, sz);
+    EXPECT_EQ(3, sz);
     Event* event1 = thisQueue->front();
     thisQueue->pop();
     Event* event2 = thisQueue->front();
+    thisQueue->pop();
+    Event* event3 = thisQueue->front();
     thisQueue->pop();
 
     msp_set_motor_hbridge payload1 = event1->getPayload<msp_set_motor_hbridge>(), 
@@ -143,13 +160,18 @@ TEST(TestUiHandler, TestInBoundEvents) {
     EXPECT_EQ(600, payload1.get_motor2());
     EXPECT_EQ(500, payload1.get_motor3());
     EXPECT_EQ(600, payload1.get_motor4());
+    EXPECT_EQ(true, event1->hasPayload());
     EXPECT_EQ(0b01010101, payload1.get_in());
 
     EXPECT_EQ(500, payload2.get_motor1());
     EXPECT_EQ(600, payload2.get_motor2());
     EXPECT_EQ(500, payload2.get_motor3());
     EXPECT_EQ(600, payload2.get_motor4());
+    EXPECT_EQ(true, event2->hasPayload());
     EXPECT_EQ(0b01010101, payload2.get_in());
+
+    EXPECT_EQ(false, event3->hasPayload());
+    EXPECT_EQ(MSPCOMMANDS::MSP_IDENT, event3->getCommand());
 }
 
 TEST(TestUiHandler, TestOutBoundEvents) {
@@ -175,9 +197,6 @@ TEST(TestUiHandler, TestOutBoundEvents) {
 
     MockExternal external = MockExternal();
     uihandler.init(&external, state, serializer);
-
-    EXPECT_CALL(external, available())
-        .Times(AnyNumber());
 
     queue<Event*>* thisQueue = state->getQueues()->getQueue(MSPDIRECTION::USER_INTERFACE);
     thisQueue->emplace(event);
