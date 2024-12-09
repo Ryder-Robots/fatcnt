@@ -26,17 +26,17 @@ class @CURATOR_CLASS_NAME@ : public RrpCuratorAbstract {
     public:
         @CURATOR_CLASS_NAME@(MSPDIRECTION direction = MSPDIRECTION::@DIRECTION@):_direction(direction) {}
 
+        Event* deserialize(MSPDIRECTION direction) {
+            Event* event = new Event(@MSP_COMMAND@, direction);
+            return event;
+        }
+
         #if @MCURATATOR_DESERIALIZER@ == 1
         Event* deserialize(json in) override {
             Event* event;
-            if (_direction == MSPDIRECTION::EXTERNAL_IN) {
-                // request for a payload.
-                event = new Event(@MSP_COMMAND@, _direction);
-            } else {
                 @CLASS_NAME@* payload = new @CLASS_NAME@(); 
                 event = new Event(@MSP_COMMAND@, _direction, payload);
 @CURATOR_SETTERS@
-            }
             return event;
         }
         #else
