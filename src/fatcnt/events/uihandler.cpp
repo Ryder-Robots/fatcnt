@@ -65,9 +65,9 @@ Event* UiHandler::produce(StateIface* state) {
     }
 
     json j = json::parse(token);
-    if (!(j.contains("command") && j.contains("payload"))) {
-        dlog_ui << dlib::LERROR << "command and payload are required acttributes";
-        throw MissingRequiredAttributeException("command and payload are required acttributes");
+    if (!j.contains("command")) {
+        dlog_ui << dlib::LERROR << "command is a required attribute";
+        throw MissingRequiredAttributeException("command is a required attribute");
     }
 
     Event* event = _serializer->deserialize(j, MSPDIRECTION::EXTERNAL_IN);
