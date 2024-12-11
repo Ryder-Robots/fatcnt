@@ -2,7 +2,7 @@
 
 using namespace rrobot;
 
-State* StateFactory::createState(Environment environment, vector<MSPDIRECTION> directions) {
+State* StateFactory::createState(Environment environment, vector<RRP_QUEUES> queuesNames) {
 
     RrQueues* queues = new RrQueues(
         environment.getQueues().getLimit(),
@@ -12,10 +12,10 @@ State* StateFactory::createState(Environment environment, vector<MSPDIRECTION> d
 
     State* state = new State(queues);
 
-    for (auto direction : directions) {
+    for (auto queueName : queuesNames) {
         mutex* lock = new mutex();
         queue<Event*>* q = new queue<Event*>();
-        queues->setQueue(direction, q, lock);
+        queues->setQueue(queueName, q, lock);
     }
 
     return state; 

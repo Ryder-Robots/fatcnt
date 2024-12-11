@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 
 #include <fatcnt/events/ui/jseralizer.hpp>
+#include <fatcnt/state/rrpqueues.hpp>
 
 using namespace rrobot;
 
@@ -20,7 +21,7 @@ TEST(TestJserializer, TestSerialize) {
 
     msp_authkey *mspAuthKey = new msp_authkey();
     mspAuthKey->set_key("test");
-    Event *event = new Event(MSPCOMMANDS::MSP_AUTHKEY, MSPDIRECTION::USER_INTERFACE, mspAuthKey);
+    Event *event = new Event(MSPCOMMANDS::MSP_AUTHKEY, MSPDIRECTION::EXTERNAL_IN, mspAuthKey);
     json out = jserializer.serialize(event);
 
     EXPECT_EQ("MSP_AUTHKEY", out["command"]);

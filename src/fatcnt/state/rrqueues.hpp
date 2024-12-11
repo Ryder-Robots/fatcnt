@@ -8,6 +8,7 @@
 #include <unordered_map>
 #include <fatcnt/events/Event.hpp>
 #include <fatcnt/exceptions/exceptions.hpp>
+#include <fatcnt/state/rrpqueues.hpp>
 
 using namespace std;
 
@@ -38,26 +39,26 @@ namespace rrobot {
              * @param direction queue that should be listened too.
              * @return queue
              */
-            queue<Event*>* getQueue(MSPDIRECTION direction);
+            queue<Event*>* getQueue(RRP_QUEUES direction);
 
             /**
              * @fn getLock
              * @brief
              * Gets a lock given a direction.
              */
-            mutex* getLock(MSPDIRECTION direction);
+            mutex* getLock(RRP_QUEUES direction);
         
             /**
              * @fn setQueue
              * @brief
              * Used by stateFactory to create queues from configuration in drones manifest.
              */
-            void setQueue(MSPDIRECTION direction, queue<Event*>* queue, mutex* lock);
+            void setQueue(RRP_QUEUES direction, queue<Event*>* queue, mutex* lock);
 
         private:
 
-            unordered_map<MSPDIRECTION, queue<Event*>*>      _queues;     // events to be sent to user interface
-            unordered_map<MSPDIRECTION, mutex*>              _locks;      // lock for UI queue
+            unordered_map<RRP_QUEUES, queue<Event*>*>      _queues;     // events to be sent to user interface
+            unordered_map<RRP_QUEUES, mutex*>              _locks;      // lock for UI queue
     };
 }
 

@@ -14,7 +14,7 @@ void UiHandler::init(External* external, StateIface* state, Serializer<json>* se
     dlog_ui.set_level(dlib::LALL);
     dlog_ui << dlib::LINFO << "configurating queues";
 
-    EventHandler::init(state->getQueues(), MSPDIRECTION::USER_INTERFACE, MSPDIRECTION::CATEGORIZER);
+    EventHandler::init(state->getQueues(), RRP_QUEUES::USER_INTERFACE, RRP_QUEUES::CATEGORIZER);
     _external = external;
     _buffer = static_cast<char*>(malloc(BUFSIZ * sizeof(char)));
     _serializer = serializer;

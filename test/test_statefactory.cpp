@@ -5,6 +5,7 @@
 #include <iostream>
 #include <stdint.h>
 #include <fatcnt/state/statefactory.hpp>
+#include <fatcnt/state/rrpqueues.hpp>
 #include <fatcnt/environment/environmentProcessor.hpp>
 #include <fatcnt/protocols/common/mspdirection.hpp>
 #include <nlohmann/json.hpp>
@@ -32,13 +33,13 @@ TEST(TestStateFactory, TestStateFactoryCreate) {
     ifs.close();
 
     // directions are supplied by the handler, and must include queues that are needed by the handler.
-    vector<MSPDIRECTION> directions = {MSPDIRECTION::USER_INTERFACE};
+    vector<RRP_QUEUES> directions = {RRP_QUEUES::USER_INTERFACE};
     Environment environment = EnviromentProcessor::createEnvironment(manifest);
     State* state = StateFactory::createState(environment, directions);
 
     EXPECT_EQ(true, state->isRunning());
 
-    queue<Event*>* queueUserInterface = state->getQueues()->getQueue(MSPDIRECTION::USER_INTERFACE);
+    queue<Event*>* queueUserInterface = state->getQueues()->getQueue(RRP_QUEUES::USER_INTERFACE);
 }
 
 int main(int argc, char **argv) {

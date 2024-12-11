@@ -11,7 +11,7 @@ void RrCatagorizer::init(RrQueues* queues, StateIface *state, Environment* envir
     _environment = environment;
 
     dlog_c << dlib::LINFO << "creating event handlers and initilizing queues";
-    EventHandler::init(queues, MSPDIRECTION::CATEGORIZER, MSPDIRECTION::USER_INTERFACE);
+    EventHandler::init(queues, RRP_QUEUES::CATEGORIZER, RRP_QUEUES::USER_INTERFACE);
     vector<EventHandler*> handlers = mapper->createEventHandlers(environment, state);
 
     dlog_c << dlib::LINFO << "creating threads";

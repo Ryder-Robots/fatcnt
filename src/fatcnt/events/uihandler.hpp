@@ -6,6 +6,7 @@
 #include <fatcnt/events/serializer.hpp>
 #include <fatcnt/com/external.hpp>
 #include <fatcnt/exceptions/exceptions.hpp>
+#include <fatcnt/state/rrpqueues.hpp>
 
 #include "eventhandler.hpp"
 

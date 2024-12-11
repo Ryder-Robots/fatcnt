@@ -8,6 +8,7 @@
 #include <fatcnt/events/Event.hpp>
 #include <fatcnt/state/stateiface.hpp>
 #include <fatcnt/state/statefactory.hpp>
+#include <fatcnt/state/rrpqueues.hpp>
 #include <fatcnt/exceptions/exceptions.hpp>
 #include <fatcnt/protocols/rrp/rrpstatus.hpp>
 #include <mutex>
@@ -32,7 +33,7 @@ class EventHandler {
      * This method is called when program is reloaded, or initialization time by the queue manger
      *
      */
-    void init(RrQueues* queues, MSPDIRECTION inbound, MSPDIRECTION outbound);
+    void init(RrQueues* queues, RRP_QUEUES inbound, RRP_QUEUES outbound);
 
     /**
      * @fn handleEvent
