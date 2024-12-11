@@ -6,8 +6,7 @@
 #include <fatcnt/state/state.hpp>
 #include <fatcnt/environment/environment.hpp>
 #include <fatcnt/events/catagorizer/catgorizermapper.hpp>
-#include <fatcnt/protocols/common/curators/rrp/msp_ident.hpp>
-#include <fatcnt/protocols/common/curators/rrp/msp_status.hpp>
+#include <fatcnt/protocols/common/curators/rrp/rrpcurator.hpp>
 #include "eventhandler.hpp"
 
 namespace rrobot {

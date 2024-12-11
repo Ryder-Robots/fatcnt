@@ -4,6 +4,7 @@
 #include <vector>
 #include <fatcnt/environment/environment.hpp>
 #include <fatcnt/state/state.hpp>
+#include <fatcnt/state/rrpqueues.hpp>
 #include <fatcnt/protocols/common/mspdirection.hpp>
 #include <fatcnt/events/eventhandler.hpp>
 #include <fatcnt/events/Event.hpp>
@@ -35,17 +36,28 @@ namespace rrobot {
              * @brief
              * Applies any any overridden mapping that is a result of changing the drones mode.
              */
-            virtual MSPDIRECTION mapDirection(Event event, RR_CMMODES mode) {
-                return MSPDIRECTION::INVALID;
+            virtual RRP_QUEUES mapQueue(Environment* environment, StateIface* state, Event* event) {
+                return RRP_QUEUES::NONE;
             }
 
             /**
-             * @fn getDirections
+             * @fn initializeMode
              * @brief
-             * returns a list of supported directions.
+             * sets mapper to use a different mode, may also perform any changes to handlers that required.
+             * 
+             * if the request mode can be assigned for some reason then false is returned otherwise true.
              */
-            virtual vector<MSPDIRECTION> getDirections() {
-                vector<MSPDIRECTION> directions;
+            virtual bool initializeMode(Environment* environment, StateIface* state, RR_CMMODES mode) {
+                return false;    
+            }
+
+            /**
+             * @fn getQueues
+             * @brief
+             * returns a list of supported queue names.
+             */
+            virtual vector<RRP_QUEUES> getQueues() {
+                vector<RRP_QUEUES> directions;
                 return directions;
             }
     };
