@@ -25,21 +25,29 @@ namespace rrobot {
              * @brief
              * creates the event handler mapping.
              */
-            virtual vector<EventHandler*> createEventHandlers(Environment environment, StateIface state) = 0;
+            virtual vector<EventHandler*> createEventHandlers(Environment* environment, StateIface* state) {
+               vector<EventHandler*> handlers;
+               return handlers;
+            }
             
             /**
              * @fn mapDirection
              * @brief
              * Applies any any overridden mapping that is a result of changing the drones mode.
              */
-            virtual MSPDIRECTION mapDirection(Event event, RR_CMMODES mode) = 0;
+            virtual MSPDIRECTION mapDirection(Event event, RR_CMMODES mode) {
+                return MSPDIRECTION::INVALID;
+            }
 
             /**
              * @fn getDirections
              * @brief
              * returns a list of supported directions.
              */
-            virtual vector<MSPDIRECTION> getDirections() = 0;
+            virtual vector<MSPDIRECTION> getDirections() {
+                vector<MSPDIRECTION> directions;
+                return directions;
+            }
     };
 }
 

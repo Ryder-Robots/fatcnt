@@ -2,6 +2,7 @@
 #define EVENT_HPP
 
 #include <stdlib.h>
+#include <fatcnt/events/catagorizer/cmodes.hpp>
 #include <fatcnt/protocols/common/mspdirection.hpp>
 #include <fatcnt/protocols/common/mspcommands.hpp>
 

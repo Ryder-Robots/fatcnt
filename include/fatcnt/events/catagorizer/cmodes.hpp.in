@@ -8,7 +8,7 @@ namespace rrobot {
      * RR_CMODES are used by catagorizer to define which mode to use.
      */
     enum RR_CMMODES {
-        @LOOP_CONTENT@
+@LOOP_CONTENT@
     };
 }
 

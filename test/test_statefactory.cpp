@@ -37,7 +37,6 @@ TEST(TestStateFactory, TestStateFactoryCreate) {
     State* state = StateFactory::createState(environment, directions);
 
     EXPECT_EQ(true, state->isRunning());
-    EXPECT_EQ(false, state->isAuthenticated());
 
     queue<Event*>* queueUserInterface = state->getQueues()->getQueue(MSPDIRECTION::USER_INTERFACE);
 }

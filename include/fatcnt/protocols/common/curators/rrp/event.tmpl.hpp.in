@@ -5,6 +5,7 @@
 #include <string>
 #include <fatcnt/protocols/common/multitype.hpp>
 #include <fatcnt/protocols/common/mspversion.hpp>
+#include <fatcnt/events/catagorizer/cmodes.hpp>
 
 using namespace std;
 

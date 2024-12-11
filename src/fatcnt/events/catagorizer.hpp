@@ -6,6 +6,8 @@
 #include <fatcnt/state/state.hpp>
 #include <fatcnt/environment/environment.hpp>
 #include <fatcnt/events/catagorizer/catgorizermapper.hpp>
+#include <fatcnt/protocols/common/curators/rrp/msp_ident.hpp>
+#include <fatcnt/protocols/common/curators/rrp/msp_status.hpp>
 #include "eventhandler.hpp"
 
 namespace rrobot {
@@ -23,7 +25,7 @@ namespace rrobot {
              * @brief
              * Callled when object is created before thread is created.
              */
-            void init(RrQueues* queues, StateIface *state, Environment environment, RrCatagorizerMapper *mapper);
+            void init(RrQueues* queues, StateIface *state, Environment* environment, RrCatagorizerMapper *mapper);
 
             bool consume(Event* event, StateIface* state) override;
 
@@ -52,14 +54,18 @@ namespace rrobot {
              */
             void tearDown() override;
 
+            void onError(const std::exception& e) override;
+
 
         private:
-            thread*              _cthread = nullptr;
-            RrCatagorizerMapper* _mapper = nullptr;
-            StateIface*          _state  = nullptr;
-            RrQueues*            _queues = nullptr;
-            vector<thread*>      _threads;
-            RRP_STATUS           _status = RRP_STATUS::INITILIZING;
+            thread*               _cthread = nullptr;
+            RrCatagorizerMapper*  _mapper = nullptr;
+            StateIface*           _state  = nullptr;
+            RrQueues*             _queues = nullptr;
+            vector<thread*>       _threads;
+            vector<EventHandler*> _handlers;
+            RRP_STATUS            _status = RRP_STATUS::INITILIZING;
+            Environment*          _environment;
 
             /**
              * @fn produceInt
@@ -70,6 +76,15 @@ namespace rrobot {
              * 
              */
             bool produceInt(Event* event);
+
+            /**
+             * @fn processRequest
+             * @brief
+             * process inbound request.
+             */
+            bool produceRequest(MSPCOMMANDS request);
+
+            int32_t getFlags();
     };
 }
 

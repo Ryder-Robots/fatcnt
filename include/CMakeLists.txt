@@ -57,9 +57,9 @@ configure_file(fatcnt/environment/rrserial.hpp.in fatcnt/environment/rrserial.hp
 
 # Catagorizer CMODES
 set(LOOP_CONTENT "")
-set(CMODES CMODE_MANUAL_FLIGHT)
-foreach(item CMODES)
-  string(APPEND LOOP_CONTENT "${item},\n")
+set(CMODES CMODE_NOT_SET CMODE_MANUAL_FLIGHT)
+foreach(item ${CMODES})
+  string(APPEND LOOP_CONTENT "        ${item},\n")
 endforeach()
 configure_file(fatcnt/events/catagorizer/cmodes.hpp.in fatcnt/events/catagorizer/cmodes.hpp @ONLY)
 # end catagorizers
@@ -87,6 +87,7 @@ set(fatcnt_INCLUDE
   fatcnt/events/Event.hpp
   fatcnt/protocols/common/mspdirection.hpp
   fatcnt/protocols/common/mspversion.hpp
+  fatcnt/protocols/common/mspsensors.hpp
   fatcnt/state/state.hpp
   fatcnt/state/stateiface.hpp
   fatcnt/protocols/common/curators/rrp/rrpcuratorabstract.hpp
@@ -107,9 +108,10 @@ endforeach()
 # 4 direction (which queue to message should be directed to)
 # 5..n members in pairs, type [attribute]
 set(MSPCOMMANDS 
-  "MSP_SONAR_ALTITUDE 58 USER_INTERFACE 1 1  uint32_t distance uint32_t temperature" 
-  "MSP_NONE 0 INVALID 1 1" 
+  "MSP_NONE 0 INVALID 1 1"
+  "MSP_MODE 1 CATEGORIZER 1 1 RR_CMMODES mode"
   "MSP_AUTHKEY 7 USER_INTERFACE 1 1 string key"
+  "MSP_SONAR_ALTITUDE 58 USER_INTERFACE 1 1  uint32_t distance uint32_t temperature" 
   "MSP_IDENT 100 USER_INTERFACE 0 0 uint8_t version MULTITYPE_T multitype MSP_VERSION msp_version uint32_t capability"
   "MSP_STATUS 101 CATEGORIZER 1 1 uint16_t cycletime uint16_t i2c_errors_count uint16_t sensor uint32_t flag uint8_t current_set"
   "MSP_MOTOR 104 FLIGHT_CONTROLLER 1 1 uint16_t motor1 uint16_t motor2 uint16_t motor3 uint16_t motor4 uint16_t motor5 uint16_t motor6 uint16_t motor7 uint16_t motor8"

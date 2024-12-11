@@ -37,6 +37,8 @@ class MockConcreteHandler : public EventHandler {
 class MockState : public StateIface {
     public:
     MOCK_METHOD(bool, isRunning, (), (override));
+    void setIsRunning(bool isrunning) override {}
+
 };
 
 TEST(TestEventHandler, TestAbstractHandler) {
