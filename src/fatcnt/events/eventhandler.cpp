@@ -50,9 +50,10 @@ void EventHandler::handleEvent(EventHandler* handler, StateIface* state) {
             }
 
         } catch (const std::exception& e) {
+            state->incremementErrorCount();
+            dlog_hnd << dlib::LERROR << "error occured while handling event " << e.what();
             status = RRP_STATUS::ERROR;
             handler->setStatus(status);
-            dlog_hnd << dlib::LERROR << "error occured while handling event " << e.what();
             handler->onError(e);
         }
         this_thread::sleep_for(handler->_thread_wait_time);

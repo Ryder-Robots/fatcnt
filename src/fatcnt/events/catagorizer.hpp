@@ -46,9 +46,6 @@ namespace rrobot {
              */
             void tearDown() override;
 
-            void onError(const std::exception& e) override;
-
-
         private:
             RrCatagorizerMapper*  _mapper = nullptr;
             StateIface*           _state  = nullptr;
@@ -67,16 +64,6 @@ namespace rrobot {
              * 
              */
             bool produceInt(Event* event);
-
-            /**
-             * @fn processRequest
-             * @brief
-             * process inbound request.
-             */
-            bool produceRequest(MSPCOMMANDS request);
-
-            int32_t getFlags();
-
     };
 }
 

@@ -12,7 +12,6 @@ using namespace rrobot;
 namespace fs = std::filesystem;
 
 // Mock classes
-
 class MockRrCatagorizerMapper : public RrCatagorizerMapper {
 
 };
