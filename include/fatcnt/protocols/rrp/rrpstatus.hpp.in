@@ -14,6 +14,7 @@ namespace rrobot {
         ERROR          = 4,  // indicates that an error has occured, and the handler will need to be reloaded.
         RELOADING      = 8,  // reloading after an error has occured.
         SHUTTING_DOWN  = 16, // indicates that system is now shutting down.
+        TERMINATED     = 32, // handler has terminated.
     };
 }
 

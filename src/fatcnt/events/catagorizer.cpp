@@ -127,14 +127,12 @@ void RrCatagorizer::setUp() {
 }
 
 void RrCatagorizer::tearDown() {
-    _status = RRP_STATUS::SHUTTING_DOWN; 
-
     for(EventHandler* handler : _handlers) {
-        while (handler->status() != RRP_STATUS::SHUTTING_DOWN) {
+        dlog_c << dlib::LINFO << "waiting for thread to terminate";
+        while (handler->status() != RRP_STATUS::TERMINATED) {
             std::this_thread::sleep_for(std::chrono::milliseconds(10));
         }
     }
-
 }
 
 bool RrCatagorizer::produceInt(Event* event) {

@@ -74,7 +74,13 @@ class EventHandler {
     /**
      * Current status of the handler.
      */
-    virtual RRP_STATUS status() = 0;
+    RRP_STATUS status() {
+        return _status;
+    }
+
+    void setStatus(RRP_STATUS status) {
+        _status = status;
+    }
 
     /**
      * @fn setUp
@@ -93,7 +99,8 @@ class EventHandler {
     /**
      * @fn reload
      * @brief
-     * called to reload system after an error has occured.
+     * called to reload system after an error has occured.  If this method is implemented then the handler MUST
+     * reset the status is the error has been handled.
      */
     virtual void reload() {}
 
@@ -101,6 +108,9 @@ class EventHandler {
      * @fn onError
      * @brief 
      * when in implmented called when an error has occured within handler.
+     * 
+     * It is up to the handler to set the status to active if the exception has been handled.
+     * 
      * @param exception that has occured.
      */
     virtual void onError(const std::exception& e) {}
@@ -118,6 +128,8 @@ class EventHandler {
 
     int _limit;
     chrono::milliseconds _thread_wait_time;
+
+    RRP_STATUS        _status = RRP_STATUS::INITILIZING;
 };
 }  // namespace rrobot
 

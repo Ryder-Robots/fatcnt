@@ -32,8 +32,6 @@ namespace rrobot {
 
             bool available() override {return false;}
 
-            RRP_STATUS status() override {return _status;}
-
             /**
              * @fn setUp
              * @brief

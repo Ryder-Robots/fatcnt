@@ -50,8 +50,6 @@ namespace rrobot {
              */
             bool available() override;
 
-            RRP_STATUS status() override;
-
             void setUp() override;
 
             void reload() override;
@@ -64,7 +62,6 @@ namespace rrobot {
             char*             _buffer;
             Serializer<json>* _serializer;
             bool              _available = true;
-            RRP_STATUS        _status = RRP_STATUS::INITILIZING;
     };
 }
 
