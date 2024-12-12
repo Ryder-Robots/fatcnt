@@ -18,14 +18,14 @@ class StateIface {
      * @brief
      * returns queues object see \ref fatcnt/state/rrqueues.hpp
      */
-    virtual RrQueues* getQueues() {return nullptr;}
+    virtual RrQueues* getQueues() = 0;
 
     /**
      * @fn isRunning
      * @brief
      * returns true when the application is running, otherwise return false.
      */
-    virtual bool isRunning() {return false;}
+    virtual bool isRunning()  = 0;
 
     /**
      * @fn getCycleTime
@@ -34,14 +34,14 @@ class StateIface {
      * how long the controller has spent in its main loop. For drones that do not use a flight 
      * or micro-processor, this value can be returned as '0' which is the default.
      */
-    virtual uint16_t getCycleTime() {return 0;}
+    virtual uint16_t getCycleTime() = 0;
 
     /**
      * @fn getErrorCount
      * @brief
      * gets count of all errors that have occrued.
      */
-    virtual uint16_t getErrorCount() {return 0;}
+    virtual uint16_t getErrorCount()  = 0;
 
     /**
      * @fn getSensors
@@ -51,12 +51,12 @@ class StateIface {
      * 
      * BARO<<1|MAG<<2|GPS<<3|SONAR<<4|CAMERA<<5
      */
-    virtual uint16_t getSensors() {return 0;}
+    virtual uint16_t getSensors()  = 0;
 
     /**
      * @fn 
      */
-    virtual RR_CMMODES getMode() {return RR_CMMODES::CMODE_NOT_SET;}
+    virtual RR_CMMODES getMode()  = 0;
 
     /**
      * @fn setIsRunning
@@ -64,7 +64,7 @@ class StateIface {
      * when set to true, then the application is considered to be running, when application
      * is to be shutdown then set to false.
      */
-    virtual void setIsRunning(bool isrunning) = 0;
+    virtual void setIsRunning(bool isrunning)  = 0;
 
     /**
      * @fn setCycleTime()
@@ -73,7 +73,7 @@ class StateIface {
      * that have both a micro-processor, and flight controller. The value is set by the handler that controls
      * the flight controller.
      */
-    virtual void setCycleTime(uint16_t cycleTime) {}
+    virtual void setCycleTime(uint16_t cycleTime)  = 0;
 
     /**
      * @fn incremementErrorCount
@@ -81,21 +81,21 @@ class StateIface {
      * when an exception is thrown the hanlder will call this function to incremement the erorr count 
      * by 1.
      */
-    virtual void incremementErrorCount() {}
+    virtual void incremementErrorCount() = 0;
 
     /**
      * @fn setSensorFlag
      * @brief
      * Adds an available sensor.
      */
-    virtual void setSensorFlag(MSPSENSOR_FLAGS flag) {}
+    virtual void setSensorFlag(MSPSENSOR_FLAGS flag)  = 0;
 
     /**
      * @fn setMode
      * @brief
      * sets the current mode of the drone.
      */
-    virtual void setMode(RR_CMMODES mode){}
+    virtual void setMode(RR_CMMODES mode)  = 0;
 };
 }  // namespace rrobot
 

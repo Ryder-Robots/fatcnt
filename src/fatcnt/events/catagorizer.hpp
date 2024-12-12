@@ -32,11 +32,6 @@ namespace rrobot {
 
             bool available() override {return false;}
 
-            /**
-             * Returns catagorizer thread.
-             */
-            thread* getThread() {return _cthread;}
-
             RRP_STATUS status() override {return _status;}
 
             /**
@@ -57,7 +52,6 @@ namespace rrobot {
 
 
         private:
-            thread*               _cthread = nullptr;
             RrCatagorizerMapper*  _mapper = nullptr;
             StateIface*           _state  = nullptr;
             RrQueues*             _queues = nullptr;
@@ -84,6 +78,7 @@ namespace rrobot {
             bool produceRequest(MSPCOMMANDS request);
 
             int32_t getFlags();
+
     };
 }
 

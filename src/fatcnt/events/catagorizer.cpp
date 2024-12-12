@@ -9,24 +9,7 @@ void RrCatagorizer::init(RrQueues* queues, StateIface *state, Environment* envir
     _state  = state;
     _mapper = mapper;
     _environment = environment;
-
-    dlog_c << dlib::LINFO << "creating event handlers and initilizing queues";
     EventHandler::init(queues, RRP_QUEUES::CATEGORIZER, RRP_QUEUES::USER_INTERFACE);
-    vector<EventHandler*> handlers = mapper->createEventHandlers(environment, state);
-
-    dlog_c << dlib::LINFO << "creating threads";
-    for (EventHandler* handler : handlers) {
-        std::thread* t = new std::thread(EventHandler::handleEvent, handler, state);
-        while (!t->joinable()) {
-            std::this_thread::sleep_for(std::chrono::milliseconds(10));
-        }
-        _threads.push_back(t);
-        _handlers.push_back(handler);
-    }
-
-    dlog_c << dlib::LINFO << "starting catagorizer thread";
-    thread* t = new thread(RrCatagorizer::handleEvent, this, state);
-    _cthread = t;
 }
 
 
@@ -44,7 +27,7 @@ int32_t RrCatagorizer::getFlags() {
  }
 
 bool RrCatagorizer::produceRequest(MSPCOMMANDS request) {
-    Event* event = nullptr;
+    
     void* payload = nullptr;
     Environment env = *_environment;
     StateIface* state = _state;
@@ -76,11 +59,11 @@ bool RrCatagorizer::produceRequest(MSPCOMMANDS request) {
             break;
     }
 
-    if (event == nullptr) {
+    if (payload == nullptr) {
         dlog_c << dlib::LERROR << "an unknown request was sent, ignoring";
         return false;
     }
-    event = new Event(MSPCOMMANDS::MSP_IDENT, MSPDIRECTION::EXTERNAL_OUT, payload);
+    Event* event = new Event(MSPCOMMANDS::MSP_IDENT, MSPDIRECTION::EXTERNAL_OUT, payload);
     produceInt(event);
     return true;
 }
@@ -124,18 +107,34 @@ bool RrCatagorizer::consume(Event* event, StateIface* state) {
 Event* RrCatagorizer::produce(StateIface* state) {return nullptr;}
 
 void RrCatagorizer::setUp() {
+    _status = RRP_STATUS::INITILIZING;
+    dlog_c << dlib::LINFO << "creating event handlers and initilizing queues";
+    vector<EventHandler*> handlers = _mapper->createEventHandlers(_environment, _state);
+
+    dlog_c << dlib::LINFO << "creating threads";
+    for (EventHandler* handler : handlers) {
+         std::thread* t = new std::thread(EventHandler::handleEvent, handler, _state);
+         while (!t->joinable()) {
+             std::this_thread::sleep_for(std::chrono::milliseconds(10));
+         }
+         _threads.push_back(t);
+         _handlers.push_back(handler);
+         t->detach();
+    }
+
+    dlog_c << dlib::LINFO << "starting catagorizer thread";
     _status = RRP_STATUS::ACTIVE;
 }
 
 void RrCatagorizer::tearDown() {
+    _status = RRP_STATUS::SHUTTING_DOWN; 
 
-    for (thread* t : _threads) {
-        while (!t->joinable()) {
+    for(EventHandler* handler : _handlers) {
+        while (handler->status() != RRP_STATUS::SHUTTING_DOWN) {
             std::this_thread::sleep_for(std::chrono::milliseconds(10));
         }
-        t->join();
     }
-    _status = RRP_STATUS::SHUTTING_DOWN; 
+
 }
 
 bool RrCatagorizer::produceInt(Event* event) {

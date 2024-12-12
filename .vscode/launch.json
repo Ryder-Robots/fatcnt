@@ -8,7 +8,7 @@
             "name": "(gdb) test environment processor",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/build/test_environmentprocessor",
+            "program": "${workspaceFolder}/build/test/test_environmentprocessor",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}/resources",
@@ -33,7 +33,7 @@
             "name": "(gdb) test event handler",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/build/test_eventhandler",
+            "program": "${workspaceFolder}/build/test/test_eventhandler",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}/resources",
@@ -58,7 +58,7 @@
             "name": "(gdb) test rrp curator",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/build/test_rrpcurator",
+            "program": "${workspaceFolder}/build/test/test_rrpcurator",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}/resources",
@@ -83,7 +83,7 @@
             "name": "(gdb) test uihandler",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/build/test_uihandler",
+            "program": "${workspaceFolder}/build/test/test_uihandler",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}/resources",
@@ -108,7 +108,7 @@
             "name": "(gdb) test jserializer",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/build/test_jserializer",
+            "program": "${workspaceFolder}/build/test/test_jserializer",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}/resources",
@@ -133,7 +133,32 @@
             "name": "(gdb) test ui handler",
             "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/build/test_uihandler",
+            "program": "${workspaceFolder}/build/test/test_uihandler",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}/resources",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                },
+                {
+                    "description": "Set Disassembly Flavor to Intel",
+                    "text": "-gdb-set disassembly-flavor intel",
+                    "ignoreFailures": true
+                }
+            ]           
+        },
+
+        {
+            "name": "(gdb) test catagorizer",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/test/test_catagorizer",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}/resources",
