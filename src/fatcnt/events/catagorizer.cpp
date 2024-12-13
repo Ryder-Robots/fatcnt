@@ -13,26 +13,6 @@ void RrCatagorizer::init(RrQueues* queues, StateIface *state, Environment* envir
 }
 
 bool RrCatagorizer::consume(Event* event, StateIface* state) {
-
-    // check for mode changes, 
-    if (event->getCommand() == MSP_MODE) {
-        if (!event->hasPayload()) {
-            dlog_c << dlib::LERROR << "payload is a required attribute";
-            throw MissingRequiredAttributeException("payload is a required attribute");
-        }
-        msp_mode mode = event->getPayload<msp_mode>();
-        if (!_mapper->initializeMode(_environment, _state, mode.get_mode())) {
-            dlog_c << dlib::LWARN << "can not switch to requested mode";
-            {
-                msp_error* mspError = new msp_error();
-                mspError->set_message("request mode is unavaiable");
-                Event* event = new Event(MSPCOMMANDS::MSP_ERROR, MSPDIRECTION::ERROR, mspError);
-                produceInt(event);
-            }
-        }
-        return true;
-    } 
-
     RRP_QUEUES queueName = _mapper->mapQueue(_environment, state, event);
     queue<Event*>* queue = _queues->getQueue(queueName);
     mutex* mtx = _queues->getLock(queueName);
