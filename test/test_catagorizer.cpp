@@ -13,7 +13,9 @@ namespace fs = std::filesystem;
 
 // Mock classes
 class MockRrCatagorizerMapper : public RrCatagorizerMapper {
-
+    MOCK_METHOD(void, init, (Environment*, StateIface*), (override));
+    MOCK_METHOD(vector<EventHandler*>, createEventHandlers, (), (override));
+    MOCK_METHOD(RRP_QUEUES, mapQueue, (Event*), (override));
 };
 
 

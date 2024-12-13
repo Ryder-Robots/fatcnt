@@ -13,7 +13,7 @@ void RrCatagorizer::init(RrQueues* queues, StateIface *state, Environment* envir
 }
 
 bool RrCatagorizer::consume(Event* event, StateIface* state) {
-    RRP_QUEUES queueName = _mapper->mapQueue(_environment, state, event);
+    RRP_QUEUES queueName = _mapper->mapQueue(event);
     queue<Event*>* queue = _queues->getQueue(queueName);
     mutex* mtx = _queues->getLock(queueName);
 
@@ -28,7 +28,7 @@ Event* RrCatagorizer::produce(StateIface* state) {return nullptr;}
 void RrCatagorizer::setUp() {
     _status = RRP_STATUS::INITILIZING;
     dlog_c << dlib::LINFO << "creating event handlers and initilizing queues";
-    vector<EventHandler*> handlers = _mapper->createEventHandlers(_environment, _state);
+    vector<EventHandler*> handlers = _mapper->createEventHandlers();
 
     dlog_c << dlib::LINFO << "creating threads";
     for (EventHandler* handler : handlers) {

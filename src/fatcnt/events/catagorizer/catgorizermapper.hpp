@@ -21,45 +21,22 @@ namespace rrobot {
      */
     class RrCatagorizerMapper {
         public:
+
+            virtual void init(Environment* environment, StateIface* state) = 0;
+
             /**
              * @fn createEventHandlers
              * @brief
              * creates the event handler mapping.
              */
-            virtual vector<EventHandler*> createEventHandlers(Environment* environment, StateIface* state) {
-               vector<EventHandler*> handlers;
-               return handlers;
-            }
+            virtual vector<EventHandler*> createEventHandlers() = 0;
             
             /**
              * @fn mapDirection
              * @brief
              * Applies any any overridden mapping that is a result of changing the drones mode.
              */
-            virtual RRP_QUEUES mapQueue(Environment* environment, StateIface* state, Event* event) {
-                return RRP_QUEUES::NONE;
-            }
-
-            /**
-             * @fn initializeMode
-             * @brief
-             * sets mapper to use a different mode, may also perform any changes to handlers that required.
-             * 
-             * if the request mode can be assigned for some reason then false is returned otherwise true.
-             */
-            virtual bool initializeMode(Environment* environment, StateIface* state, RR_CMMODES mode) {
-                return false;    
-            }
-
-            /**
-             * @fn getQueues
-             * @brief
-             * returns a list of supported queue names.
-             */
-            virtual vector<RRP_QUEUES> getQueues() {
-                vector<RRP_QUEUES> directions;
-                return directions;
-            }
+            virtual RRP_QUEUES mapQueue(Event* event) = 0;
     };
 }
 
