@@ -37,6 +37,17 @@ class MockConcreteHandler : public EventHandler {
 class MockState : public StateIface {
     public:
     MOCK_METHOD(bool, isRunning, (), (override));
+    MOCK_METHOD(uint16_t, getCycleTime, (), (override));
+    MOCK_METHOD(uint16_t, getErrorCount, (), (override));
+    MOCK_METHOD(uint16_t, getSensors, (), (override));
+    MOCK_METHOD(RR_CMMODES, getMode, (), (override));
+    void setIsRunning(bool isrunning) override {}
+    RrQueues* getQueues() override {return nullptr;}
+    void setCycleTime(uint16_t cycleTime) override {}
+    void incremementErrorCount() override {}
+    void setSensorFlag(MSPSENSOR_FLAGS flag) override {}
+    void setMode(RR_CMMODES mode) override {}
+
 };
 
 TEST(TestEventHandler, TestAbstractHandler) {
@@ -45,13 +56,13 @@ TEST(TestEventHandler, TestAbstractHandler) {
 
     mutex* lock1 = new mutex();
     queue<Event*>* q1 = new queue<Event*>();
-    rrqueues->setQueue(MSPDIRECTION::USER_INTERFACE, q1, lock1);
+    rrqueues->setQueue(RRP_QUEUES::USER_INTERFACE, q1, lock1);
 
     mutex* lock2 = new mutex();
     queue<Event*>* q2 = new queue<Event*>();
-    rrqueues->setQueue(MSPDIRECTION::CATEGORIZER, q2, lock2);
+    rrqueues->setQueue(RRP_QUEUES::CATEGORIZER, q2, lock2);
 
-    mockConcreteHandler->init(rrqueues, MSPDIRECTION::USER_INTERFACE, MSPDIRECTION::CATEGORIZER);
+    mockConcreteHandler->init(rrqueues, RRP_QUEUES::USER_INTERFACE, RRP_QUEUES::CATEGORIZER);
     MockState mockState;
 
     EXPECT_CALL(mockState, isRunning())
@@ -67,7 +78,7 @@ TEST(TestEventHandler, TestInvalidQueue) {
     RrQueues* rrqueues = new RrQueues(100, chrono::milliseconds(500), chrono::milliseconds(500));
 
     EXPECT_THROW({
-        mockConcreteHandler->init(rrqueues, MSPDIRECTION::USER_INTERFACE, MSPDIRECTION::CATEGORIZER);
+        mockConcreteHandler->init(rrqueues, RRP_QUEUES::USER_INTERFACE, RRP_QUEUES::CATEGORIZER);
     }, QueueDoesNotExit);
 }
 
@@ -78,13 +89,13 @@ TEST(TestEventHandler, TestConsumeEvent) {
 
     mutex* lock1 = new mutex();
     queue<Event*>* q1 = new queue<Event*>();
-    rrqueues->setQueue(MSPDIRECTION::USER_INTERFACE, q1, lock1);
+    rrqueues->setQueue(RRP_QUEUES::USER_INTERFACE, q1, lock1);
 
     mutex* lock2 = new mutex();
     queue<Event*>* q2 = new queue<Event*>();
-    rrqueues->setQueue(MSPDIRECTION::CATEGORIZER, q2, lock2);
+    rrqueues->setQueue(RRP_QUEUES::CATEGORIZER, q2, lock2);
 
-    mockConcreteHandler.init(rrqueues, MSPDIRECTION::USER_INTERFACE, MSPDIRECTION::CATEGORIZER);
+    mockConcreteHandler.init(rrqueues, RRP_QUEUES::USER_INTERFACE, RRP_QUEUES::CATEGORIZER);
     MockState mockState;
 
     EXPECT_CALL(mockState, isRunning())
@@ -96,7 +107,7 @@ TEST(TestEventHandler, TestConsumeEvent) {
 
     msp_authkey* payload = new msp_authkey();
     payload->set_key("test");
-    Event* event = new Event(MSP_AUTHKEY, MSPDIRECTION::USER_INTERFACE, payload);
+    Event* event = new Event(MSP_AUTHKEY, MSPDIRECTION::EXTERNAL_IN, payload);
     q1->emplace(event);
     mockConcreteHandler.handleEvent(&mockConcreteHandler, &mockState);
 }
@@ -107,13 +118,13 @@ TEST(TestEventHandler, TestProduceEvent) {
 
     mutex* lock1 = new mutex();
     queue<Event*>* q1 = new queue<Event*>();
-    rrqueues->setQueue(MSPDIRECTION::USER_INTERFACE, q1, lock1);
+    rrqueues->setQueue(RRP_QUEUES::USER_INTERFACE, q1, lock1);
 
     mutex* lock2 = new mutex();
     queue<Event*>* q2 = new queue<Event*>();
-    rrqueues->setQueue(MSPDIRECTION::CATEGORIZER, q2, lock2);
+    rrqueues->setQueue(RRP_QUEUES::CATEGORIZER, q2, lock2);
 
-    mockConcreteHandler.init(rrqueues, MSPDIRECTION::USER_INTERFACE, MSPDIRECTION::CATEGORIZER);
+    mockConcreteHandler.init(rrqueues, RRP_QUEUES::USER_INTERFACE, RRP_QUEUES::CATEGORIZER);
     MockState mockState;
     EXPECT_CALL(mockState, isRunning())
         .WillOnce(Return(true))
@@ -121,7 +132,7 @@ TEST(TestEventHandler, TestProduceEvent) {
 
     msp_authkey* payload = new msp_authkey();
     payload->set_key("test");
-    Event* event = new Event(MSP_AUTHKEY, MSPDIRECTION::USER_INTERFACE, payload);
+    Event* event = new Event(MSP_AUTHKEY, MSPDIRECTION::EXTERNAL_IN, payload);
     EXPECT_CALL(mockConcreteHandler, produce(_))
         .Times(1)
         .WillOnce(Return(event));

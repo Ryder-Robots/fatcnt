@@ -6,6 +6,7 @@
 #include <thread>
 #include <queue>
 #include <fatcnt/state/statefactory.hpp>
+#include <fatcnt/state/rrpqueues.hpp>
 #include <fatcnt/environment/environmentProcessor.hpp>
 #include <fatcnt/events/ui/jseralizer.hpp>
 #include <fatcnt/events/uihandler.hpp>
@@ -100,7 +101,7 @@ TEST(TestUniHandler, TestInit) {
     json manifest = json::parse(ifs);
     ifs.close();
 
-    vector<MSPDIRECTION> directions = {MSPDIRECTION::USER_INTERFACE, MSPDIRECTION::CATEGORIZER};
+    vector<RRP_QUEUES> directions = {RRP_QUEUES::USER_INTERFACE, RRP_QUEUES::CATEGORIZER};
     Environment environment = EnviromentProcessor::createEnvironment(manifest);
     State* state = StateFactory::createState(environment, directions);
     Serializer<json>* serializer = new Jseralizer();
@@ -118,7 +119,7 @@ TEST(TestUiHandler, TestInBoundEvents) {
     json manifest = json::parse(ifs);
     ifs.close();
 
-    vector<MSPDIRECTION> directions = {MSPDIRECTION::USER_INTERFACE, MSPDIRECTION::CATEGORIZER};
+    vector<RRP_QUEUES> directions = {RRP_QUEUES::USER_INTERFACE, RRP_QUEUES::CATEGORIZER};
     Environment environment = EnviromentProcessor::createEnvironment(manifest);
     State* state = StateFactory::createState(environment, directions);
     Serializer<json>* serializer = new Jseralizer();
@@ -141,7 +142,7 @@ TEST(TestUiHandler, TestInBoundEvents) {
     }
 
     // Get the queue that events should be written to
-    queue<Event*>* thisQueue = state->getQueues()->getQueue(MSPDIRECTION::CATEGORIZER);
+    queue<Event*>* thisQueue = state->getQueues()->getQueue(RRP_QUEUES::CATEGORIZER);
     size_t sz = thisQueue->size();
 
     EXPECT_EQ(3, sz);
@@ -182,7 +183,7 @@ TEST(TestUiHandler, TestOutBoundEvents) {
     payload->set_motor4(800);
     payload->set_in(0b10101010);
 
-    Event* event = new Event(MSPCOMMANDS::MSP_SET_MOTOR_HBRIDGE, MSPDIRECTION::USER_INTERFACE, payload);
+    Event* event = new Event(MSPCOMMANDS::MSP_SET_MOTOR_HBRIDGE, MSPDIRECTION::EXTERNAL_IN , payload);
 
     UiHandler uihandler = UiHandler();
     const fs::path filepath = "manifests/virtual.json";
@@ -190,7 +191,7 @@ TEST(TestUiHandler, TestOutBoundEvents) {
     json manifest = json::parse(ifs);
     ifs.close();
 
-    vector<MSPDIRECTION> directions = {MSPDIRECTION::USER_INTERFACE, MSPDIRECTION::CATEGORIZER};
+    vector<RRP_QUEUES> directions = {RRP_QUEUES::USER_INTERFACE, RRP_QUEUES::CATEGORIZER};
     Environment environment = EnviromentProcessor::createEnvironment(manifest);
     State* state = StateFactory::createState(environment, directions);
     Serializer<json>* serializer = new Jseralizer();
@@ -198,7 +199,7 @@ TEST(TestUiHandler, TestOutBoundEvents) {
     MockExternal external = MockExternal();
     uihandler.init(&external, state, serializer);
 
-    queue<Event*>* thisQueue = state->getQueues()->getQueue(MSPDIRECTION::USER_INTERFACE);
+    queue<Event*>* thisQueue = state->getQueues()->getQueue(RRP_QUEUES::USER_INTERFACE);
     thisQueue->emplace(event);
 
     thread t(&UiHandler::handleEvent, &uihandler, state);

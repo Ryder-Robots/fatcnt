@@ -61,7 +61,7 @@ TEST(TestRrpCurator, TestSerialize) {
     payload->set_multitype(MULTITYPE_T::QUADP);
     payload->set_version(1);
     payload->set_capability(2);
-    Event* event = new Event(MSPCOMMANDS::MSP_IDENT, MSPDIRECTION::USER_INTERFACE, payload);
+    Event* event = new Event(MSPCOMMANDS::MSP_IDENT, MSPDIRECTION::EXTERNAL_OUT, payload);
 
     msp_ident_curator *curator = new msp_ident_curator();
     json outbound = curator->serialize(event);
@@ -79,7 +79,7 @@ TEST(TestRrpCurator, TestGeneratedDeserialize) {
     Event* event = curator->deserialize(inbound);
 
     EXPECT_EQ(MSPCOMMANDS::MSP_AUTHKEY, event->getCommand());
-    EXPECT_EQ(MSPDIRECTION::USER_INTERFACE, event->getDirection());
+    EXPECT_EQ(MSPDIRECTION::EXTERNAL_IN, event->getDirection());
 
     msp_authkey payload = event->getPayload<msp_authkey>();
     EXPECT_EQ("test", payload.get_key());
@@ -88,7 +88,7 @@ TEST(TestRrpCurator, TestGeneratedDeserialize) {
 TEST(TestRrpCurator, TestGeneratedSerialize) {
     msp_authkey *payload = new msp_authkey();
     payload->set_key("test");
-    Event* event = new Event(MSPCOMMANDS::MSP_AUTHKEY, MSPDIRECTION::USER_INTERFACE, payload);
+    Event* event = new Event(MSPCOMMANDS::MSP_AUTHKEY, MSPDIRECTION::EXTERNAL_OUT, payload);
 
     msp_authkey_curator *curator = new msp_authkey_curator();
     json outbound = curator->serialize(event);

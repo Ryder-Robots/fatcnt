@@ -1,17 +1,20 @@
 #ifndef RRPSTATUS_HPP
 #define RRPSTATUS_HPP
 
+#include <stdint.h>
+
 /**
  * indicates the current status of a handler.
  */
 
 namespace rrobot {
-    enum RRP_STATUS {
-        INITILIZING,     // indicates that the handler has been started but is not yet active
-        ACTIVE,          // indicates that the handler is an active state, and ready to consume or produce.
-        ERROR,           // indicates that an error has occured, and the handler will need to be reloaded.
-        RELOADING,       // reloading after an error has occured.
-        SHUTTING_DOWN,   // indicates that system is now shutting down.
+    enum RRP_STATUS : uint32_t {
+        INITILIZING    = 1,  // indicates that the handler has been started but is not yet active
+        ACTIVE         = 2,  // indicates that the handler is an active state, and ready to consume or produce.
+        ERROR          = 4,  // indicates that an error has occured, and the handler will need to be reloaded.
+        RELOADING      = 8,  // reloading after an error has occured.
+        SHUTTING_DOWN  = 16, // indicates that system is now shutting down.
+        TERMINATED     = 32, // handler has terminated.
     };
 }
 

@@ -33,8 +33,9 @@ void EventHandler::handleConsumeEvents(EventHandler* handler, StateIface* state)
  * Uses FIFO queueing to consume and produce events.
  */
 void EventHandler::handleEvent(EventHandler* handler, StateIface* state) {
+    handler->setStatus(RRP_STATUS::INITILIZING);
     handler->setUp();
-    // Get initial status from handler
+    handler->setStatus(RRP_STATUS::ACTIVE);
     RRP_STATUS status = handler->status();
 
     // isRunning can be considered a kill switch if it is hit, then stop
@@ -49,21 +50,29 @@ void EventHandler::handleEvent(EventHandler* handler, StateIface* state) {
             }
 
         } catch (const std::exception& e) {
-            status = RRP_STATUS::ERROR;
-            handler->reload();
+            state->incremementErrorCount();
             dlog_hnd << dlib::LERROR << "error occured while handling event " << e.what();
+            status = RRP_STATUS::ERROR;
+            handler->setStatus(status);
             handler->onError(e);
         }
         this_thread::sleep_for(handler->_thread_wait_time);
         status = handler->status();
+
+        if (status != RRP_STATUS::ACTIVE) {
+            dlog_hnd << dlib::LWARN << "handler status was not active attempting to reload";
+            handler->reload();
+        }
     }
+    handler->setStatus(RRP_STATUS::SHUTTING_DOWN);
     handler->tearDown();
+    handler->setStatus(RRP_STATUS::TERMINATED);
 }
 
 /**
  * On failure the any exception MUST always set is_exit to true.  This is fatal.
  */
-void EventHandler::init(RrQueues* queues, MSPDIRECTION direction, MSPDIRECTION outbound) {
+void EventHandler::init(RrQueues* queues, RRP_QUEUES direction, RRP_QUEUES outbound) {
     dlog_hnd.set_level(dlib::LALL);
 
     dlog_hnd << dlib::LINFO << "setting up inbound queue and lock";

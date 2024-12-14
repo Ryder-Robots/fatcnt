@@ -15,6 +15,17 @@ Environment EnviromentProcessor::createEnvironment(json manifest) {
     return Environment(hwModel, mc, version, queues);
 }
 
+Environment* EnviromentProcessor::createEnvironmentRef(json manifest) {
+    dlog_envf.set_level(dlib::LALL);
+
+    HwModel hwModel = createHwModel(manifest);
+    RrSerial mc = createMc(manifest);
+    RrVersion version;
+    Queues queues = createQueues(manifest);
+
+    return new Environment(hwModel, mc, version, queues);
+}
+
 HwModel EnviromentProcessor::createHwModel(json manifest) {
     vector<string> keys = {"multitype", "mspversion", "capability"};
     verify(manifest, keys, "hwmodel");

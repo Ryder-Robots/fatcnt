@@ -24,6 +24,7 @@ namespace rrobot {
              *     - command line options override environment variables
              */
             static Environment createEnvironment(json manifest);
+            static Environment* createEnvironmentRef(json manifest);
         
         private:
             static HwModel  createHwModel(json manifest);

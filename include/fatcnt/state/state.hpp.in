@@ -17,27 +17,56 @@ namespace rrobot {
                 return _is_running;
             }
 
+            uint16_t getErrorCount() override {
+                return _error_count;
+            }
+
             void setIsRunning(bool isrunning) override {
-                _lock.lock();
+                const std::lock_guard<std::mutex> lock(_lock);
                 _is_running = isrunning;
-                _lock.unlock();
             }
 
-            bool isAuthenticated() override {
-                return _is_authenticated;
+            void incremementErrorCount() override {
+                const std::lock_guard<std::mutex> lock(_lock);
+                _error_count++;
             }
 
-            void setIsAuthenticated(bool isauthenticated) override {
-                _lock.lock();
-                _is_authenticated = isauthenticated;
-                _lock.unlock();
+            RR_CMMODES getMode() override {
+                return _mode;
             }
+
+            void setMode(RR_CMMODES mode) override {
+                const std::lock_guard<std::mutex> lock(_lock);
+                _mode = mode;
+            }
+
+            void setCycleTime(uint16_t cycleTime) override {
+                const std::lock_guard<std::mutex> lock(_lock);
+                _cycleTime = cycleTime;
+            }
+
+
+            uint16_t getCycleTime() override {
+                return _cycleTime;
+            }
+
+            uint16_t getSensors() override {
+                return _sensors;
+            }
+
+             void setSensorFlag(MSPSENSOR_FLAGS flag)  override {
+                const std::lock_guard<std::mutex> lock(_lock);
+                _sensors = _sensors | flag;
+             }
 
         private:
-            RrQueues* _queues;
-            bool   _is_running = true;
-            bool   _is_authenticated = false;
-            mutex  _lock;
+            RrQueues*  _queues;
+            bool       _is_running = true;
+            uint16_t   _error_count = 0;
+            mutex      _lock;
+            RR_CMMODES _mode = RR_CMMODES::CMODE_NOT_SET;
+            uint16_t   _sensors = 0;
+            uint16_t   _cycleTime;
     };
 }
 

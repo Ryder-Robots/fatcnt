@@ -6,6 +6,7 @@
 #include <fatcnt/state/state.hpp>
 #include <fatcnt/environment/environment.hpp>
 #include <fatcnt/events/catagorizer/catgorizermapper.hpp>
+#include <fatcnt/protocols/common/curators/rrp/rrpcurator.hpp>
 #include "eventhandler.hpp"
 
 namespace rrobot {
@@ -23,20 +24,13 @@ namespace rrobot {
              * @brief
              * Callled when object is created before thread is created.
              */
-            void init(RrQueues* queues, StateIface *state, Environment environment, RrCatagorizerMapper *mapper);
+            void init(StateIface *state, Environment* environment, RrCatagorizerMapper *mapper);
 
             bool consume(Event* event, StateIface* state) override;
 
             Event* produce(StateIface* state) override;
 
             bool available() override {return false;}
-
-            /**
-             * Returns catagorizer thread.
-             */
-            thread* getThread() {return _cthread;}
-
-            RRP_STATUS status() override {return _status;}
 
             /**
              * @fn setUp
@@ -52,14 +46,13 @@ namespace rrobot {
              */
             void tearDown() override;
 
-
         private:
-            thread*              _cthread = nullptr;
-            RrCatagorizerMapper* _mapper = nullptr;
-            StateIface*          _state  = nullptr;
-            RrQueues*            _queues = nullptr;
-            vector<thread*>      _threads;
-            RRP_STATUS           _status = RRP_STATUS::INITILIZING;
+            RrCatagorizerMapper*  _mapper = nullptr;
+            StateIface*           _state  = nullptr;
+            vector<thread*>       _threads;
+            vector<EventHandler*> _handlers;
+            RRP_STATUS            _status = RRP_STATUS::INITILIZING;
+            Environment*          _environment;
 
             /**
              * @fn produceInt

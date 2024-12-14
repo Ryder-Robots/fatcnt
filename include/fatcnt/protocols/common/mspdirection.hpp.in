@@ -9,12 +9,7 @@ namespace rrobot {
  * be sent to AI_ENGINE, or FLIGHT_CONTROLLER unless connection has been authenticated.
  */
 enum class MSPDIRECTION {
-    USER_INTERFACE,
-    AI_ENGINE,
-    AUHTH,
-    MICROCONTROLLER,
-    FLIGHT_CONTROLLER,
-    CATEGORIZER,
+    ERROR,         // An internal error has occurred
     EXTERNAL_IN,   // Comming from an external entity inbound
     EXTERNAL_OUT,  // goint to an external entity outbound
     INVALID,

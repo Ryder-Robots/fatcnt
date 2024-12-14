@@ -2,6 +2,7 @@
 #define EVENT_HPP
 
 #include <stdlib.h>
+#include <fatcnt/events/catagorizer/cmodes.hpp>
 #include <fatcnt/protocols/common/mspdirection.hpp>
 #include <fatcnt/protocols/common/mspcommands.hpp>
 
@@ -14,7 +15,7 @@ class Event {
     // constructor for outbound, or requests with a payload.
     Event(MSPCOMMANDS command, MSPDIRECTION direction, void* payload)
         : _command(command), 
-          _direction(_direction),
+          _direction(direction),
           _payload(payload) {
         
         _hasPayload = true;
@@ -23,7 +24,7 @@ class Event {
     // constructor for inbound request, payload is not set.
     Event(MSPCOMMANDS command, MSPDIRECTION direction)        
         : _command(command), 
-          _direction(_direction) {}
+          _direction(direction) {}
 
     /**
      * @fn hasPayload
@@ -54,7 +55,7 @@ class Event {
    private:
     const MSPCOMMANDS  _command;   // command
     const MSPDIRECTION _direction; // direction of command
-    void*              _payload;   // payload
+    void*              _payload = nullptr;   // payload
     bool               _hasPayload = false;    
 };
 }  // namespace rrobot

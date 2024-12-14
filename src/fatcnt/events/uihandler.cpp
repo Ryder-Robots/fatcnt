@@ -14,7 +14,7 @@ void UiHandler::init(External* external, StateIface* state, Serializer<json>* se
     dlog_ui.set_level(dlib::LALL);
     dlog_ui << dlib::LINFO << "configurating queues";
 
-    EventHandler::init(state->getQueues(), MSPDIRECTION::USER_INTERFACE, MSPDIRECTION::CATEGORIZER);
+    EventHandler::init(state->getQueues(), RRP_QUEUES::USER_INTERFACE, RRP_QUEUES::CATEGORIZER);
     _external = external;
     _buffer = static_cast<char*>(malloc(BUFSIZ * sizeof(char)));
     _serializer = serializer;
@@ -77,10 +77,8 @@ Event* UiHandler::produce(StateIface* state) {
 
 bool UiHandler::available() { return _external->available() && _available; }
 
-RRP_STATUS UiHandler::status() { return _status; }
 
 void UiHandler::setUp() {
-    RRP_STATUS lstatus = RRP_STATUS::ACTIVE;
     if (_external->accept_rr() == -1) {
         dlog_ui << dlib::LFATAL
             << "sommething went wrong when accepting connection: " + to_string(errno) + ": " + strerror(errno);
@@ -88,7 +86,6 @@ void UiHandler::setUp() {
             strerror(errno));
     }
     dlog_ui << dlib::LINFO << " established successful connection";
-    _status = lstatus;
 }
 
 void UiHandler::tearDown() {
@@ -100,4 +97,5 @@ void UiHandler::reload() {
     dlog_ui << dlib::LERROR << "attempting to stop and re-establish connection";
     setUp();
     tearDown();
+    setStatus(RRP_STATUS::ACTIVE);
 }

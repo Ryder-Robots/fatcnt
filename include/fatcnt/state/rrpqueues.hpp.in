@@ -1,0 +1,21 @@
+#ifndef RRPQUEUES_HPP
+#define RRPQUEUES_HPP
+
+namespace rrobot {
+    /**
+     * @enum RRP_QUEUES
+     * list of available queues. These are queues that can be mapped to requests
+     */
+
+    enum RRP_QUEUES {
+        NONE,
+        USER_INTERFACE,
+        AI_ENGINE,
+        MICROCONTROLLER,
+        FLIGHT_CONTROLLER,
+        CATEGORIZER,
+        STATUS,
+    };
+}
+
+#endif // RRPQUEUES_HPP

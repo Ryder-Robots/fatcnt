@@ -5,15 +5,20 @@
 #include <queue>
 #include <condition_variable>
 #include <fatcnt/state/state.hpp>
+#include <fatcnt/state/rrpqueues.hpp>
 #include <fatcnt/environment/environment.hpp>
-#include <fatcnt/protocols/common/mspdirection.hpp>
 
 using namespace std;
 
 namespace rrobot {
     class StateFactory  {
         public:
-            static State* createState(Environment environment, vector<MSPDIRECTION> directions);
+            /**
+             * @fn createState
+             * @brief
+             * Creates state and queues based upon inputs.
+             */
+            static State* createState(Environment environment, vector<RRP_QUEUES> queues);
     };
 }
 
