@@ -24,7 +24,7 @@ namespace rrobot {
              * @brief
              * Callled when object is created before thread is created.
              */
-            void init(RrQueues* queues, StateIface *state, Environment* environment, RrCatagorizerMapper *mapper);
+            void init(StateIface *state, Environment* environment, RrCatagorizerMapper *mapper);
 
             bool consume(Event* event, StateIface* state) override;
 
@@ -49,7 +49,6 @@ namespace rrobot {
         private:
             RrCatagorizerMapper*  _mapper = nullptr;
             StateIface*           _state  = nullptr;
-            RrQueues*             _queues = nullptr;
             vector<thread*>       _threads;
             vector<EventHandler*> _handlers;
             RRP_STATUS            _status = RRP_STATUS::INITILIZING;

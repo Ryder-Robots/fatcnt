@@ -2,6 +2,7 @@
 #include <gmock/gmock.h>
 
 #include <fatcnt/events/catagorizer.hpp>
+#include <fatcnt/events/statushandler.hpp>
 #include <fatcnt/environment/environmentProcessor.hpp>
 #include <fatcnt/protocols/common/mspcommands.hpp>
 #include <fatcnt/protocols/common/mspdirection.hpp>
@@ -13,9 +14,24 @@ namespace fs = std::filesystem;
 
 // Mock classes
 class MockRrCatagorizerMapper : public RrCatagorizerMapper {
-    MOCK_METHOD(void, init, (Environment*, StateIface*), (override));
-    MOCK_METHOD(vector<EventHandler*>, createEventHandlers, (), (override));
+    public:
     MOCK_METHOD(RRP_QUEUES, mapQueue, (Event*), (override));
+
+    void init(Environment* env, StateIface* state) {
+        _state = state;
+        _env = env;
+    }
+
+    vector<EventHandler*>  createEventHandlers() override {
+        vector<EventHandler*> handlers = {};
+        RrStatusHandler* statusHandler = new RrStatusHandler();
+        handlers.push_back(statusHandler);
+        statusHandler->init(_state, _env, handlers);
+        return handlers;        
+    }
+
+     StateIface* _state = nullptr;
+     Environment* _env = nullptr;
 };
 
 
@@ -23,7 +39,7 @@ class MockRrCatagorizerMapper : public RrCatagorizerMapper {
 class TestCatagorizer : public ::testing::Test {
    protected:
 
-    RrQueues*   queues = new RrQueues(100, chrono::milliseconds(500), chrono::milliseconds(500));
+    // RrQueues*   queues = new Rrqueues(100, chrono::milliseconds(500), chrono::milliseconds(500));
     StateIface* state = nullptr;
     MockRrCatagorizerMapper* mapper = new MockRrCatagorizerMapper;
     RrCatagorizer* catagorizer = new RrCatagorizer();
@@ -33,13 +49,11 @@ class TestCatagorizer : public ::testing::Test {
     void SetUp() override {
         // Setup code
         RrCatagorizer* catagorizer = new RrCatagorizer();
-        vector<RRP_QUEUES> queuesNames = {RRP_QUEUES::CATEGORIZER, RRP_QUEUES::USER_INTERFACE, RRP_QUEUES::MICROCONTROLLER,};
-
-        for (auto queueName : queuesNames) {
-            mutex* lock = new mutex();
-            queue<Event*>* q = new queue<Event*>();
-            queues->setQueue(queueName, q, lock);
-        }
+        vector<RRP_QUEUES> queuesNames = {
+            RRP_QUEUES::CATEGORIZER, 
+            RRP_QUEUES::USER_INTERFACE, 
+            RRP_QUEUES::MICROCONTROLLER,
+            RRP_QUEUES::STATUS,};
 
         const fs::path filepath = "manifests/virtual.json";
         ifstream ifs(filepath);
@@ -49,23 +63,28 @@ class TestCatagorizer : public ::testing::Test {
         env = EnviromentProcessor::createEnvironmentRef(manifest);
         state = StateFactory::createState(*env, queuesNames);
         mapper = new MockRrCatagorizerMapper();
-
-        catagorizer->init(queues, state, env, mapper);
+        mapper->init(env, state);
+        catagorizer->init(state, env, mapper);
     }
 
     void TearDown() override {
         // Teardown code
+        delete(mapper);
     }
 };
 
 // Tests
 TEST_F(TestCatagorizer, TestInit) {
-    catagorizer->init(queues, state, env, mapper);
+    catagorizer->init(state, env, mapper);
 }
 
 TEST_F(TestCatagorizer, TestIdent) {
-    queue<Event*>* queue = queues->getQueue(RRP_QUEUES::CATEGORIZER);
-    mutex* mtx = queues->getLock(RRP_QUEUES::CATEGORIZER);
+    EXPECT_CALL(*mapper, mapQueue(testing::_))
+        .Times(testing::AtLeast(1))
+        .WillOnce(testing::Return(RRP_QUEUES::STATUS));
+
+    queue<Event*>* queue = state->getQueues()->getQueue(RRP_QUEUES::CATEGORIZER);
+    mutex* mtx = state->getQueues()->getLock(RRP_QUEUES::CATEGORIZER);
     const std::lock_guard<std::mutex> lock(*mtx);
 
     // place an MSP_IDENT request and see that we get something back.
@@ -74,19 +93,18 @@ TEST_F(TestCatagorizer, TestIdent) {
     EXPECT_EQ(1, queue->size());
     mtx->unlock();
 
-    catagorizer->init(queues, state, env, mapper);
+    catagorizer->init(state, env, mapper);
     std::thread* t = new std::thread(RrCatagorizer::handleEvent, catagorizer, state);
-    this_thread::sleep_for(chrono::milliseconds(10));
+    this_thread::sleep_for(chrono::milliseconds(100));
     
     while(!t->joinable()) {
         this_thread::sleep_for(chrono::milliseconds(10));
     }
-    state->setIsRunning(false);
-    t->join();
 
     EXPECT_EQ(0, queue->size());
 
-    queue = queues->getQueue(RRP_QUEUES::USER_INTERFACE);
+
+    queue = state->getQueues()->getQueue(RRP_QUEUES::USER_INTERFACE);
     EXPECT_EQ(1, queue->size());
     identEvent = queue->front();
     EXPECT_EQ(MSPDIRECTION::EXTERNAL_OUT, identEvent->getDirection());
@@ -95,6 +113,9 @@ TEST_F(TestCatagorizer, TestIdent) {
     EXPECT_EQ(LANDDRONE_4W, mspIdent.get_multitype());
     EXPECT_EQ(VIRTUAL, mspIdent.get_msp_version());
     EXPECT_EQ(0, mspIdent.get_capability());
+
+    state->setIsRunning(false);
+    t->join();
 }
 
 // Main class

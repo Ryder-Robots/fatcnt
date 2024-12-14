@@ -10,13 +10,13 @@ State* StateFactory::createState(Environment environment, vector<RRP_QUEUES> que
         chrono::milliseconds(environment.getQueues().getThreadProcessTime())
     );
 
-    State* state = new State(queues);
-
     for (auto queueName : queuesNames) {
         mutex* lock = new mutex();
         queue<Event*>* q = new queue<Event*>();
         queues->setQueue(queueName, q, lock);
     }
 
+    State* state = new State(queues);
+    
     return state; 
 }

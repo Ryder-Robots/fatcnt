@@ -15,6 +15,7 @@ namespace rrobot {
      * handles status requests and returns directly to the user interface.
      */
     class RrStatusHandler : public EventHandler {
+        public:
         bool consume(Event* event, StateIface* state) override;
 
         Event* produce(StateIface* state) override;
@@ -31,7 +32,7 @@ namespace rrobot {
          * @brief
          * base initlization.
          */
-        void init(RrQueues* queues, Environment* environment, vector<EventHandler *> handlers);
+        void init(StateIface *state, Environment* environment, vector<EventHandler *> handlers);
 
         private:
         Event* _request = nullptr;

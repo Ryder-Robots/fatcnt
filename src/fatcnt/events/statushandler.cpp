@@ -5,12 +5,11 @@ using namespace rrobot;
 
 dlib::logger dlog_st("status_handler");
 
-void RrStatusHandler::init(RrQueues* queues, Environment *environment, vector<EventHandler*> handlers) {
+void RrStatusHandler::init(StateIface *state, Environment *environment, vector<EventHandler*> handlers) {
     dlog_st << dlib::LINFO << "initalizing status handler";
-    setStatus(RRP_STATUS::INITILIZING);
     _environment = environment;
     _handlers = handlers;
-    EventHandler::init(queues, RRP_QUEUES::STATUS, RRP_QUEUES::USER_INTERFACE);
+    EventHandler::init(state->getQueues(), RRP_QUEUES::STATUS, RRP_QUEUES::USER_INTERFACE);
 }
 
 /**
@@ -66,6 +65,8 @@ Event* RrStatusHandler::produce(StateIface* state) {
     } else {
         event = new Event(MSPCOMMANDS::MSP_IDENT, MSPDIRECTION::EXTERNAL_OUT, payload);
     }
+    dlog_st << dlib::LDEBUG << "sending out status event";
+    _request = nullptr;
     return event;
 }
 
