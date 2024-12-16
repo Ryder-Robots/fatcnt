@@ -5,6 +5,29 @@ namespace po = boost::program_options;
 
 dlib::logger dlog_main("rr_robot_main");
 
+StateIface* volatile state = nullptr;
+thread* volatile tmain = nullptr;
+
+void signalHandler(int signum) {
+    if (signum == SIGTERM && state != nullptr) {
+        dlog_main << dlib::LINFO << "SIGTERM has been, begining shutdown process";
+        state->setIsRunning(false);
+
+        dlog_main << dlib::LINFO << "allowing for threads to exit normally.";
+        exit(EXIT_SUCCESS);
+    }
+    while (!tmain->joinable()) {
+        dlog_main << dlib::LINFO << "waiting for main loop to start";
+        this_thread::sleep_for(chrono::milliseconds(10));
+    }
+    if (tmain != nullptr && tmain->joinable()) {
+        tmain->join();
+        dlog_main << dlib::LINFO << "exitng program";
+    }
+    
+    exit(EXIT_SUCCESS);
+}
+
 int main(int argc, char *argv[]) {
     po::options_description desc("Allowed options");
     desc.add_options()
@@ -31,6 +54,27 @@ int main(int argc, char *argv[]) {
 
         dlog_main << dlib::LINFO << "creating environment";
         Environment environment = EnviromentProcessor::createEnvironment(manifest);
+        RrCatagorizerMapper* mapper = MapperFactory::getMapper(environment);
+
+        dlog_main << dlib::LINFO << "creating state";
+        state = StateFactory::createState(environment, mapper->queueNames());
+        mapper->init(&environment, state);
+
+        dlog_main << dlib::LINFO << "creating catagorizer";
+        RrCatagorizer* catagorizer = new RrCatagorizer();
+        catagorizer->init(state, &environment, mapper);
+
+        dlog_main << dlib::LINFO << "starting application";
+        std::thread t = std::thread(RrCatagorizer::handleEvent, catagorizer, state);
+
+        tmain = &t;
+        while (!t.joinable()) {
+            dlog_main << dlib::LINFO << "waiting for main loop to start";
+            this_thread::sleep_for(chrono::milliseconds(environment.getQueues().getThreadProcessTime()));
+        }
+        std::signal(SIGTERM, signalHandler);
+        t.join();
+        dlog_main << dlib::LINFO << "exitng program";
     } catch (const std::exception &ex) {
         dlog_main << dlib::LFATAL << "fatal error " << ex.what();
     }

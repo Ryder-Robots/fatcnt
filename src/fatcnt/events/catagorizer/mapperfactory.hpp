@@ -6,14 +6,16 @@
 #include "catgorizermapper.hpp"
 #include "ldsqu001mapper.hpp"
 
-namespace rrobot::MapperFactory {
-
-    /**
-     * @fn getMapper
-     * @brief
-     * Retrieve the mapper object.
-     */
-    static RrCatagorizerMapper* getMapper(Environment* environment, StateIface* state);
+namespace rrobot {
+    class MapperFactory {
+    public:
+        /**
+         * @fn getMapper
+         * @brief
+         * Retrieve the mapper object.
+         */
+        static RrCatagorizerMapper* getMapper(Environment env);
+    };
 }
 
 #endif // MAPPFACTORY_HPP

@@ -2,8 +2,7 @@
 
 using namespace rrobot;
 
-RrCatagorizerMapper* MapperFactory::getMapper(Environment* environment, StateIface* state) {
-    Environment env = *environment;
+RrCatagorizerMapper* MapperFactory::getMapper(rrobot::Environment env) {
     RrCatagorizerMapper* mapper = nullptr;
 
     switch(env.getHwModel().getMspVersion()) {
@@ -16,7 +15,5 @@ RrCatagorizerMapper* MapperFactory::getMapper(Environment* environment, StateIfa
         throw UnsupportedAttribute("MSP_VERSION is not supported by this version of " + env.getVersion().getAppName() 
             + " version:" + env.getVersion().getVersion());
     }
-    mapper->init(environment, state);
-
     return mapper;
 }
