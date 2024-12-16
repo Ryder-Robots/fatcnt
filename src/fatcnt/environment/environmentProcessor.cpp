@@ -11,8 +11,9 @@ Environment EnviromentProcessor::createEnvironment(json manifest) {
     RrSerial mc = createMc(manifest);
     RrVersion version;
     Queues queues = createQueues(manifest);
+    Server server = createServer(manifest);
 
-    return Environment(hwModel, mc, version, queues);
+    return Environment(hwModel, mc, version, queues, server);
 }
 
 Environment* EnviromentProcessor::createEnvironmentRef(json manifest) {
@@ -22,8 +23,9 @@ Environment* EnviromentProcessor::createEnvironmentRef(json manifest) {
     RrSerial mc = createMc(manifest);
     RrVersion version;
     Queues queues = createQueues(manifest);
+    Server server = createServer(manifest);
 
-    return new Environment(hwModel, mc, version, queues);
+    return new Environment(hwModel, mc, version, queues, server);
 }
 
 HwModel EnviromentProcessor::createHwModel(json manifest) {
@@ -66,4 +68,10 @@ Queues EnviromentProcessor::createQueues(json manifest) {
     return Queues(manifest["queues"]["limit"], 
         manifest["queues"]["thread_wait_time"],  
         manifest["queues"]["thread_process_time"]);
+}
+
+Server EnviromentProcessor::createServer(json manifest) {
+    vector<string> keys = {"port", "maxconnections"};
+    verify(manifest, keys, "server");
+    return Server(manifest["server"]["port"], manifest["server"]["maxconnections"]);
 }

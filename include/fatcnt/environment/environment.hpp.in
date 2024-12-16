@@ -5,6 +5,7 @@
 #include <fatcnt/environment/rrserial.hpp>
 #include <fatcnt/environment/version.hpp>
 #include <fatcnt/environment/queues.hpp>
+#include <fatcnt/environment/rr_server.hpp>
 
 namespace rrobot {
 
@@ -16,22 +17,25 @@ namespace rrobot {
      */
     class Environment {
         public:
-            Environment(const HwModel hwmodel, const RrSerial mc, const RrVersion rrVersion, const Queues queues) :
+            Environment(const HwModel hwmodel, const RrSerial mc, const RrVersion rrVersion, const Queues queues, const Server server) :
                 _hwModel(hwmodel),
                 _mc(mc),
                 _version(rrVersion),
-                _queues(queues) {}
+                _queues(queues),
+                _server(server) {}
 
             HwModel   getHwModel() {return _hwModel;}
             RrSerial  getMc() {return _mc;}
             RrVersion getVersion() { return _version;}
             Queues    getQueues() {return _queues;}
+            Server    getServer() {return _server;}
             
         private:
             const HwModel   _hwModel;
             const RrSerial  _mc;
             const RrVersion _version;
             const Queues    _queues;
+            const Server    _server;
     };
 }
 

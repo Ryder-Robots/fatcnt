@@ -30,6 +30,7 @@ namespace rrobot {
             static HwModel  createHwModel(json manifest);
             static RrSerial createMc(json manifest);
             static Queues   createQueues(json manifest);
+            static Server   createServer(json server);
     };
 }
 

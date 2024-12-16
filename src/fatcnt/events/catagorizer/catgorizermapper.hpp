@@ -37,6 +37,13 @@ namespace rrobot {
              * Applies any any overridden mapping that is a result of changing the drones mode.
              */
             virtual RRP_QUEUES mapQueue(Event* event) = 0;
+
+            /**
+             * @fn queueNames
+             * @brief
+             * Returns a vector of queue names, this is used to create queues for drone.
+             */
+            virtual vector<RRP_QUEUES> queueNames() = 0;
     };
 }
 

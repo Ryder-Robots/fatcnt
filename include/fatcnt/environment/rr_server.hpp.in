@@ -1,0 +1,19 @@
+#ifndef RR_SERVER_HPP
+#define RR_SERVER_HPP
+
+namespace rrobot {
+    class Server {
+        public:
+            Server(int port, int maxconnections):
+                _port(port),
+                _maxconnections(maxconnections) {}
+
+            int getPort() {return _port;}
+            int getMaxConnections(){ return _maxconnections;}
+        private:
+            const int _port;
+            const int _maxconnections;
+    };
+}
+
+#endif //RR_SERVER_HPP

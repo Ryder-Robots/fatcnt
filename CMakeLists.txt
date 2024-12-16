@@ -29,6 +29,7 @@ set(fatcnt_SOURCES
   src/fatcnt/protocols/common/curators/rrp/msp_ident_curator.cpp
   src/fatcnt/events/ui/jserializer.cpp
   src/fatcnt/events/catagorizer.cpp
+  src/fatcnt/com/server.cpp
 )
 
 # Include directory

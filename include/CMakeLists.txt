@@ -84,6 +84,7 @@ set(fatcnt_INCLUDE
   fatcnt/environment/environment.hpp
   fatcnt/environment/hwmodel.hpp
   fatcnt/environment/queues.hpp
+  fatcnt/environment/rr_server.hpp
   fatcnt/events/Event.hpp
   fatcnt/protocols/common/mspdirection.hpp
   fatcnt/protocols/common/mspversion.hpp
