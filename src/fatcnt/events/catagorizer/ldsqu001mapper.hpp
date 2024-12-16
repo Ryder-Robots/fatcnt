@@ -1,9 +1,11 @@
 #ifndef LDSQU001MAPPER_HPP
 #define LDSQU001MAPPER_HPP
 
+#include <fatcnt/exceptions/exceptions.hpp>
+#include <fatcnt/protocols/common/curators/rrp/mspevent.hpp>
 #include <fatcnt/events/ui/jseralizer.hpp>
-#include <uihandler.hpp>
-#include "statushandler.hpp"
+#include <fatcnt/events/uihandler.hpp>
+#include <fatcnt/events/statushandler.hpp>
 #include "catagorizermapperbase.hpp"
 
 namespace rrobot {
