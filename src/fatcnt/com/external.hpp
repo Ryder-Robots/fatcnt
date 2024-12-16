@@ -1,6 +1,8 @@
 #ifndef EXTERNAL_HPP
 #define EXTERNAL_HPP
 
+#include <fatcnt/environment/environment.hpp>
+#include <fatcnt/state/stateiface.hpp>
 #include <sys/socket.h>
 #include <stdint.h>
 
@@ -66,6 +68,15 @@ namespace rrobot {
          * returns how many bytes are available.
          */
         virtual size_t available() {return 0;}
+
+        /**
+         * @fn init
+         * @brief
+         * Creates connection this includes binding to socket.
+         * @param environment reference to configuration (constants)
+         * @param state reference to state
+         */
+        virtual void init(Environment* environment, StateIface* _state) = 0;
     };
 }
 

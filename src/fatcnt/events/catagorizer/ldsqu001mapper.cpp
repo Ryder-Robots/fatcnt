@@ -16,11 +16,15 @@ vector<EventHandler*> LdSqu001Mapper::createEventHandlers() {
     statusHandler->init(_state, _environment, eventHandlers);
 
     Jseralizer* jserializer = new Jseralizer();
-    //TODO: external needs to be written.
-    uiHandler->init(nullptr, _state, jserializer);
+    RrServer* server = new RrServer();
+    uiHandler->init(server, _state, jserializer);
 
     eventHandlers.push_back(statusHandler);
     eventHandlers.push_back(uiHandler);
 
     return eventHandlers;
+}
+
+RRP_QUEUES mapQueue(Event* event) {
+
 }
