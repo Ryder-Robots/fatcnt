@@ -86,6 +86,8 @@ class MockExternal : public External {
 
     void init(Environment* environment, StateIface* _state) override {}
 
+    void close_rr() override {};
+
     MOCK_METHOD(int, accept_rr, (), (override));
     // MOCK_METHOD(size_t, available, (), (override));
 

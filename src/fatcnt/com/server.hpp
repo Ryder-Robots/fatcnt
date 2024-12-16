@@ -15,7 +15,7 @@
 namespace rrobot {
     class RrServer : public External {
         public:
-            void init(Environment* environment, StateIface* state);
+            void init(Environment* environment, StateIface* state) override;
 
             ssize_t recv_rr(void* buffer, size_t bufsz) override;
 
