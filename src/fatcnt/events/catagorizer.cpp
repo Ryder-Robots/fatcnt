@@ -59,8 +59,10 @@ void RrCatagorizer::tearDown() {
     for(EventHandler* handler : _handlers) {
         dlog_c << dlib::LINFO << "waiting for thread to terminate";
         while (handler->status() != RRP_STATUS::TERMINATED) {
-            std::this_thread::sleep_for(std::chrono::milliseconds(10));
+            std::this_thread::sleep_for(std::chrono::milliseconds(_environment->getQueues().getThreadProcessTime()));
         }
+        dlog_c << dlib::LINFO << "removing handler from thread manager";
+        delete(handler);
     }
 }
 

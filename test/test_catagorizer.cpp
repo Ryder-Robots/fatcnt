@@ -30,6 +30,11 @@ class MockRrCatagorizerMapper : public RrCatagorizerMapper {
         return handlers;        
     }
 
+    vector<RRP_QUEUES> queueNames() override {
+        vector<RRP_QUEUES> names = {};
+        return names;
+    }
+
      StateIface* _state = nullptr;
      Environment* _env = nullptr;
 };
