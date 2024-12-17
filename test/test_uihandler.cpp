@@ -84,6 +84,10 @@ class MockExternal : public External {
         return _response.size() - _pointer;
     }
 
+    void init(Environment* environment, StateIface* _state) override {}
+
+    void close_rr() override {};
+
     MOCK_METHOD(int, accept_rr, (), (override));
     // MOCK_METHOD(size_t, available, (), (override));
 
@@ -103,12 +107,13 @@ TEST(TestUniHandler, TestInit) {
 
     vector<RRP_QUEUES> directions = {RRP_QUEUES::USER_INTERFACE, RRP_QUEUES::CATEGORIZER};
     Environment environment = EnviromentProcessor::createEnvironment(manifest);
+    Environment* env = EnviromentProcessor::createEnvironmentRef(manifest);
     State* state = StateFactory::createState(environment, directions);
     Serializer<json>* serializer = new Jseralizer();
 
     External* external = new MockExternal();
 
-    uihandler.init(external, state, serializer);    
+    uihandler.init(external, env, state, serializer);    
 }
 
 // Test 4 motor setup using dual h-bridge
@@ -125,7 +130,7 @@ TEST(TestUiHandler, TestInBoundEvents) {
     Serializer<json>* serializer = new Jseralizer();
 
     MockExternal external = MockExternal();
-    uihandler.init(&external, state, serializer);
+    uihandler.init(&external, &environment, state, serializer);
         
     thread t(&UiHandler::handleEvent, &uihandler, state);
     // if (t.joinable()) {
@@ -197,7 +202,7 @@ TEST(TestUiHandler, TestOutBoundEvents) {
     Serializer<json>* serializer = new Jseralizer();
 
     MockExternal external = MockExternal();
-    uihandler.init(&external, state, serializer);
+    uihandler.init(&external, &environment, state, serializer);
 
     queue<Event*>* thisQueue = state->getQueues()->getQueue(RRP_QUEUES::USER_INTERFACE);
     thisQueue->emplace(event);

@@ -63,11 +63,12 @@ RrSerial EnviromentProcessor::createMc(json manifest) {
 
 
 Queues EnviromentProcessor::createQueues(json manifest) {
-    vector<string> keys = {"limit", "thread_wait_time", "thread_process_time"};
+    vector<string> keys = {"limit", "thread_wait_time", "thread_process_time", "thread_time_out"};
     verify(manifest, keys, "queues");
     return Queues(manifest["queues"]["limit"], 
         manifest["queues"]["thread_wait_time"],  
-        manifest["queues"]["thread_process_time"]);
+        manifest["queues"]["thread_process_time"],
+        manifest["queues"]["thread_time_out"]);
 }
 
 Server EnviromentProcessor::createServer(json manifest) {

@@ -51,15 +51,22 @@ void RrCatagorizer::setUp() {
          }
     }
 
-    dlog_c << dlib::LINFO << "starting catagorizer thread";
+    dlog_c << dlib::LINFO << "Drone is armed - starting catagorizer thread";
     _status = RRP_STATUS::ACTIVE;
 }
 
 void RrCatagorizer::tearDown() {
+    int threadTimeOut = 0;
     for(EventHandler* handler : _handlers) {
         dlog_c << dlib::LINFO << "waiting for thread to terminate";
         while (handler->status() != RRP_STATUS::TERMINATED) {
             std::this_thread::sleep_for(std::chrono::milliseconds(_environment->getQueues().getThreadProcessTime()));
+            threadTimeOut += _environment->getQueues().getThreadProcessTime();
+
+            if (threadTimeOut >= _environment->getQueues().getThreadTimeOut()) {
+                dlog_c << dlib::LWARN << "thread has exceeded timeout, forcing shutdown";
+                break;
+            }
         }
         dlog_c << dlib::LINFO << "removing handler from thread manager";
         delete(handler);

@@ -6,7 +6,7 @@ using json = nlohmann::json;
 
 dlib::logger dlog_ui("rr_robot_ui");
 
-void UiHandler::init(External* external, StateIface* state, Serializer<json>* serializer) {
+void UiHandler::init(External* external, Environment* environment, StateIface* state, Serializer<json>* serializer) {
     /**
      * forwards messages from USER_INTERFACE to catagorizer, if they are authenticated
      * messages from catagorizer are sent to socket.
@@ -15,9 +15,12 @@ void UiHandler::init(External* external, StateIface* state, Serializer<json>* se
     dlog_ui << dlib::LINFO << "configurating queues";
 
     EventHandler::init(state->getQueues(), RRP_QUEUES::USER_INTERFACE, RRP_QUEUES::CATEGORIZER);
+
     _external = external;
     _buffer = static_cast<char*>(malloc(BUFSIZ * sizeof(char)));
     _serializer = serializer;
+    _environment = environment;
+    _state = state;
 }
 
 bool UiHandler::consume(Event* event, StateIface* state) {
@@ -79,6 +82,11 @@ bool UiHandler::available() { return _external->available() && _available; }
 
 
 void UiHandler::setUp() {
+    // start the listener inside the loop, so that other processes are not delayed while waiting for 
+    // user interface to connect.
+    _external->init(_environment, _state);
+    dlog_ui << dlib::LINFO << "changing to active state to listen to port";
+    setStatus(RRP_STATUS::ACTIVE);
     if (_external->accept_rr() == -1) {
         dlog_ui << dlib::LFATAL
             << "sommething went wrong when accepting connection: " + to_string(errno) + ": " + strerror(errno);

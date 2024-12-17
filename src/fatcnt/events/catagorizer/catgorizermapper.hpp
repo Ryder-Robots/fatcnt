@@ -9,6 +9,7 @@
 #include <fatcnt/events/eventhandler.hpp>
 #include <fatcnt/events/Event.hpp>
 #include <fatcnt/events/catagorizer/cmodes.hpp>
+#include <fatcnt/com/server.hpp>
 
 using namespace std;
 
