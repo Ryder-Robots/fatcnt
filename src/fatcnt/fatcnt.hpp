@@ -4,6 +4,7 @@
 #include <signal.h>
 #include <csignal>
 #include <string>
+#include <boost/algorithm/string.hpp>
 #include <fatcnt/environment/environmentProcessor.hpp>
 #include <fatcnt/events/catagorizer/mapperfactory.hpp>
 #include <fatcnt/state/statefactory.hpp>

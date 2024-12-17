@@ -9,20 +9,22 @@ StateIface* volatile state = nullptr;
 thread* volatile tmain = nullptr;
 
 void signalHandler(int signum) {
-    if (signum == SIGTERM && state != nullptr) {
+    if (signum == SIGTERM) {
         dlog_main << dlib::LINFO << "SIGTERM has been, begining shutdown process";
-        state->setIsRunning(false);
-
-        dlog_main << dlib::LINFO << "allowing for threads to exit normally.";
-        exit(EXIT_SUCCESS);
-    }
-    while (!tmain->joinable()) {
-        dlog_main << dlib::LINFO << "waiting for main loop to start";
-        this_thread::sleep_for(chrono::milliseconds(10));
-    }
-    if (tmain != nullptr && tmain->joinable()) {
-        tmain->join();
-        dlog_main << dlib::LINFO << "exitng program";
+        if (state != nullptr) {
+            dlog_main << dlib::LINFO << "Setting isRunning to false for handlers";
+            state->setIsRunning(false);
+        }
+        if (tmain != nullptr) {
+            while (!tmain->joinable()) {
+                dlog_main << dlib::LINFO << "waiting for main loop to start";
+                this_thread::sleep_for(chrono::milliseconds(10));
+            }
+            if (tmain != nullptr && tmain->joinable()) {
+                tmain->join();
+                dlog_main << dlib::LINFO << "exiting program";
+            }
+        }
     }
     
     exit(EXIT_SUCCESS);
@@ -47,6 +49,7 @@ int main(int argc, char *argv[]) {
 
     try {
         string filepath = vm["manifest"].as<string>();
+        boost::trim(filepath);
         dlog_main.set_level(dlib::LALL);
         std::ifstream ifs(filepath);
         json manifest = json::parse(ifs);

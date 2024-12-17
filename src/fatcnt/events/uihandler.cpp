@@ -85,6 +85,8 @@ void UiHandler::setUp() {
     // start the listener inside the loop, so that other processes are not delayed while waiting for 
     // user interface to connect.
     _external->init(_environment, _state);
+    dlog_ui << dlib::LINFO << "changing to active state to listen to port";
+    setStatus(RRP_STATUS::ACTIVE);
     if (_external->accept_rr() == -1) {
         dlog_ui << dlib::LFATAL
             << "sommething went wrong when accepting connection: " + to_string(errno) + ": " + strerror(errno);

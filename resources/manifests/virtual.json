@@ -20,6 +20,7 @@
     "queues": {
         "limit" : 100,
         "thread_wait_time": 500,
-        "thread_process_time": 10
+        "thread_process_time": 10,
+        "thread_time_out": 500
     }
 }
