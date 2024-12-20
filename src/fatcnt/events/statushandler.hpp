@@ -34,12 +34,14 @@ namespace rrobot {
          */
         void init(StateIface *state, Environment* environment, vector<EventHandler *> handlers);
 
+        string name() override {return "statushandler";}
+
         private:
         Event* _request = nullptr;
         Environment* _environment = nullptr;
         vector<EventHandler*> _handlers;
-
         int32_t getFlags();
     };
+
 }
 #endif // STATUSHANDLER_HPP

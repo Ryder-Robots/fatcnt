@@ -56,6 +56,13 @@ class EventHandler {
     virtual bool consume(Event* event, StateIface* state) = 0;
 
     /**
+     * @fn name
+     * @brief
+     * The name of the handler used for debugging purposes.
+     */
+    virtual string name() = 0;
+
+    /**
      * @fn produce
      * @brief 
      when available method returns true, then call this method that will produce events for

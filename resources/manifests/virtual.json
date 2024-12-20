@@ -22,5 +22,8 @@
         "thread_wait_time": 500,
         "thread_process_time": 10,
         "thread_time_out": 500
+    },
+    "logging": {
+        "logLevel": "LINFO"
     }
 }

@@ -42,12 +42,12 @@ void RrServer::close_rr() {
     close(_sockfd);
 }
 
-
 ssize_t RrServer::send_rr(const void *buf, size_t bufsz) {
     return send(_socket, buf, bufsz, 0);
 }
 
 size_t RrServer::available() {
-    size_t available = 0;
-    return ioctl(_socket, FIONREAD, &available);
+    char peek_buf[1];
+    int bytes_available = recv(_socket, peek_buf, sizeof(peek_buf), MSG_PEEK);
+    return static_cast<size_t>(bytes_available);
 }

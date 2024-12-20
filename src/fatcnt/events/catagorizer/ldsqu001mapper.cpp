@@ -40,6 +40,7 @@ RRP_QUEUES LdSqu001Mapper::mapQueue(Event* eventRef) {
     switch (event.getCommand()) {
         case MSPCOMMANDS::MSP_AUTHKEY:
         case MSPCOMMANDS::MSP_IDENT:
+        case MSPCOMMANDS::MSP_STATUS:
             queue = RRP_QUEUES::STATUS;
             break;
         case MSPCOMMANDS::MSP_MODE:

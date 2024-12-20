@@ -32,6 +32,8 @@ class MockConcreteHandler : public EventHandler {
     RRP_STATUS status() {
         return RRP_STATUS::ACTIVE;
     }
+
+    string name() override {return "mockhandler";}
 };
 
 class MockState : public StateIface {

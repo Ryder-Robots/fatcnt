@@ -56,6 +56,8 @@ namespace rrobot {
 
             void tearDown() override;
 
+            string name() override {return "uihandler";}
+
         private:
             External*         _external;
             const char        _delimiter = 0x1E;

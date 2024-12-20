@@ -2,10 +2,7 @@
 
 using namespace rrobot;
 
-dlib::logger dlog_envf("rr_environment_lg");
-
 Environment EnviromentProcessor::createEnvironment(json manifest) {
-    dlog_envf.set_level(dlib::LALL);
 
     HwModel hwModel = createHwModel(manifest);
     RrSerial mc = createMc(manifest);
@@ -17,7 +14,6 @@ Environment EnviromentProcessor::createEnvironment(json manifest) {
 }
 
 Environment* EnviromentProcessor::createEnvironmentRef(json manifest) {
-    dlog_envf.set_level(dlib::LALL);
 
     HwModel hwModel = createHwModel(manifest);
     RrSerial mc = createMc(manifest);
