@@ -32,6 +32,8 @@ namespace rrobot {
 
             bool available() override {return false;}
 
+            string name() override {return "catagorizer";}
+
             /**
              * @fn setUp
              * @brief
