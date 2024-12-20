@@ -78,7 +78,15 @@ Event* UiHandler::produce(StateIface* state) {
     return event;
 }
 
-bool UiHandler::available() { return _external->available() && _available; }
+bool UiHandler::available() {
+    if (_available) {
+        ssize_t availableBytes = _external->available();
+        if (availableBytes <= 0) {
+            _available = false;
+        }
+    }
+    return _available; 
+}
 
 
 void UiHandler::setUp() {
