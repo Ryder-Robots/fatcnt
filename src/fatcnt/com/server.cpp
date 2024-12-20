@@ -48,7 +48,7 @@ ssize_t RrServer::send_rr(const void *buf, size_t bufsz) {
 }
 
 size_t RrServer::available() {
-    size_t available = 0;
-    ioctl(_socket, FIONREAD, &available);
-    return available;
+    char peek_buf[1];
+    int bytes_available = recv(_socket, peek_buf, sizeof(peek_buf), MSG_PEEK);
+    return static_cast<size_t>(bytes_available);
 }

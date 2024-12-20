@@ -6,6 +6,7 @@ dlib::logger dlog_hnd("rr_robot_eventhandler");
 
 
 void EventHandler::handleProduceEvents(EventHandler* handler, StateIface* state) {
+    dlog_hnd << dlib::LDEBUG << "producing events for " << handler->name();
     const std::lock_guard<std::mutex> lock(*handler->_outbound_lock);
     for (int i = 0; i < handler->_limit; i++) {
         if (!handler->available()) {
@@ -16,6 +17,7 @@ void EventHandler::handleProduceEvents(EventHandler* handler, StateIface* state)
 }
 
 void EventHandler::handleConsumeEvents(EventHandler* handler, StateIface* state) {
+    dlog_hnd << dlib::LDEBUG << "consuming events for " << handler->name();
     const std::lock_guard<std::mutex> lock(*handler->_lock);
     for (int i = 0; i < handler->_limit; i++) {
         if (handler->_queue->empty()) {
@@ -44,7 +46,6 @@ void EventHandler::handleEvent(EventHandler* handler, StateIface* state) {
             if (status == RRP_STATUS::ACTIVE) {
                 handleProduceEvents(handler, state);
                 handleConsumeEvents(handler, state);
-
             } else if (handler->status() == RRP_STATUS::ERROR) {
                 handler->reload();
             }
