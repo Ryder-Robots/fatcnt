@@ -42,7 +42,6 @@ void RrServer::close_rr() {
     close(_sockfd);
 }
 
-
 ssize_t RrServer::send_rr(const void *buf, size_t bufsz) {
     return send(_socket, buf, bufsz, 0);
 }
