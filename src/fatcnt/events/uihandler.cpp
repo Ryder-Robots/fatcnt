@@ -110,26 +110,25 @@ void UiHandler::setUp() {
 void UiHandler::tearDown() {
     dlog_ui << dlib::LINFO << "connecton is closed";
     _external->close_rr();
+    _external->shutdown_rr();
 }
 
 /*
  * TODO: This method is unrelaiblae but does not shutdown the server, once AI has been integrated. It would be bets
  * to go HOME location. This can be done by generating a AI Event and heading that way. Even if this routine does work
  * not a bad idea to do that, because in order to trigger a reload something has gone wrong.
- * 
+ *
  * May be use an onError() event to generate the home call.
  */
 void UiHandler::reload() {
-    for (int i = 0; i < _environment->getQueues().getLimit(); i++) {
-        try {
-            dlog_ui << dlib::LERROR << "attempting to stop and re-establish connection";
-            tearDown();
-            std::this_thread::sleep_for(std::chrono::milliseconds(_environment->getQueues().getThreadTimeOut()));
-            setUp();
-            setStatus(RRP_STATUS::ACTIVE);
-            break;
-        } catch (const std::exception& e) {
-            dlog_ui << dlib::LERROR << "connection attetmpt failed with: " << e.what();
-        }
+    dlog_ui << dlib::LERROR << "attempting to stop and re-establish connection";
+    std::this_thread::sleep_for(_state->getQueues()->QUEUE_WAIT_TIME);
+    if (_external->accept_rr() == -1) {
+        dlog_ui << dlib::LFATAL
+                << "sommething went wrong when accepting connection: " + to_string(errno) + ": " + strerror(errno);
+        throw BadConnectionException("sommething went wrong when accepting connection: " + to_string(errno) + ": " +
+                                     strerror(errno));
     }
+    setStatus(RRPSTATUS_HPP::ACTIVE);
+    dlog_ui << dlib::LINFO << " established successful connection";
 }

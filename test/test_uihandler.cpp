@@ -80,7 +80,7 @@ class MockExternal : public External {
         return bufsz;
     }
 
-    virtual size_t available() {
+    virtual ssize_t available() {
         return _response.size() - _pointer;
     }
 
@@ -93,6 +93,8 @@ class MockExternal : public External {
     string _response;
     string _outbound = "";
 
+    MOCK_METHOD(int, shutdown_rr, (), (override));
+
     private:
     int _pointer = 0;   
 };
@@ -103,8 +105,9 @@ class MockExternal2 : public External {
     MOCK_METHOD(ssize_t, send_rr, (const void*, size_t), (override));
     MOCK_METHOD(void, close_rr, (), (override));
     MOCK_METHOD(int, accept_rr, (), (override));
-    MOCK_METHOD(size_t, available, (), (override));
+    MOCK_METHOD(ssize_t, available, (), (override));
     MOCK_METHOD(void, init, (Environment*, StateIface*), (override));
+    MOCK_METHOD(int, shutdown_rr, (), (override));
 };
 
 TEST(TestUniHandler, TestInit) {
