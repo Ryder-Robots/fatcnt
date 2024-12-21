@@ -27,10 +27,11 @@ bool UiHandler::consume(Event* event, StateIface* state) {
     _available = false;
     json out = _serializer->serialize(event);
     string output = out.dump() + _delimiter;
+
     if (_external->send_rr(output.c_str(), output.length() * sizeof(char)) == -1) {
         dlog_ui << dlib::LFATAL
             << "sommething went wrong when accepting connection: " + to_string(errno) + ": " + strerror(errno);
-        throw BadConnectionException("sommething went wrong when accepting connection: " + to_string(errno) + ": " +
+        throw NetworkIOException("sommething went wrong when accepting connection: " + to_string(errno) + ": " +
             strerror(errno));        
     }
     _available = true;
@@ -50,8 +51,10 @@ Event* UiHandler::produce(StateIface* state) {
         }
         char c;
         size_t n = _external->recv_rr(&c, sizeof(char));
-
-        if (n != 1) {
+        if (n == -1) {
+            dlog_ui << dlib::LERROR << "IO Networking error has occurred";
+            throw NetworkIOException("IO Networking error has occurred");
+        } else if (n != 1) {
             dlog_ui << dlib::LERROR << "message sent without deliemeter";
             throw InvalidMessageSent("message sent without deliemeter");
         }

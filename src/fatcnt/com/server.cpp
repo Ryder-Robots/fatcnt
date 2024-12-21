@@ -2,7 +2,6 @@
 
 using namespace rrobot;
 
-
 dlib::logger dlog_svr("rr_robot_svr");
 
 void RrServer::init(Environment* environment, StateIface* state) {
@@ -19,7 +18,7 @@ void RrServer::init(Environment* environment, StateIface* state) {
     servaddr.sin_addr.s_addr = INADDR_ANY;
     servaddr.sin_port = htons(env.getServer().getPort());
 
-    if (bind(_sockfd, (const struct sockaddr *)&servaddr, sizeof(servaddr)) < 0) {
+    if (bind(_sockfd, (const struct sockaddr*)&servaddr, sizeof(servaddr)) < 0) {
         dlog_svr << dlib::LFATAL << "fatal error occured: " << strerror(errno);
         throw BadConnectionException("could not bind to port " + string(strerror(errno)));
     }
@@ -28,10 +27,12 @@ void RrServer::init(Environment* environment, StateIface* state) {
 }
 
 ssize_t RrServer::recv_rr(void* buffer, size_t bufsz) {
+    if (available() <= 0) {
+        return -1;
+    }
     size_t n = recv(_socket, buffer, bufsz, 0);
     return n;
 }
-
 
 int RrServer::accept_rr() {
     _socket = accept(_sockfd, nullptr, nullptr);
@@ -39,10 +40,16 @@ int RrServer::accept_rr() {
 }
 
 void RrServer::close_rr() {
+    if (available() <= 0) {
+        return;
+    }
     close(_sockfd);
 }
 
-ssize_t RrServer::send_rr(const void *buf, size_t bufsz) {
+ssize_t RrServer::send_rr(const void* buf, size_t bufsz) {
+    if (available() <= 0) {
+        return -1;
+    }
     return send(_socket, buf, bufsz, 0);
 }
 
