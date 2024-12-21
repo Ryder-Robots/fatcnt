@@ -73,8 +73,8 @@ void EventHandler::handleEvent(EventHandler* handler, StateIface* state) {
 /**
  * On failure the any exception MUST always set is_exit to true.  This is fatal.
  */
-void EventHandler::init(RrQueues* queues, RRP_QUEUES direction, RRP_QUEUES outbound) {
-    dlog_hnd.set_level(dlib::LALL);
+void EventHandler::init(RrQueues* queues, RRP_QUEUES direction, RRP_QUEUES outbound, Environment* environment) {
+    dlog_hnd.set_level(environment->getLogging().getLogLevel());
 
     dlog_hnd << dlib::LINFO << "setting up inbound queue and lock";
     try {

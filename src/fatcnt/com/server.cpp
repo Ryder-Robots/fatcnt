@@ -6,7 +6,7 @@ using namespace rrobot;
 dlib::logger dlog_svr("rr_robot_svr");
 
 void RrServer::init(Environment* environment, StateIface* state) {
-    dlog_svr.set_level(dlib::LALL);
+    dlog_svr.set_level(environment->getLogging().getLogLevel());
     struct sockaddr_in servaddr;
     Environment env = *environment;
     // Creating socket file descriptor

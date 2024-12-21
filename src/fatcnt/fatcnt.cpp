@@ -89,13 +89,12 @@ int main(int argc, char *argv[]) {
     try {
         string filepath = vm["manifest"].as<string>();
         boost::trim(filepath);
-        dlog_main.set_level(dlib::LALL);
         std::ifstream ifs(filepath);
         json manifest = json::parse(ifs);
         ifs.close();
 
-        dlog_main << dlib::LINFO << "creating environment";
         Environment environment = EnviromentProcessor::createEnvironment(manifest);
+        dlog_main.set_level(environment.getLogging().getLogLevel());
         RrCatagorizerMapper* mapper = MapperFactory::getMapper(environment);
 
         dlog_main << dlib::LINFO << "creating state";

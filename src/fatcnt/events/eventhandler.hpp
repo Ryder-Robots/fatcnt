@@ -33,7 +33,7 @@ class EventHandler {
      * This method is called when program is reloaded, or initialization time by the queue manger
      *
      */
-    void init(RrQueues* queues, RRP_QUEUES inbound, RRP_QUEUES outbound);
+    void init(RrQueues* queues, RRP_QUEUES inbound, RRP_QUEUES outbound, Environment* environment);
 
     /**
      * @fn handleEvent

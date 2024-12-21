@@ -11,10 +11,10 @@ void UiHandler::init(External* external, Environment* environment, StateIface* s
      * forwards messages from USER_INTERFACE to catagorizer, if they are authenticated
      * messages from catagorizer are sent to socket.
      */
-    dlog_ui.set_level(dlib::LALL);
+    dlog_ui.set_level(environment->getLogging().getLogLevel());
     dlog_ui << dlib::LINFO << "configurating queues";
 
-    EventHandler::init(state->getQueues(), RRP_QUEUES::USER_INTERFACE, RRP_QUEUES::CATEGORIZER);
+    EventHandler::init(state->getQueues(), RRP_QUEUES::USER_INTERFACE, RRP_QUEUES::CATEGORIZER, environment);
 
     _external = external;
     _buffer = static_cast<char*>(malloc(BUFSIZ * sizeof(char)));
