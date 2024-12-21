@@ -40,10 +40,10 @@ int RrServer::accept_rr() {
 }
 
 void RrServer::close_rr() {
-    if (available() <= 0) {
-        return;
+    if (available()) {
+        close(_sockfd);
     }
-    close(_sockfd);
+    shutdown(_sockfd, SHUT_RDWR);   
 }
 
 ssize_t RrServer::send_rr(const void* buf, size_t bufsz) {

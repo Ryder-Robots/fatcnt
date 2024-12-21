@@ -30,9 +30,9 @@ bool UiHandler::consume(Event* event, StateIface* state) {
 
     if (_external->send_rr(output.c_str(), output.length() * sizeof(char)) == -1) {
         dlog_ui << dlib::LFATAL
-            << "sommething went wrong when accepting connection: " + to_string(errno) + ": " + strerror(errno);
+                << "sommething went wrong when accepting connection: " + to_string(errno) + ": " + strerror(errno);
         throw NetworkIOException("sommething went wrong when accepting connection: " + to_string(errno) + ": " +
-            strerror(errno));        
+                                 strerror(errno));
     }
     _available = true;
     return true;
@@ -89,21 +89,20 @@ bool UiHandler::available() {
             available = false;
         }
     }
-    return available; 
+    return available;
 }
 
-
 void UiHandler::setUp() {
-    // start the listener inside the loop, so that other processes are not delayed while waiting for 
+    // start the listener inside the loop, so that other processes are not delayed while waiting for
     // user interface to connect.
     _external->init(_environment, _state);
     dlog_ui << dlib::LINFO << "changing to active state to listen to port";
     setStatus(RRP_STATUS::ACTIVE);
     if (_external->accept_rr() == -1) {
         dlog_ui << dlib::LFATAL
-            << "sommething went wrong when accepting connection: " + to_string(errno) + ": " + strerror(errno);
+                << "sommething went wrong when accepting connection: " + to_string(errno) + ": " + strerror(errno);
         throw BadConnectionException("sommething went wrong when accepting connection: " + to_string(errno) + ": " +
-            strerror(errno));
+                                     strerror(errno));
     }
     dlog_ui << dlib::LINFO << " established successful connection";
 }
@@ -113,9 +112,24 @@ void UiHandler::tearDown() {
     _external->close_rr();
 }
 
+/*
+ * TODO: This method is unrelaiblae but does not shutdown the server, once AI has been integrated. It would be bets
+ * to go HOME location. This can be done by generating a AI Event and heading that way. Even if this routine does work
+ * not a bad idea to do that, because in order to trigger a reload something has gone wrong.
+ * 
+ * May be use an onError() event to generate the home call.
+ */
 void UiHandler::reload() {
-    dlog_ui << dlib::LERROR << "attempting to stop and re-establish connection";
-    setUp();
-    tearDown();
-    setStatus(RRP_STATUS::ACTIVE);
+    for (int i = 0; i < _environment->getQueues().getLimit(); i++) {
+        try {
+            dlog_ui << dlib::LERROR << "attempting to stop and re-establish connection";
+            tearDown();
+            std::this_thread::sleep_for(std::chrono::milliseconds(_environment->getQueues().getThreadTimeOut()));
+            setUp();
+            setStatus(RRP_STATUS::ACTIVE);
+            break;
+        } catch (const std::exception& e) {
+            dlog_ui << dlib::LERROR << "connection attetmpt failed with: " << e.what();
+        }
+    }
 }
