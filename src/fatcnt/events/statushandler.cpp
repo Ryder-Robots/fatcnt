@@ -9,7 +9,7 @@ void RrStatusHandler::init(StateIface *state, Environment *environment, vector<E
     dlog_st << dlib::LINFO << "initalizing status handler";
     _environment = environment;
     _handlers = handlers;
-    EventHandler::init(state->getQueues(), RRP_QUEUES::STATUS, RRP_QUEUES::USER_INTERFACE);
+    EventHandler::init(state->getQueues(), RRP_QUEUES::STATUS, RRP_QUEUES::USER_INTERFACE, environment);
 }
 
 /**

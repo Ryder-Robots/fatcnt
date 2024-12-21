@@ -5,11 +5,11 @@ using namespace rrobot;
 dlib::logger dlog_c("rr_curator");
 
 void RrCatagorizer::init(StateIface* state, Environment* environment, RrCatagorizerMapper* mapper) {
-    dlog_c.set_level(dlib::LALL);
+    dlog_c.set_level(environment->getLogging().getLogLevel());
     _state = state;
     _mapper = mapper;
     _environment = environment;
-    EventHandler::init(state->getQueues(), RRP_QUEUES::CATEGORIZER, RRP_QUEUES::USER_INTERFACE);
+    EventHandler::init(state->getQueues(), RRP_QUEUES::CATEGORIZER, RRP_QUEUES::USER_INTERFACE, environment);
 }
 
 bool RrCatagorizer::consume(Event* event, StateIface* state) {

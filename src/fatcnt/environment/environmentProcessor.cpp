@@ -9,8 +9,9 @@ Environment EnviromentProcessor::createEnvironment(json manifest) {
     RrVersion version;
     Queues queues = createQueues(manifest);
     Server server = createServer(manifest);
+    Logging logging = createLogging(manifest);
 
-    return Environment(hwModel, mc, version, queues, server);
+    return Environment(hwModel, mc, version, queues, server, logging);
 }
 
 Environment* EnviromentProcessor::createEnvironmentRef(json manifest) {
@@ -20,8 +21,9 @@ Environment* EnviromentProcessor::createEnvironmentRef(json manifest) {
     RrVersion version;
     Queues queues = createQueues(manifest);
     Server server = createServer(manifest);
+    Logging logging = createLogging(manifest);
 
-    return new Environment(hwModel, mc, version, queues, server);
+    return new Environment(hwModel, mc, version, queues, server, logging);
 }
 
 HwModel EnviromentProcessor::createHwModel(json manifest) {
@@ -71,4 +73,13 @@ Server EnviromentProcessor::createServer(json manifest) {
     vector<string> keys = {"port", "maxconnections"};
     verify(manifest, keys, "server");
     return Server(manifest["server"]["port"], manifest["server"]["maxconnections"]);
+}
+
+Logging EnviromentProcessor::createLogging(json manifest) {
+    vector<string> keys = {"logLevel"};
+    verify(manifest, keys, "logging");
+
+    VALID_LOGLEVELS;
+    dlib::log_level logLevel = VALID_LOGLEVELS_KEYS.at(manifest["logging"]["logLevel"]);
+    return Logging(logLevel);
 }
