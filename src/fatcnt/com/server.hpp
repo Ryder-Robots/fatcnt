@@ -25,7 +25,9 @@ namespace rrobot {
 
             ssize_t send_rr(const void *buf, size_t bufsz)  override;
 
-            size_t available() override;
+            ssize_t available() override;
+
+            int shutdown_rr() override;
 
         private:
             int                 _socket = 0;

@@ -66,7 +66,7 @@ namespace rrobot {
          * @brief 
          * returns how many bytes are available.
          */
-        virtual size_t available() = 0;
+        virtual ssize_t available() = 0;
 
         /**
          * @fn init
@@ -76,6 +76,14 @@ namespace rrobot {
          * @param state reference to state
          */
         virtual void init(Environment* environment, StateIface* _state) = 0;
+
+
+        /**
+         * @fn shutdown_rr
+         * @brief
+         * executes any actions that are needed to shutdown the connection.
+         */
+        virtual int shutdown_rr() = 0;
     };
 }
 
