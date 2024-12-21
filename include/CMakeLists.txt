@@ -65,7 +65,7 @@ configure_file(fatcnt/events/catagorizer/cmodes.hpp.in fatcnt/events/catagorizer
 # end catagorizers
 
 #Exceptions
-set(EXCEPTIONS InvalidManifestException MissingRequiredAttributeException QueueDoesNotExit ExceedMaxMessage InvalidMessageSent InvalidFormat InvalidCommand UnsupportedAttribute BadConnectionException FailedToInitilizeHandler)
+set(EXCEPTIONS InvalidManifestException MissingRequiredAttributeException QueueDoesNotExit ExceedMaxMessage InvalidMessageSent InvalidFormat InvalidCommand UnsupportedAttribute BadConnectionException FailedToInitilizeHandler NetworkIOException)
 set(INCLUDE_CONTENT "")
 foreach(item ${EXCEPTIONS})
   set(EXCEPTION_NAME ${item})
