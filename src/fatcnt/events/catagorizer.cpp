@@ -35,7 +35,7 @@ void RrCatagorizer::setUp() {
         dlog_c << dlib::LINFO << "initilizing handler:" << handler->name();
         std::thread* t = new std::thread(EventHandler::handleEvent, handler, _state);
         while (!t->joinable()) {
-            std::this_thread::sleep_for(std::chrono::milliseconds(_environment->getQueues().getThreadProcessTime()));
+            std::this_thread::sleep_for(_state->getQueues()->QUEUE_PROCESS_TIME);
         }
         _threads.push_back(t);
         _handlers.push_back(handler);
@@ -47,7 +47,7 @@ void RrCatagorizer::setUp() {
         }
 
         while (handler->status() != RRP_STATUS::ACTIVE) {
-            std::this_thread::sleep_for(std::chrono::milliseconds(_environment->getQueues().getThreadProcessTime()));
+            std::this_thread::sleep_for(_state->getQueues()->QUEUE_PROCESS_TIME);
         }
         dlog_c << dlib::LINFO << "status active for:" << handler->name();
     }
@@ -61,7 +61,7 @@ void RrCatagorizer::tearDown() {
     for (EventHandler* handler : _handlers) {
         dlog_c << dlib::LINFO << "waiting for thread to terminate";
         while (handler->status() != RRP_STATUS::TERMINATED) {
-            std::this_thread::sleep_for(std::chrono::milliseconds(_environment->getQueues().getThreadProcessTime()));
+            std::this_thread::sleep_for(_state->getQueues()->QUEUE_PROCESS_TIME);
             threadTimeOut += _environment->getQueues().getThreadProcessTime();
 
             if (threadTimeOut >= _environment->getQueues().getThreadTimeOut()) {

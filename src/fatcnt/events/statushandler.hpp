@@ -27,6 +27,8 @@ namespace rrobot {
          */
         bool available() override;
 
+        bool isArmed();
+
         /**
          * @fn init
          * @brief
@@ -36,11 +38,15 @@ namespace rrobot {
 
         string name() override {return "statushandler";}
 
+        int32_t getFlags();
+
         private:
         Event* _request = nullptr;
         Environment* _environment = nullptr;
         vector<EventHandler*> _handlers;
-        int32_t getFlags();
+        StateIface* _state;
+
+        const int32_t DRONE_ARMED = 0 | INITILIZING | ERROR | RELOADING | SHUTTING_DOWN | TERMINATED; 
     };
 
 }

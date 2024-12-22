@@ -105,3 +105,8 @@ add_executable(test_catagorizer test/test_catagorizer.cpp)
 set_target_properties(test_catagorizer PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/test)
 target_link_libraries(test_catagorizer GTest::gtest_main ctl dlib gmock)
 gtest_discover_tests(test_catagorizer  WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/resources")
+
+add_executable(test_statushandler test/test_statushandler.cpp)
+set_target_properties(test_statushandler PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/test)
+target_link_libraries(test_statushandler GTest::gtest_main ctl dlib gmock)
+gtest_discover_tests(test_statushandler  WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/resources")

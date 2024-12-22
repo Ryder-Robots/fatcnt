@@ -9,7 +9,13 @@ void RrStatusHandler::init(StateIface *state, Environment *environment, vector<E
     dlog_st << dlib::LINFO << "initalizing status handler";
     _environment = environment;
     _handlers = handlers;
+    _state = state;
     EventHandler::init(state->getQueues(), RRP_QUEUES::STATUS, RRP_QUEUES::USER_INTERFACE, environment);
+}
+
+bool RrStatusHandler::isArmed() {
+    int32_t flags = getFlags();
+    return (flags & DRONE_ARMED) == 0;
 }
 
 /**
@@ -18,6 +24,10 @@ void RrStatusHandler::init(StateIface *state, Environment *environment, vector<E
  * it should be seen as the current state.
  */
 int32_t RrStatusHandler::getFlags() {
+    if (_state->isRunning() == false) {
+        return SHUTTING_DOWN;
+    }
+
     int32_t flags = 0;
     for (auto handler : _handlers) {
         flags = flags | handler->status();
