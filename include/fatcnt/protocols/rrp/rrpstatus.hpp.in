@@ -10,13 +10,16 @@
 
 namespace rrobot {
     enum RRP_STATUS : uint32_t {
-        INITILIZING    = 1,  // indicates that the handler has been started but is not yet active
-        ACTIVE         = 2,  // indicates that the handler is an active state, and ready to consume or produce.
-        ERROR          = 4,  // indicates that an error has occured, and the handler will need to be reloaded.
-        RELOADING      = 8,  // reloading after an error has occured.
-        SHUTTING_DOWN  = 16, // indicates that system is now shutting down.
-        TERMINATED     = 32, // handler has terminated.
+        INITILIZING    = 1 << 1,  // indicates that the handler has been started but is not yet active
+        ACTIVE         = 1 << 2,  // indicates that the handler is an active state, and ready to consume or produce.
+        ERROR          = 1 << 3,  // indicates that an error has occured, and the handler will need to be reloaded.
+        RELOADING      = 1 << 4,  // reloading after an error has occured.
+        SHUTTING_DOWN  = 1 << 5, // indicates that system is now shutting down.
+        TERMINATED     = 1 << 6, // handler has terminated.
     };
 }
+
+#define STATUS_ARRAY_INIT {TERMINATED, SHUTTING_DOWN, ERROR, RELOADING, INITILIZING, ACTIVE}
+#define MODE_BITMASK (flags & INITILIZING) + (flags & ERROR) + (flags & RELOADING) + (flags + SHUTTING_DOWN) + (flags & TERMINATED) + (flags & ACTIVE)
 
 #endif // RRPSTATUS_HPP
