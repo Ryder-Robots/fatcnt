@@ -11,7 +11,7 @@ using namespace std;
 namespace rrobot {
 /*
  */
-class StatusProcrssorIface {
+class StatusProcessorIface {
    public:
 
     /**
@@ -19,14 +19,14 @@ class StatusProcrssorIface {
      * @brief
      * returns the current mode.
      */
-    virtual RR_CMMODES getMode(int32_t flags) = 0;
+    virtual RR_CMODES getMode() = 0;
 
     /**
      * @fn getStatus
      * @brief
      * Returns the global status.
      */
-    virtual RRP_STATUS getStatus(int32_t flags) = 0;
+    virtual RRP_STATUS getStatus() = 0;
 
     /**
      * @fn addHandler
@@ -41,6 +41,9 @@ class StatusProcrssorIface {
      * returns the list of handlers.
      */
     virtual vector<EventHandler*> getHandlers() = 0;
+
+
+    virtual void setMode(RR_CMODES mode) = 0;
 };
 }  // namespace rrobot
 

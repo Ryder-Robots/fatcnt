@@ -22,6 +22,7 @@ set(fatcnt_SOURCES
   src/fatcnt/environment/environmentProcessor.cpp
   src/fatcnt/environment/processorbase.cpp
   src/fatcnt/state/statefactory.cpp
+  src/fatcnt/state/statusprocessor.cpp
   src/fatcnt/state/rrqueues.cpp
   src/fatcnt/events/eventhandler.cpp
   src/fatcnt/events/uihandler.cpp
@@ -110,3 +111,8 @@ add_executable(test_statushandler test/test_statushandler.cpp)
 set_target_properties(test_statushandler PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/test)
 target_link_libraries(test_statushandler GTest::gtest_main ctl dlib gmock)
 gtest_discover_tests(test_statushandler  WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/resources")
+
+add_executable(test_status_processor test/test_status_processor.cpp)
+set_target_properties(test_status_processor PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/test)
+target_link_libraries(test_status_processor GTest::gtest_main ctl dlib gmock)
+gtest_discover_tests(test_status_processor  WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/resources")

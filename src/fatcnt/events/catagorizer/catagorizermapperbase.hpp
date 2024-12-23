@@ -20,18 +20,22 @@ namespace rrobot {
             }
 
         protected:
-            void setMode(RR_CMMODES mode) {
+            // TODO deprecate this,  it should come through statusprocessor.
+            void setMode(RR_CMODES mode) {
                 const std::lock_guard<std::mutex> lock(_lock);
                 _mode = mode;
             }
 
-            RR_CMMODES getMode() {
+            // TODO deprecate this,  it should come through statusprocessor.
+            RR_CMODES getMode() {
                 return _mode;
             }
 
             Environment* _environment = nullptr;
             StateIface*  _state = nullptr;
-            RR_CMMODES   _mode = CMODE_NOT_SET;
+
+            // TODO deprecate this,  it should come through statusprocessor.
+            RR_CMODES   _mode = CMODE_NOT_SET;
 
         protected:
             std::mutex   _lock;

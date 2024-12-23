@@ -57,7 +57,7 @@ RRP_QUEUES LdSqu001Mapper::mapQueue(Event* eventRef) {
             queue = RRP_QUEUES::USER_INTERFACE;
             break;
         case MSPCOMMANDS::MSP_SET_MOTOR_HBRIDGE:
-            if (_mode == RR_CMMODES::CMODE_MANUAL_FLIGHT) {
+            if (_mode == RR_CMODES::CMODE_MANUAL_FLIGHT) {
                 queue = RRP_QUEUES::MICROCONTROLLER;
                 break;
             } 
