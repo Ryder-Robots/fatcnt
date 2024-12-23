@@ -19,6 +19,6 @@ namespace rrobot {
     };
 }
 
-#define MODE_BITMASK(F) F & CMODE_MANUAL_FLIGHT + F & CMODE_NOT_SET
+#define MODE_BITMASK(F) ((F & CMODE_MANUAL_FLIGHT) + (F & CMODE_NOT_SET))
 
 #endif // CMODES_HPP

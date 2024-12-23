@@ -51,6 +51,7 @@ namespace rrobot {
              }
 
              void setFlags(uint32_t flags) {
+                const std::lock_guard<std::mutex> lock(_lock);
                 _flags = flags;
              }
 
