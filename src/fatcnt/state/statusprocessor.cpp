@@ -4,7 +4,7 @@ using namespace rrobot;
 
 RR_CMODES StatusProcessor::getMode() {
     int32_t flags = _state->getFlags();
-    flags -= MODE_BITMASK;
+    flags -= STATUS_BITMASK(flags);
     return static_cast<RR_CMODES>(flags);
 }
 
@@ -13,7 +13,7 @@ RRP_STATUS StatusProcessor::getStatus() {
     for (auto handler : _eventHandlers) {
         statuses = statuses | handler->status();
     }
-    int32_t flags_modes = _state->getFlags() & CMODE_MANUAL_FLIGHT + _state->getFlags() & CMODE_NOT_SET;
+    int32_t flags_modes = MODE_BITMASK(_state->getFlags());
 
     RRP_STATUS status = RRP_STATUS::INITILIZING;
     vector<RRP_STATUS> statusArray = STATUS_ARRAY_INIT;
@@ -32,6 +32,6 @@ RRP_STATUS StatusProcessor::getStatus() {
 
 void StatusProcessor::setMode(RR_CMODES mode) {
     int32_t flags = _state->getFlags();
-    int32_t statuses = MODE_BITMASK;    
+    int32_t statuses = STATUS_BITMASK(flags);    
     _state->setFlags(0 | statuses | mode);
 }

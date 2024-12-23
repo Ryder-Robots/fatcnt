@@ -20,6 +20,6 @@ namespace rrobot {
 }
 
 #define STATUS_ARRAY_INIT {TERMINATED, SHUTTING_DOWN, ERROR, RELOADING, INITILIZING, ACTIVE}
-#define MODE_BITMASK (flags & INITILIZING) + (flags & ERROR) + (flags & RELOADING) + (flags + SHUTTING_DOWN) + (flags & TERMINATED) + (flags & ACTIVE)
+#define STATUS_BITMASK(F) (F & INITILIZING) + (F & ERROR) + (F & RELOADING) + (F + SHUTTING_DOWN) + (F & TERMINATED) + (F & ACTIVE)
 
 #endif // RRPSTATUS_HPP

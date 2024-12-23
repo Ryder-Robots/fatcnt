@@ -77,6 +77,10 @@ TEST_F(TestStatusProcessor, TestGetFlags) {
     m2->setStatus(RRP_STATUS::RELOADING);
     m3->setStatus(RRP_STATUS::ACTIVE);
     EXPECT_EQ(RRP_STATUS::ERROR, statusProcessor->getStatus());
+    EXPECT_EQ(CMODE_MANUAL_FLIGHT, statusProcessor->getMode());
+
+    statusProcessor->setMode(CMODE_NOT_SET);
+    EXPECT_EQ(CMODE_NOT_SET, statusProcessor->getMode());
 }
 
 

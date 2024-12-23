@@ -14,9 +14,11 @@ namespace rrobot {
      * 256, 512, 1024, 2048, 4096, 8192, 16348, 32768
      */
     enum RR_CMODES  : uint32_t {
-        CMODE_NOT_SET        = 256,  // Mode not set
-        CMODE_MANUAL_FLIGHT  = 512,  // Manual flight mode
+        CMODE_NOT_SET        = 1 << 8,  // Mode not set
+        CMODE_MANUAL_FLIGHT  = 1 << 9,  // Manual flight mode
     };
 }
+
+#define MODE_BITMASK(F) F & CMODE_MANUAL_FLIGHT + F & CMODE_NOT_SET
 
 #endif // CMODES_HPP
