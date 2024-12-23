@@ -3,6 +3,7 @@
 
 #include <fatcnt/state/rrqueues.hpp>
 #include <fatcnt/protocols/common/mspsensors.hpp>
+#include <fatcnt/protocols/rrp/rrpstatus.hpp>
 #include <fatcnt/events/catagorizer/cmodes.hpp>
 
 namespace rrobot {
@@ -54,11 +55,6 @@ class StateIface {
     virtual uint16_t getSensors()  = 0;
 
     /**
-     * @fn 
-     */
-    virtual RR_CMMODES getMode()  = 0;
-
-    /**
      * @fn setIsRunning
      * @brief
      * when set to true, then the application is considered to be running, when application
@@ -86,16 +82,23 @@ class StateIface {
     /**
      * @fn setSensorFlag
      * @brief
-     * Adds an available sensor.
+     * sets sensor flags.
      */
-    virtual void setSensorFlag(MSPSENSOR_FLAGS flag)  = 0;
+    virtual void setSensorFlag(MSPSENSOR_FLAGS flag) = 0;
 
     /**
-     * @fn setMode
+     * @fn setFlags
      * @brief
-     * sets the current mode of the drone.
+     * sets flags used to determine drone status, and mode.
      */
-    virtual void setMode(RR_CMMODES mode)  = 0;
+    virtual void setFlags(uint32_t flags) = 0;
+
+    /**
+     * @fn getFlags
+     * @brief
+     * returns flags used for status and mode.
+     */
+    virtual int32_t getFlags() = 0;
 };
 }  // namespace rrobot
 

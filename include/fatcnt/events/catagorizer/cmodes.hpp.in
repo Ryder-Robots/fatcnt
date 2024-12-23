@@ -1,14 +1,21 @@
 #ifndef CMODES_HPP
 #define CMODES_HPP
 
+#include <stdint.h>
+
 namespace rrobot {
     /**
      * @enum RR_CMMODES
      * @brief
      * RR_CMODES are used by catagorizer to define which mode to use.
+     * 
+     * Value range is between (256 to 32768)
+     * valid values are:
+     * 256, 512, 1024, 2048, 4096, 8192, 16348, 32768
      */
-    enum RR_CMMODES {
-@LOOP_CONTENT@
+    enum RR_CMMODES  : uint32_t {
+        CMODE_NOT_SET        = 256,  // Mode not set
+        CMODE_MANUAL_FLIGHT  = 512,  // Manual flight mode
     };
 }
 

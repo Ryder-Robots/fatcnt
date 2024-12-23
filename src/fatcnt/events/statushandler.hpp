@@ -29,6 +29,8 @@ namespace rrobot {
 
         bool isArmed();
 
+        int32_t getStatus();
+
         /**
          * @fn init
          * @brief

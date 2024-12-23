@@ -5,6 +5,7 @@
 
 /**
  * indicates the current status of a handler.
+ * (value range is 1 to 124)
  */
 
 namespace rrobot {

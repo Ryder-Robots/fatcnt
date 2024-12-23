@@ -18,6 +18,31 @@ bool RrStatusHandler::isArmed() {
     return (flags & DRONE_ARMED) == 0;
 }
 
+int32_t RrStatusHandler::getStatus() {
+    int32_t flags = getFlags();
+
+    if ((flags & SHUTTING_DOWN) == SHUTTING_DOWN) {
+        return SHUTTING_DOWN;
+    }
+    else if ((flags & ERROR) == ERROR) {
+        return ERROR;
+    }
+    else if ((flags & TERMINATED) == TERMINATED) {
+        return TERMINATED;
+    }
+        else if ((flags & RELOADING) == RELOADING) {
+        return RELOADING;
+    }
+    else if ((flags & INITILIZING) == INITILIZING) {
+        return INITILIZING;
+    }
+    else if ((flags & ACTIVE) == ACTIVE) {
+        return ACTIVE;
+    }
+
+    return INITILIZING;
+}
+
 /**
  * iterate through each handler,  and set the corresponding bit value. If values are anything but
  * 2, then not all components have initialized. For each iteration of flags is set to '0' therefore

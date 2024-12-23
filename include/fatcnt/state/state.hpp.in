@@ -31,15 +31,6 @@ namespace rrobot {
                 _error_count++;
             }
 
-            RR_CMMODES getMode() override {
-                return _mode;
-            }
-
-            void setMode(RR_CMMODES mode) override {
-                const std::lock_guard<std::mutex> lock(_lock);
-                _mode = mode;
-            }
-
             void setCycleTime(uint16_t cycleTime) override {
                 const std::lock_guard<std::mutex> lock(_lock);
                 _cycleTime = cycleTime;
@@ -59,14 +50,22 @@ namespace rrobot {
                 _sensors = _sensors | flag;
              }
 
+             void setFlags(uint32_t flags) {
+                _flags = flags;
+             }
+
+             int32_t getFlags() {
+                return _flags;
+             }
+
         private:
             RrQueues*  _queues;
             bool       _is_running = true;
             uint16_t   _error_count = 0;
             mutex      _lock;
-            RR_CMMODES _mode = RR_CMMODES::CMODE_NOT_SET;
             uint16_t   _sensors = 0;
-            uint16_t   _cycleTime;
+            uint16_t   _cycleTime = 0;
+            uint32_t   _flags = 0;
     };
 }
 
