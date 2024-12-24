@@ -12,14 +12,23 @@ using namespace rrobot;
 
 namespace fs = std::filesystem;
 
+class MockStatusProcessor : public StatusProcessorIface {
+    MOCK_METHOD(RR_CMODES, getMode, (), (override));
+    MOCK_METHOD(RRP_STATUS, getStatus, (), (override));
+    MOCK_METHOD(void, addHandler, (EventHandler*), (override));
+    MOCK_METHOD(vector<EventHandler*>, getHandlers, (), (override));
+    MOCK_METHOD(void, setMode, (RR_CMODES), (override));
+};
+
 // Mock classes
 class MockRrCatagorizerMapper : public RrCatagorizerMapper {
     public:
     MOCK_METHOD(RRP_QUEUES, mapQueue, (Event*), (override));
 
-    void init(Environment* env, StateIface* state) {
+    void init(Environment* env, StateIface* state, StatusProcessorIface* statusProcessor) {
         _state = state;
         _env = env;
+        _mockStatusProcessor = statusProcessor;
     }
 
     vector<EventHandler*>  createEventHandlers() override {
@@ -37,6 +46,7 @@ class MockRrCatagorizerMapper : public RrCatagorizerMapper {
 
      StateIface* _state = nullptr;
      Environment* _env = nullptr;
+     StatusProcessorIface* _mockStatusProcessor = nullptr;
 };
 
 
@@ -50,6 +60,7 @@ class TestCatagorizer : public ::testing::Test {
     RrCatagorizer* catagorizer = new RrCatagorizer();
     Environment* env = nullptr;
     thread* thread_c;
+    MockStatusProcessor* _mockStatusProcessor = new MockStatusProcessor();
 
     void SetUp() override {
         // Setup code
@@ -68,13 +79,14 @@ class TestCatagorizer : public ::testing::Test {
         env = EnviromentProcessor::createEnvironmentRef(manifest);
         state = StateFactory::createState(*env, queuesNames);
         mapper = new MockRrCatagorizerMapper();
-        mapper->init(env, state);
+        mapper->init(env, state, _mockStatusProcessor);
         catagorizer->init(state, env, mapper);
     }
 
     void TearDown() override {
         // Teardown code
         delete(mapper);
+        delete(_mockStatusProcessor);
     }
 };
 

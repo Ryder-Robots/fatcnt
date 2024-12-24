@@ -14,28 +14,24 @@ namespace rrobot {
      */
     class CatagorizerMapperBase : RrCatagorizerMapper {
         public:
-            void init(Environment* environment, StateIface* state) override {
+            void init(Environment* environment, StateIface* state, StatusProcessorIface* statusProcessor) override {
                 _environment = environment;
                 _state = state;
+                _statusProcessor = statusProcessor;
             }
 
         protected:
-            // TODO deprecate this,  it should come through statusprocessor.
             void setMode(RR_CMODES mode) {
-                const std::lock_guard<std::mutex> lock(_lock);
-                _mode = mode;
+               _statusProcessor->setMode(mode);
             }
 
-            // TODO deprecate this,  it should come through statusprocessor.
             RR_CMODES getMode() {
-                return _mode;
+                return _statusProcessor->getMode();
             }
 
             Environment* _environment = nullptr;
             StateIface*  _state = nullptr;
-
-            // TODO deprecate this,  it should come through statusprocessor.
-            RR_CMODES   _mode = CMODE_NOT_SET;
+            StatusProcessorIface* _statusProcessor;
 
         protected:
             std::mutex   _lock;
