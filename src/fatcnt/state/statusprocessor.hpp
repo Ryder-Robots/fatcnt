@@ -9,7 +9,7 @@
 using namespace std;
 
 namespace rrobot {
-    class StatusProcessor : StatusProcessorIface {
+    class StatusProcessor : public StatusProcessorIface {
         public:
             StatusProcessor(StateIface* state): _state(state) {}
 

@@ -2,6 +2,7 @@
 #include <gtest/gtest.h>
 
 #include <fatcnt/environment/environmentProcessor.hpp>
+#include <fatcnt/state/statusprocessorfact.hpp>
 #include <fatcnt/state/statusprocessor.hpp>
 #include <fatcnt/state/rrpqueues.hpp>
 #include <fatcnt/state/statefactory.hpp>
@@ -27,7 +28,7 @@ class TestStatusProcessor : public ::testing::Test {
         ifstream ifs(filepath);
         _manifest = json::parse(ifs);
         ifs.close();
-        Environment environment = EnviromentProcessor::createEnvironment(_manifest);
+        Environment environment = getEnv();
         _state = StateFactory::createState(environment, _queueNames);
     }
 
@@ -35,9 +36,13 @@ class TestStatusProcessor : public ::testing::Test {
         // Teardown code
     }
 
+    Environment getEnv() {
+        return EnviromentProcessor::createEnvironment(_manifest);
+    }
+
     vector<RRP_QUEUES> _queueNames = {RRP_QUEUES::STATUS, RRP_QUEUES::USER_INTERFACE};
     json _manifest;
-    StateIface* _state;    
+    StateIface* _state;
 };
 
 class MockHandler : public EventHandler {
@@ -57,7 +62,7 @@ TEST_F(TestStatusProcessor, TestGetFlags) {
     vector<EventHandler*> handlers = {m1, m2, m3};
     _state->setFlags(0);
 
-    StatusProcessor* statusProcessor = new StatusProcessor(_state);
+    StatusProcessorIface* statusProcessor = StatusProcessorFactory::createStatusProcessor(getEnv(), _state);
     statusProcessor->addHandler(m1);
     statusProcessor->addHandler(m2);
     statusProcessor->addHandler(m3);
