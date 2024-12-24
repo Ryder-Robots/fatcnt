@@ -1,0 +1,50 @@
+#ifndef STATUSPROCESSORIFACE_HPP
+#define STATUSPROCESSORIFACE_HPP
+
+#include <stdint.h>
+#include <vector>
+#include <fatcnt/events/eventhandler.hpp>
+#include <fatcnt/protocols/rrp/rrpstatus.hpp>
+
+using namespace std;
+
+namespace rrobot {
+/*
+ */
+class StatusProcessorIface {
+   public:
+
+    /**
+     * @fn getMode
+     * @brief
+     * returns the current mode.
+     */
+    virtual RR_CMODES getMode() = 0;
+
+    /**
+     * @fn getStatus
+     * @brief
+     * Returns the global status.
+     */
+    virtual RRP_STATUS getStatus() = 0;
+
+    /**
+     * @fn addHandler
+     * @brief
+     * adds handler to handler vector
+     */
+    virtual void addHandler(EventHandler* handler) = 0;
+
+    /**
+     * @fn getHandlers
+     * @brief
+     * returns the list of handlers.
+     */
+    virtual vector<EventHandler*> getHandlers() = 0;
+
+
+    virtual void setMode(RR_CMODES mode) = 0;
+};
+}  // namespace rrobot
+
+#endif  // STATUSPROCESSORIFACE_HPP

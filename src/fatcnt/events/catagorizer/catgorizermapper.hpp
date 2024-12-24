@@ -5,6 +5,7 @@
 #include <fatcnt/environment/environment.hpp>
 #include <fatcnt/state/state.hpp>
 #include <fatcnt/state/rrpqueues.hpp>
+#include <fatcnt/state/statusprocessoriface.hpp>
 #include <fatcnt/protocols/common/mspdirection.hpp>
 #include <fatcnt/events/eventhandler.hpp>
 #include <fatcnt/events/Event.hpp>
@@ -23,7 +24,7 @@ namespace rrobot {
     class RrCatagorizerMapper {
         public:
 
-            virtual void init(Environment* environment, StateIface* state) = 0;
+            virtual void init(Environment* environment, StateIface* state, StatusProcessorIface* statusProcessor) = 0;
 
             /**
              * @fn createEventHandlers

@@ -10,19 +10,16 @@ vector<RRP_QUEUES> LdSqu001Mapper::queueNames() {
 vector<EventHandler*> LdSqu001Mapper::createEventHandlers() {
     RrStatusHandler* statusHandler = new RrStatusHandler();
     UiHandler* uiHandler = new UiHandler();
-
-    vector<EventHandler*> eventHandlers = {};
-
-    statusHandler->init(_state, _environment, eventHandlers);
+    statusHandler->init(_state, _environment,  _statusProcessor);
 
     Jseralizer* jserializer = new Jseralizer();
     RrServer* server = new RrServer();
     uiHandler->init(server, _environment, _state, jserializer);
 
-    eventHandlers.push_back(statusHandler);
-    eventHandlers.push_back(uiHandler);
+    _statusProcessor->addHandler(statusHandler);
+    _statusProcessor->addHandler(uiHandler);
 
-    return eventHandlers;
+    return _statusProcessor->getHandlers();
 }
 
 RRP_QUEUES LdSqu001Mapper::mapQueue(Event* eventRef) {
@@ -49,15 +46,15 @@ RRP_QUEUES LdSqu001Mapper::mapQueue(Event* eventRef) {
             }
             {
                 msp_mode mspMode = event.getPayload<msp_mode>();
-                _mode = mspMode.get_mode();
+                _statusProcessor->setMode(mspMode.get_mode());
                 msp_mode* payload = new msp_mode();
-                payload->set_mode(_mode);
+                payload->set_mode(_statusProcessor->getMode());
                 eventRef = new Event(MSPCOMMANDS::MSP_MODE, MSPDIRECTION::EXTERNAL_OUT, payload);
             }
             queue = RRP_QUEUES::USER_INTERFACE;
             break;
         case MSPCOMMANDS::MSP_SET_MOTOR_HBRIDGE:
-            if (_mode == RR_CMMODES::CMODE_MANUAL_FLIGHT) {
+            if (_statusProcessor->getMode() == RR_CMODES::CMODE_MANUAL_FLIGHT) {
                 queue = RRP_QUEUES::MICROCONTROLLER;
                 break;
             } 

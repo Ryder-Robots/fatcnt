@@ -53,13 +53,15 @@ class MockState : public StateIface {
     MOCK_METHOD(uint16_t, getCycleTime, (), (override));
     MOCK_METHOD(uint16_t, getErrorCount, (), (override));
     MOCK_METHOD(uint16_t, getSensors, (), (override));
-    MOCK_METHOD(RR_CMMODES, getMode, (), (override));
+    MOCK_METHOD(void, setFlags, (uint32_t), (override));
+    MOCK_METHOD(int32_t, getFlags, (), (override));
+    
     void setIsRunning(bool isrunning) override {}
     RrQueues* getQueues() override { return nullptr; }
     void setCycleTime(uint16_t cycleTime) override {}
     void incremementErrorCount() override {}
     void setSensorFlag(MSPSENSOR_FLAGS flag) override {}
-    void setMode(RR_CMMODES mode) override {}
+    
 };
 
 TEST_F(TestEventHandler, TestAbstractHandler) {

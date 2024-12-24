@@ -5,25 +5,14 @@ using namespace rrobot;
 
 dlib::logger dlog_st("status_handler");
 
-void RrStatusHandler::init(StateIface *state, Environment *environment, vector<EventHandler*> handlers) {
+void RrStatusHandler::init(StateIface *state, Environment *environment, StatusProcessorIface* statusProcessor) {
     dlog_st << dlib::LINFO << "initalizing status handler";
     _environment = environment;
-    _handlers = handlers;
+    _statusProcessor = statusProcessor;
+    _state = state;
     EventHandler::init(state->getQueues(), RRP_QUEUES::STATUS, RRP_QUEUES::USER_INTERFACE, environment);
 }
 
-/**
- * iterate through each handler,  and set the corresponding bit value. If values are anything but
- * 2, then not all components have initialized. For each iteration of flags is set to '0' therefore
- * it should be seen as the current state.
- */
-int32_t RrStatusHandler::getFlags() {
-    int32_t flags = 0;
-    for (auto handler : _handlers) {
-        flags = flags | handler->status();
-    }
-    return flags;
- }
 
 Event* RrStatusHandler::produce(StateIface* state) {
     void* payload = nullptr;
@@ -46,7 +35,7 @@ Event* RrStatusHandler::produce(StateIface* state) {
                 mspStatus->set_cycletime(state->getCycleTime());
                 mspStatus->set_i2c_errors_count(state->getErrorCount());
                 mspStatus->set_sensor(state->getSensors());
-                mspStatus->set_flag(getFlags());
+                mspStatus->set_flag(_state->getFlags());
 
                 // The setting involves ACC_1G which is a current setting,  however this is not 
                 // on the drone hardware at the moment, so at the moment this is just set to '0'

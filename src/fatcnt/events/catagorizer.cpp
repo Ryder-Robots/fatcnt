@@ -4,11 +4,13 @@ using namespace rrobot;
 
 dlib::logger dlog_c("rr_curator");
 
-void RrCatagorizer::init(StateIface* state, Environment* environment, RrCatagorizerMapper* mapper) {
+void RrCatagorizer::init(StateIface* state, Environment* environment, RrCatagorizerMapper* mapper, 
+StatusProcessorIface*  statusProcessor) {
     dlog_c.set_level(environment->getLogging().getLogLevel());
     _state = state;
     _mapper = mapper;
     _environment = environment;
+    _statusProcessor = statusProcessor;
     EventHandler::init(state->getQueues(), RRP_QUEUES::CATEGORIZER, RRP_QUEUES::USER_INTERFACE, environment);
 }
 
@@ -35,10 +37,9 @@ void RrCatagorizer::setUp() {
         dlog_c << dlib::LINFO << "initilizing handler:" << handler->name();
         std::thread* t = new std::thread(EventHandler::handleEvent, handler, _state);
         while (!t->joinable()) {
-            std::this_thread::sleep_for(std::chrono::milliseconds(_environment->getQueues().getThreadProcessTime()));
+            std::this_thread::sleep_for(_state->getQueues()->QUEUE_PROCESS_TIME);
         }
         _threads.push_back(t);
-        _handlers.push_back(handler);
         t->detach();
 
         if (handler->status() == RRP_STATUS::TERMINATED || handler->status() == RRP_STATUS::ERROR) {
@@ -47,7 +48,7 @@ void RrCatagorizer::setUp() {
         }
 
         while (handler->status() != RRP_STATUS::ACTIVE) {
-            std::this_thread::sleep_for(std::chrono::milliseconds(_environment->getQueues().getThreadProcessTime()));
+            std::this_thread::sleep_for(_state->getQueues()->QUEUE_PROCESS_TIME);
         }
         dlog_c << dlib::LINFO << "status active for:" << handler->name();
     }
@@ -58,10 +59,10 @@ void RrCatagorizer::setUp() {
 
 void RrCatagorizer::tearDown() {
     int threadTimeOut = 0;
-    for (EventHandler* handler : _handlers) {
+    for (EventHandler* handler : _statusProcessor->getHandlers()) {
         dlog_c << dlib::LINFO << "waiting for thread to terminate";
         while (handler->status() != RRP_STATUS::TERMINATED) {
-            std::this_thread::sleep_for(std::chrono::milliseconds(_environment->getQueues().getThreadProcessTime()));
+            std::this_thread::sleep_for(_state->getQueues()->QUEUE_PROCESS_TIME);
             threadTimeOut += _environment->getQueues().getThreadProcessTime();
 
             if (threadTimeOut >= _environment->getQueues().getThreadTimeOut()) {

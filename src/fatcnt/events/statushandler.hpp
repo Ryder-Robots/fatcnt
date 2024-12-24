@@ -3,6 +3,7 @@
 
 #include <stdint.h>
 #include <vector>
+#include <fatcnt/state/statusprocessoriface.hpp>
 #include <fatcnt/protocols/common/curators/rrp/mspevent.hpp>
 #include "eventhandler.hpp"
 
@@ -32,15 +33,15 @@ namespace rrobot {
          * @brief
          * base initlization.
          */
-        void init(StateIface *state, Environment* environment, vector<EventHandler *> handlers);
+        void init(StateIface *state, Environment* environment, StatusProcessorIface* statusProcessor);
 
         string name() override {return "statushandler";}
 
         private:
         Event* _request = nullptr;
         Environment* _environment = nullptr;
-        vector<EventHandler*> _handlers;
-        int32_t getFlags();
+        StateIface* _state;
+        StatusProcessorIface* _statusProcessor;
     };
 
 }
