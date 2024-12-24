@@ -40,7 +40,6 @@ void RrCatagorizer::setUp() {
             std::this_thread::sleep_for(_state->getQueues()->QUEUE_PROCESS_TIME);
         }
         _threads.push_back(t);
-        _statusProcessor->addHandler(handler);
         t->detach();
 
         if (handler->status() == RRP_STATUS::TERMINATED || handler->status() == RRP_STATUS::ERROR) {

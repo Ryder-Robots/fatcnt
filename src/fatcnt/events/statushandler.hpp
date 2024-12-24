@@ -3,6 +3,7 @@
 
 #include <stdint.h>
 #include <vector>
+#include <fatcnt/state/statusprocessoriface.hpp>
 #include <fatcnt/protocols/common/curators/rrp/mspevent.hpp>
 #include "eventhandler.hpp"
 
@@ -27,28 +28,20 @@ namespace rrobot {
          */
         bool available() override;
 
-        bool isArmed();
-
-        int32_t getStatus();
-
         /**
          * @fn init
          * @brief
          * base initlization.
          */
-        void init(StateIface *state, Environment* environment, vector<EventHandler *> handlers);
+        void init(StateIface *state, Environment* environment, StatusProcessorIface* statusProcessor);
 
         string name() override {return "statushandler";}
-
-        int32_t getFlags();
 
         private:
         Event* _request = nullptr;
         Environment* _environment = nullptr;
-        vector<EventHandler*> _handlers;
         StateIface* _state;
-
-        const int32_t DRONE_ARMED = 0 | INITILIZING | ERROR | RELOADING | SHUTTING_DOWN | TERMINATED; 
+        StatusProcessorIface* _statusProcessor;
     };
 
 }

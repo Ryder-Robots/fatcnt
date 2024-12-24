@@ -47,35 +47,6 @@ class MockHandler : public EventHandler {
 
 };
 
-TEST_F(TestStatusHandler, TestGetFlags) {
-    RrStatusHandler statusHandler = RrStatusHandler();
-    Environment environment = EnviromentProcessor::createEnvironment(_manifest);
-    State* state = StateFactory::createState(environment, _queueNames);
-
-    MockHandler* m1 = new MockHandler();
-    MockHandler* m2 = new MockHandler();
-    MockHandler* m3 = new MockHandler();
-    vector<EventHandler*> handlers = {m1, m2, m3};
-
-    m1->setStatus(RRP_STATUS::ACTIVE);
-    m2->setStatus(RRP_STATUS::ACTIVE);
-    m3->setStatus(RRP_STATUS::ACTIVE);
-    statusHandler.init(state, &environment, handlers);
-
-    EXPECT_EQ(true, statusHandler.isArmed());
-
-    m1->setStatus(RRP_STATUS::INITILIZING);
-    m2->setStatus(RRP_STATUS::ACTIVE);
-    m3->setStatus(RRP_STATUS::ACTIVE);
-    statusHandler.init(state, &environment, handlers);
-    EXPECT_EQ(false, statusHandler.isArmed());
-
-    m1->setStatus(RRP_STATUS::INITILIZING);
-    m2->setStatus(RRP_STATUS::ERROR);
-    m3->setStatus(RRP_STATUS::ACTIVE);
-    statusHandler.init(state, &environment, handlers);
-    EXPECT_EQ(false, statusHandler.isArmed());    
-}
 
 int main(int argc, char** argv) {
     ::testing::InitGoogleTest(&argc, argv);

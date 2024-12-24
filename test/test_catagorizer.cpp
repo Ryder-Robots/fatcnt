@@ -35,7 +35,7 @@ class MockRrCatagorizerMapper : public RrCatagorizerMapper {
         vector<EventHandler*> handlers = {};
         RrStatusHandler* statusHandler = new RrStatusHandler();
         handlers.push_back(statusHandler);
-        statusHandler->init(_state, _env, handlers);
+        statusHandler->init(_state, _env, _mockStatusProcessor);
         return handlers;        
     }
 
