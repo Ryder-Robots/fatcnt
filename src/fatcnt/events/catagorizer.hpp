@@ -4,6 +4,7 @@
 #include <thread>
 #include <vector>
 #include <fatcnt/state/state.hpp>
+#include <fatcnt/state/statusprocessoriface.hpp>
 #include <fatcnt/environment/environment.hpp>
 #include <fatcnt/events/catagorizer/catgorizermapper.hpp>
 #include <fatcnt/protocols/common/curators/rrp/rrpcurator.hpp>
@@ -24,7 +25,8 @@ namespace rrobot {
              * @brief
              * Callled when object is created before thread is created.
              */
-            void init(StateIface *state, Environment* environment, RrCatagorizerMapper *mapper);
+            void init(StateIface *state, Environment* environment, RrCatagorizerMapper *mapper, 
+                StatusProcessorIface*  statusProcessor);
 
             bool consume(Event* event, StateIface* state) override;
 
@@ -52,9 +54,9 @@ namespace rrobot {
             RrCatagorizerMapper*  _mapper = nullptr;
             StateIface*           _state  = nullptr;
             vector<thread*>       _threads;
-            vector<EventHandler*> _handlers;
             RRP_STATUS            _status = RRP_STATUS::INITILIZING;
             Environment*          _environment;
+            StatusProcessorIface* _statusProcessor = nullptr;
 
             /**
              * @fn produceInt

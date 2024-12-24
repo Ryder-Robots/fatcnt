@@ -80,7 +80,7 @@ class TestCatagorizer : public ::testing::Test {
         state = StateFactory::createState(*env, queuesNames);
         mapper = new MockRrCatagorizerMapper();
         mapper->init(env, state, _mockStatusProcessor);
-        catagorizer->init(state, env, mapper);
+        catagorizer->init(state, env, mapper, _mockStatusProcessor);
     }
 
     void TearDown() override {
@@ -92,7 +92,7 @@ class TestCatagorizer : public ::testing::Test {
 
 // Tests
 TEST_F(TestCatagorizer, TestInit) {
-    catagorizer->init(state, env, mapper);
+    catagorizer->init(state, env, mapper, _mockStatusProcessor);
 }
 
 TEST_F(TestCatagorizer, TestIdent) {
@@ -110,7 +110,7 @@ TEST_F(TestCatagorizer, TestIdent) {
     EXPECT_EQ(1, queue->size());
     mtx->unlock();
 
-    catagorizer->init(state, env, mapper);
+    catagorizer->init(state, env, mapper, _mockStatusProcessor);
     std::thread* t = new std::thread(RrCatagorizer::handleEvent, catagorizer, state);
     this_thread::sleep_for(chrono::milliseconds(100));
     

@@ -4,11 +4,13 @@ using namespace rrobot;
 
 dlib::logger dlog_c("rr_curator");
 
-void RrCatagorizer::init(StateIface* state, Environment* environment, RrCatagorizerMapper* mapper) {
+void RrCatagorizer::init(StateIface* state, Environment* environment, RrCatagorizerMapper* mapper, 
+StatusProcessorIface*  statusProcessor) {
     dlog_c.set_level(environment->getLogging().getLogLevel());
     _state = state;
     _mapper = mapper;
     _environment = environment;
+    _statusProcessor = statusProcessor;
     EventHandler::init(state->getQueues(), RRP_QUEUES::CATEGORIZER, RRP_QUEUES::USER_INTERFACE, environment);
 }
 
@@ -38,7 +40,7 @@ void RrCatagorizer::setUp() {
             std::this_thread::sleep_for(_state->getQueues()->QUEUE_PROCESS_TIME);
         }
         _threads.push_back(t);
-        _handlers.push_back(handler);
+        _statusProcessor->addHandler(handler);
         t->detach();
 
         if (handler->status() == RRP_STATUS::TERMINATED || handler->status() == RRP_STATUS::ERROR) {
@@ -58,7 +60,7 @@ void RrCatagorizer::setUp() {
 
 void RrCatagorizer::tearDown() {
     int threadTimeOut = 0;
-    for (EventHandler* handler : _handlers) {
+    for (EventHandler* handler : _statusProcessor->getHandlers()) {
         dlog_c << dlib::LINFO << "waiting for thread to terminate";
         while (handler->status() != RRP_STATUS::TERMINATED) {
             std::this_thread::sleep_for(_state->getQueues()->QUEUE_PROCESS_TIME);
