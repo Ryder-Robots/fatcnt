@@ -17,6 +17,7 @@ void RrStatusHandler::init(StateIface *state, Environment *environment, StatusPr
 Event* RrStatusHandler::produce(StateIface* state) {
     void* payload = nullptr;
     Environment env = *_environment;
+    Event* event = nullptr;
 
     switch(_request->getCommand()) {
         case MSP_IDENT:
@@ -27,10 +28,12 @@ Event* RrStatusHandler::produce(StateIface* state) {
                 mspIdent->set_msp_version(env.getHwModel().getMspVersion());
                 mspIdent->set_capability(0);
                 payload = static_cast<void *>(mspIdent);
+                event = new Event(MSPCOMMANDS::MSP_IDENT, MSPDIRECTION::EXTERNAL_OUT, payload);
             }
             break;
         case MSP_STATUS:
             {
+                VALID_RRP_STATUS_KEYS_INIT;
                 msp_status* mspStatus = new msp_status();
                 mspStatus->set_cycletime(state->getCycleTime());
                 mspStatus->set_i2c_errors_count(state->getErrorCount());
@@ -40,21 +43,19 @@ Event* RrStatusHandler::produce(StateIface* state) {
                 // The setting involves ACC_1G which is a current setting,  however this is not 
                 // on the drone hardware at the moment, so at the moment this is just set to '0'
                 mspStatus->set_current_set(0);
+                mspStatus->set_status(VALID_RRP_STATUS_KEYS.at(_statusProcessor->getStatus()));
                 payload = static_cast<void *>(mspStatus);
+                event = new Event(MSPCOMMANDS::MSP_STATUS, MSPDIRECTION::EXTERNAL_OUT, payload);
             }
             break;
     }
 
-    Event* event;
-    if (payload == nullptr) {
+    if (payload == nullptr || event == nullptr) {
         dlog_st << dlib::LERROR << "an unknown request was sent, ignoring";
         msp_error* mspError = new msp_error();
         mspError->set_message("an unknown request was sent.");
         event = new Event(MSPCOMMANDS::MSP_ERROR,  MSPDIRECTION::EXTERNAL_OUT);
-    } else {
-        event = new Event(MSPCOMMANDS::MSP_IDENT, MSPDIRECTION::EXTERNAL_OUT, payload);
-    }
-    dlog_st << dlib::LDEBUG << "sending out status event";
+    } 
     _request = nullptr;
     return event;
 }
