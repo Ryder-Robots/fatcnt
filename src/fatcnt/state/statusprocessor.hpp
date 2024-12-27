@@ -1,6 +1,7 @@
 #ifndef STATUSPROCESOR_HPP
 #define STATUSPROCESOR_HPP
 
+#include <stdint.h>
 #include <fatcnt/state/statusprocessoriface.hpp>
 #include <fatcnt/state/stateiface.hpp>
 #include <fatcnt/events/eventhandler.hpp>
@@ -31,8 +32,7 @@ namespace rrobot {
         vector<EventHandler*> _eventHandlers = {};
         StateIface*           _state;
         mutex                 _lock;
-        
-        
+        // Environment*       _environment;        
         const int32_t DRONE_ARMED = 0 | INITILIZING | ERROR | RELOADING | SHUTTING_DOWN | TERMINATED; 
     };
 }

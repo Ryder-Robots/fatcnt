@@ -3,6 +3,11 @@ project(fatctl DESCRIPTION "MVP for Arduino Nano MC" LANGUAGES CXX)
 
 include(FetchContent)
 include(FindPkgConfig)
+include(CMakeDependentOption)
+
+cmake_dependent_option(BUILD_WITH_LIBWWIRE
+    "Enable ${PROJECT_NAME} libwiring support" ON
+    "BUILD_WITH_LIBWWIRE" ON)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CPACK_PACKAGE_NAME "fatcnt")
@@ -10,6 +15,13 @@ set(CPACK_PACKAGE_VERSION_MAJOR "0")
 set(CPACK_PACKAGE_VERSION_MINOR "0")
 set(CPACK_PACKAGE_VERSION_PATCH "1")
 set(CPACK_DEBIAN_PACKAGE_DEPENDS "libserial")
+set(CPACK_DEBIAN_PACKAGE_DEPENDS "dlib")
+
+# For Land drone 1, libwire is used instead of a micro-controller.
+if(BUILD_WITH_LIBWWIRE)
+  set(CPACK_DEBIAN_PACKAGE_DEPENDS "wiringpi, wiringpi (>= 3.2)")
+endif()
+
 set(VERSION ${CPACK_PACKAGE_VERSION_MAJOR}.${CPACK_PACKAGE_VERSION_MINOR}.${CPACK_PACKAGE_VERSION_PATCH})
 set(JSON_VERSION v3.11.3)
 
@@ -31,10 +43,15 @@ set(fatcnt_SOURCES
   src/fatcnt/protocols/common/curators/rrp/msp_ident_curator.cpp
   src/fatcnt/events/ui/jserializer.cpp
   src/fatcnt/events/catagorizer.cpp
-  src/fatcnt/events/catagorizer/ldsqu001mapper.cpp
   src/fatcnt/events/catagorizer/mapperfactory.cpp
   src/fatcnt/com/server.cpp
 )
+
+if (BUILD_WITH_LIBWWIRE)
+  list(APPEND fatcnt_SOURCES 
+    src/fatcnt/events/catagorizer/ldsqu001mapper.cpp 
+    src/fatcnt/events/hbridgecontroller.cpp)
+endif()
 
 # Include directory
 add_subdirectory(include)
@@ -53,6 +70,10 @@ find_package(Boost 1.74.0 COMPONENTS program_options REQUIRED )
 add_library(ctl SHARED  ${fatcnt_SOURCES})
 target_link_libraries(ctl pthread)
 target_link_libraries(ctl ${LIBSERIAL_LIBRARIES})
+
+if (BUILD_WITH_LIBWWIRE)
+  target_link_libraries(ctl wiringPi)
+endif()
 
 add_executable(fatcnt src/fatcnt/fatcnt.hpp src/fatcnt/fatcnt.cpp  ${fatcnt_SOURCES})
 target_link_libraries(fatcnt ctl)

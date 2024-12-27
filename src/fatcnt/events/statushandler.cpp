@@ -43,7 +43,6 @@ Event* RrStatusHandler::produce(StateIface* state) {
                 // The setting involves ACC_1G which is a current setting,  however this is not 
                 // on the drone hardware at the moment, so at the moment this is just set to '0'
                 mspStatus->set_current_set(0);
-                mspStatus->set_status(VALID_RRP_STATUS_KEYS.at(_statusProcessor->getStatus()));
                 payload = static_cast<void *>(mspStatus);
                 event = new Event(MSPCOMMANDS::MSP_STATUS, MSPDIRECTION::EXTERNAL_OUT, payload);
             }
