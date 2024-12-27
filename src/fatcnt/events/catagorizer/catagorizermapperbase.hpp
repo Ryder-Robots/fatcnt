@@ -14,7 +14,7 @@ namespace rrobot {
      */
     class CatagorizerMapperBase : RrCatagorizerMapper {
         public:
-            void init(Environment* environment, StateIface* state, StatusProcessorIface* statusProcessor) override {
+            void init(Environment* environment, StateIface* state, StateManagerIface* statusProcessor) override {
                 _environment = environment;
                 _state = state;
                 _statusProcessor = statusProcessor;
@@ -31,7 +31,7 @@ namespace rrobot {
 
             Environment* _environment = nullptr;
             StateIface*  _state = nullptr;
-            StatusProcessorIface* _statusProcessor;
+            StateManagerIface* _statusProcessor;
 
         protected:
             std::mutex   _lock;

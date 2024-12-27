@@ -61,7 +61,7 @@ TEST_F(TestStatusProcessor, TestGetFlags) {
     vector<EventHandler*> handlers = {m1, m2, m3};
     _state->setFlags(0);
 
-    StatusProcessorIface* statusProcessor = new StateManager(_state);
+    StateManagerIface* statusProcessor = new StateManager(_state);
     statusProcessor->addHandler(m1);
     statusProcessor->addHandler(m2);
     statusProcessor->addHandler(m3);

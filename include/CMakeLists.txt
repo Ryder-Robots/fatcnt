@@ -88,7 +88,7 @@ set(fatcnt_INCLUDE
   fatcnt/protocols/common/curators/rrp/rrpcuratorabstract.hpp
   fatcnt/protocols/rrp/rrpstatus.hpp
   fatcnt/events/catagorizer/cmodes.hpp
-  fatcnt/state/statusprocessoriface.hpp
+  fatcnt/state/statemanageriface.hpp
 )
 foreach(item ${fatcnt_INCLUDE})
   configure_file("${item}.in" ${item} @ONLY)

@@ -5,7 +5,7 @@ using namespace rrobot;
 
 dlib::logger dlog_st("status_handler");
 
-void RrStatusHandler::init(StateIface *state, Environment *environment, StatusProcessorIface* statusProcessor) {
+void RrStatusHandler::init(StateIface *state, Environment *environment, StateManagerIface* statusProcessor) {
     dlog_st << dlib::LINFO << "initalizing status handler";
     _environment = environment;
     _statusProcessor = statusProcessor;

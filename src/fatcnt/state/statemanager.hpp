@@ -2,7 +2,7 @@
 #define STATUSPROCESOR_HPP
 
 #include <stdint.h>
-#include <fatcnt/state/statusprocessoriface.hpp>
+#include <fatcnt/state/statemanageriface.hpp>
 #include <fatcnt/state/stateiface.hpp>
 #include <fatcnt/events/eventhandler.hpp>
 #include <mutex>
@@ -10,7 +10,7 @@
 using namespace std;
 
 namespace rrobot {
-    class StateManager : public StatusProcessorIface {
+    class StateManager : public StateManagerIface {
         public:
             StateManager(StateIface* state): _state(state) {}
 
