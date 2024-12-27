@@ -34,9 +34,8 @@ set(fatcnt_SOURCES
   src/fatcnt/environment/environmentProcessor.cpp
   src/fatcnt/environment/processorbase.cpp
   src/fatcnt/state/statefactory.cpp
-  src/fatcnt/state/statusprocessor.cpp
+  src/fatcnt/state/statemanager.cpp
   src/fatcnt/state/rrqueues.cpp
-  src/fatcnt/state/statusprocessorfact.cpp
   src/fatcnt/events/eventhandler.cpp
   src/fatcnt/events/uihandler.cpp
   src/fatcnt/events/statushandler.cpp

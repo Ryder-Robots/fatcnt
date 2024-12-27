@@ -10,9 +10,9 @@
 using namespace std;
 
 namespace rrobot {
-    class StatusProcessor : public StatusProcessorIface {
+    class StateManager : public StatusProcessorIface {
         public:
-            StatusProcessor(StateIface* state): _state(state) {}
+            StateManager(StateIface* state): _state(state) {}
 
             RR_CMODES getMode() override;
             

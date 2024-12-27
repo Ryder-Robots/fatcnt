@@ -2,8 +2,7 @@
 #include <gtest/gtest.h>
 
 #include <fatcnt/environment/environmentProcessor.hpp>
-#include <fatcnt/state/statusprocessorfact.hpp>
-#include <fatcnt/state/statusprocessor.hpp>
+#include <fatcnt/state/statemanager.hpp>
 #include <fatcnt/state/rrpqueues.hpp>
 #include <fatcnt/state/statefactory.hpp>
 #include <filesystem>
@@ -62,7 +61,7 @@ TEST_F(TestStatusProcessor, TestGetFlags) {
     vector<EventHandler*> handlers = {m1, m2, m3};
     _state->setFlags(0);
 
-    StatusProcessorIface* statusProcessor = StatusProcessorFactory::createStatusProcessor(getEnv(), _state);
+    StatusProcessorIface* statusProcessor = new StateManager(_state);
     statusProcessor->addHandler(m1);
     statusProcessor->addHandler(m2);
     statusProcessor->addHandler(m3);
