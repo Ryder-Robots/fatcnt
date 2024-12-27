@@ -99,7 +99,7 @@ int main(int argc, char *argv[]) {
 
         dlog_main << dlib::LINFO << "creating state";
         state = StateFactory::createState(environment, mapper->queueNames());
-        StateManagerIface* stateManager = new StateManager(state);
+        StateManagerIface* stateManager = new StateManager(state, &environment);
         mapper->init(&environment, state, stateManager);
 
         dlog_main << dlib::LINFO << "creating catagorizer";

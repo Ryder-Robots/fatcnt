@@ -5,6 +5,7 @@
 #include <vector>
 #include <fatcnt/events/eventhandler.hpp>
 #include <fatcnt/protocols/rrp/rrpstatus.hpp>
+#include <fatcnt/state/statemanageriface.hpp>
 
 using namespace std;
 
@@ -48,6 +49,20 @@ class StateManagerIface {
      * sets current mode.
      */
     virtual void setMode(RR_CMODES mode) = 0;
+
+    /**
+     * @fn getState
+     * @brief
+     * returns state variable.
+     */
+    virtual StateIface* getState() = 0;
+
+    /**
+     * @fn getEnv
+     * @brief
+     * returns environment.
+     */
+    virtual Environment* getEnv() = 0;
 };
 }  // namespace rrobot
 

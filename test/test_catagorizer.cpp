@@ -18,6 +18,8 @@ class MockStatusProcessor : public StateManagerIface {
     MOCK_METHOD(void, addHandler, (EventHandler*), (override));
     MOCK_METHOD(vector<EventHandler*>, getHandlers, (), (override));
     MOCK_METHOD(void, setMode, (RR_CMODES), (override));
+    MOCK_METHOD(StateIface*, getState, (), (override));
+    MOCK_METHOD(Environment*, getEnv, (), (override));
 };
 
 // Mock classes
