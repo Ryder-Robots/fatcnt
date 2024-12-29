@@ -1,14 +1,14 @@
-#include "statusprocessor.hpp"
+#include "statemanager.hpp"
 
 using namespace rrobot;
 
-RR_CMODES StatusProcessor::getMode() {
+RR_CMODES StateManager::getMode() {
     int32_t flags = _state->getFlags();
     flags -= STATUS_BITMASK(flags);
     return static_cast<RR_CMODES>(flags);
 }
 
-RRP_STATUS StatusProcessor::getStatus() {
+RRP_STATUS StateManager::getStatus() {
     int32_t statuses = 0;
     for (auto handler : _eventHandlers) {
         statuses = statuses | handler->status();
@@ -30,7 +30,7 @@ RRP_STATUS StatusProcessor::getStatus() {
     return status;
 }
 
-void StatusProcessor::setMode(RR_CMODES mode) {
+void StateManager::setMode(RR_CMODES mode) {
     int32_t flags = _state->getFlags();
     int32_t statuses = STATUS_BITMASK(flags);    
     _state->setFlags(0 | statuses | mode);

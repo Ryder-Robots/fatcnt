@@ -12,12 +12,14 @@ using namespace rrobot;
 
 namespace fs = std::filesystem;
 
-class MockStatusProcessor : public StatusProcessorIface {
+class MockStatusProcessor : public StateManagerIface {
     MOCK_METHOD(RR_CMODES, getMode, (), (override));
     MOCK_METHOD(RRP_STATUS, getStatus, (), (override));
     MOCK_METHOD(void, addHandler, (EventHandler*), (override));
     MOCK_METHOD(vector<EventHandler*>, getHandlers, (), (override));
     MOCK_METHOD(void, setMode, (RR_CMODES), (override));
+    MOCK_METHOD(StateIface*, getState, (), (override));
+    MOCK_METHOD(Environment*, getEnv, (), (override));
 };
 
 // Mock classes
@@ -25,7 +27,7 @@ class MockRrCatagorizerMapper : public RrCatagorizerMapper {
     public:
     MOCK_METHOD(RRP_QUEUES, mapQueue, (Event*), (override));
 
-    void init(Environment* env, StateIface* state, StatusProcessorIface* statusProcessor) {
+    void init(Environment* env, StateIface* state, StateManagerIface* statusProcessor) {
         _state = state;
         _env = env;
         _mockStatusProcessor = statusProcessor;
@@ -46,7 +48,7 @@ class MockRrCatagorizerMapper : public RrCatagorizerMapper {
 
      StateIface* _state = nullptr;
      Environment* _env = nullptr;
-     StatusProcessorIface* _mockStatusProcessor = nullptr;
+     StateManagerIface* _mockStatusProcessor = nullptr;
 };
 
 

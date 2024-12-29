@@ -2,8 +2,7 @@
 #include <gtest/gtest.h>
 
 #include <fatcnt/environment/environmentProcessor.hpp>
-#include <fatcnt/state/statusprocessorfact.hpp>
-#include <fatcnt/state/statusprocessor.hpp>
+#include <fatcnt/state/statemanager.hpp>
 #include <fatcnt/state/rrpqueues.hpp>
 #include <fatcnt/state/statefactory.hpp>
 #include <filesystem>
@@ -62,7 +61,8 @@ TEST_F(TestStatusProcessor, TestGetFlags) {
     vector<EventHandler*> handlers = {m1, m2, m3};
     _state->setFlags(0);
 
-    StatusProcessorIface* statusProcessor = StatusProcessorFactory::createStatusProcessor(getEnv(), _state);
+    Environment env = getEnv();
+    StateManagerIface* statusProcessor = new StateManager(_state, &env);
     statusProcessor->addHandler(m1);
     statusProcessor->addHandler(m2);
     statusProcessor->addHandler(m3);
@@ -88,8 +88,6 @@ TEST_F(TestStatusProcessor, TestGetFlags) {
     EXPECT_EQ(CMODE_NOT_SET, statusProcessor->getMode());
 }
 
-// #define STATUS_BITMASK_TEST(F) (F & RRP_STATUS::INITILIZING) + (F & RRP_STATUS::ACTIVE) + (F & RRP_STATUS::ERROR) + \
-//     (F &  RRP_STATUS::RELOADING) + (F &  RRP_STATUS::SHUTTING_DOWN) + (F &  RRP_STATUS::TERMINATED)
 TEST_F(TestStatusProcessor, TestBitMaps) {
     EXPECT_EQ(1, INITILIZING);
     EXPECT_EQ(2, ACTIVE);

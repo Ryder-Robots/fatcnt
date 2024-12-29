@@ -5,7 +5,7 @@ using namespace rrobot;
 dlib::logger dlog_c("rr_curator");
 
 void RrCatagorizer::init(StateIface* state, Environment* environment, RrCatagorizerMapper* mapper, 
-StatusProcessorIface*  statusProcessor) {
+StateManagerIface*  statusProcessor) {
     dlog_c.set_level(environment->getLogging().getLogLevel());
     _state = state;
     _mapper = mapper;

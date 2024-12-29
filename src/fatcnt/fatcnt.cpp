@@ -99,12 +99,12 @@ int main(int argc, char *argv[]) {
 
         dlog_main << dlib::LINFO << "creating state";
         state = StateFactory::createState(environment, mapper->queueNames());
-        StatusProcessorIface* statusProcessor = StatusProcessorFactory::createStatusProcessor(environment, state);
-        mapper->init(&environment, state, statusProcessor);
+        StateManagerIface* stateManager = new StateManager(state, &environment);
+        mapper->init(&environment, state, stateManager);
 
         dlog_main << dlib::LINFO << "creating catagorizer";
         RrCatagorizer* catagorizer = new RrCatagorizer();
-        catagorizer->init(state, &environment, mapper, statusProcessor);
+        catagorizer->init(state, &environment, mapper, stateManager);
 
         dlog_main << dlib::LINFO << "starting application";
         std::thread t = std::thread(RrCatagorizer::handleEvent, catagorizer, state);

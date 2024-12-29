@@ -6,6 +6,7 @@
 #include <fatcnt/events/ui/jseralizer.hpp>
 #include <fatcnt/events/uihandler.hpp>
 #include <fatcnt/events/statushandler.hpp>
+#include <fatcnt/events/hbridgecontroller.hpp>
 #include "catagorizermapperbase.hpp"
 
 namespace rrobot {
