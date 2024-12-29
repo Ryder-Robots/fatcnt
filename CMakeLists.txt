@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.25)
-project(fatctl DESCRIPTION "MVP for Arduino Nano MC" LANGUAGES CXX)
+project(fatcnt DESCRIPTION "MVP for Arduino Nano MC" LANGUAGES CXX)
 
 include(FetchContent)
 include(FindPkgConfig)
@@ -9,13 +9,36 @@ cmake_dependent_option(BUILD_WITH_LIBWWIRE
     "Enable ${PROJECT_NAME} libwiring support" ON
     "BUILD_WITH_LIBWWIRE" ON)
 
+set(CPACK_GENERATOR "DEB")    
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CPACK_PACKAGE_NAME "fatcnt")
 set(CPACK_PACKAGE_VERSION_MAJOR "0")
 set(CPACK_PACKAGE_VERSION_MINOR "0")
 set(CPACK_PACKAGE_VERSION_PATCH "1")
-set(CPACK_DEBIAN_PACKAGE_DEPENDS "libserial")
-set(CPACK_DEBIAN_PACKAGE_DEPENDS "dlib")
+set(CPACK_DEBIAN_PACKAGE_DEPENDS "libserial-dev")
+# set(CPACK_DEBIAN_PACKAGE_DEPENDS "dlib")
+set(CPACK_SOURCE_IGNORE_FILES "/gtest/;/googletest/")
+set(CPACK_PACKAGE_CONTACT "Aaron Spiteri")
+set(CPACK_DEBIAN_FILE_NAME DEB-DEFAULT)
+set(CPACK_DEBIAN_PACKAGE_CONTROL_EXTRA "${CMAKE_CURRENT_SOURCE_DIR}/scripts/postinst")
+
+install(FILES scripts/fatcnt.service
+        DESTINATION /etc/systemd/system
+        PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
+
+install(FILES resources/manifests/virtual.json
+        DESTINATION /opt/fatcnt/etc/
+        PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
+
+install(FILES build/bin/fatcnt DESTINATION 
+  /opt/fatcnt/bin 
+  PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
+
+install(FILES build/lib/libctl.so DESTINATION 
+  /opt/fatcnt/lib 
+  PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
+
+include(CPack)
 
 # For Land drone 1, libwire is used instead of a micro-controller.
 if(BUILD_WITH_LIBWWIRE)

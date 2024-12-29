@@ -1,0 +1,5 @@
+#!/bin/bash
+
+# for land drone
+ln -s /opt/fatcnt/etc/virtual.json /opt/fatcnt/etc/manifest.json
+systemctl enable --now fatcnt

@@ -1,0 +1,11 @@
+[Unit]
+Description=Fat Controller (Ryder Robot)
+
+[Service]
+ExecStart=/opt/fatcnt/bin/fatcnt -m /opt/fatcnt/etc/manifest.json
+Restart=on-failure
+RestartPreventExitStatus=255
+
+[Install]
+WantedBy=multi-user.target
+Alias=fatcnt.service
