@@ -1,0 +1,104 @@
+#ifndef EVENTHANDLERIFACE_HPP
+#define EVENTHANDLERIFACE_HPP
+
+#include <string>
+#include <fatcnt/events/Event.hpp>
+#include <fatcnt/state/rrpqueues.hpp>
+#include <fatcnt/state/statemanageriface.hpp>
+
+namespace rrobot {
+/**
+ * @class EventHandlerIface
+ * @brief
+ * interface for event handlers.
+ */
+class EventHandler {
+   public:
+    /**
+     * @fn init
+     * @brief
+     * used by mapper to alocate queues, and locks to handler.
+     */
+    virtual void init(StateManagerIface* sm, RRP_QUEUES direction, RRP_QUEUES inbound, RRP_QUEUES outbound) = 0;
+
+    /**
+     * @fn handleEvent
+     * @brief
+     * Called within the thread to allow execution of the handler.
+     *
+     */
+    virtual void handleEvent() = 0;
+
+    /**
+     * @fn consume
+     * @brief
+     * this method must be implemented when another handler directs an event to this handler.
+     * @param event event that is to be consumed
+     * @param state reference to current state file.
+     * @return true on success.
+     */
+    virtual bool consume(Event* event) = 0;
+
+    /**
+     * @fn name
+     * @brief
+     * The name of the handler used for debugging purposes.
+     */
+    virtual string name() = 0;
+
+    /**
+     * @fn produce
+     * @brief
+     * when available method returns true, then call this method that will produce events for
+     * other handlers.
+     */
+    virtual Event* produce() = 0;
+
+    /**
+     * @fn available
+     * @brief
+     * when events can be consumed this method must return true.
+     */
+    virtual bool available() = 0;
+
+    /**
+     * Current status of the handler.
+     */
+    virtual RRP_STATUS status() = 0;
+
+    /**
+     * @fn setUp
+     * @brief
+     * if defined by the handler performs any start up routine necessary
+     */
+    virtual void setUp() {}
+
+    /**
+     * @fn shutDown
+     * @brief
+     * called when isRunning() == false and when defined by handler indicates that the drone should be taken offline.
+     */
+    virtual void tearDown() {}
+
+    /**
+     * @fn reload
+     * @brief
+     * called to reload system after an error has occured.  If this method is implemented then the handler MUST
+     * reset the status is the error has been handled.
+     */
+    virtual void reload() {}
+
+    /**
+     * @fn onError
+     * @brief
+     * when in implmented called when an error has occured within handler.
+     *
+     * It is up to the handler to set the status to active if the exception has been handled.
+     *
+     * @param exception that has occured.
+     */
+    virtual void onError(const std::exception& e) {}
+};
+}  // namespace rrobot
+
+#endif
