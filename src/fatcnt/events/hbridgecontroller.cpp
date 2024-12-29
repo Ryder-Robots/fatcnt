@@ -66,5 +66,8 @@ Event* HbridgeController::produce(StateIface* state) {
 
      // code goes in here
      _available = true;
-    return nullptr;
+
+    msp_set_motor_hbridge* payload = new msp_set_motor_hbridge();
+    Event* event = new Event(MSPCOMMANDS::MSP_SET_MOTOR_HBRIDGE, MSPDIRECTION::EXTERNAL_OUT, payload);
+    return event;
 }

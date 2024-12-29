@@ -16,8 +16,12 @@ vector<EventHandler*> LdSqu001Mapper::createEventHandlers() {
     RrServer* server = new RrServer();
     uiHandler->init(server, _environment, _state, jserializer);
 
+    HbridgeController* hbridge = new HbridgeController();
+    hbridge->init(_state, _environment);
+
     _statusProcessor->addHandler(statusHandler);
     _statusProcessor->addHandler(uiHandler);
+    _statusProcessor->addHandler(hbridge);
 
     return _statusProcessor->getHandlers();
 }
