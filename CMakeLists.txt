@@ -1,13 +1,32 @@
 cmake_minimum_required(VERSION 3.25)
-project(fatcnt DESCRIPTION "MVP for Arduino Nano MC" LANGUAGES CXX)
+project(fatcnt DESCRIPTION "MVP for Ryder Robots" LANGUAGES CXX)
 
 include(FetchContent)
 include(FindPkgConfig)
 include(CMakeDependentOption)
 
-cmake_dependent_option(BUILD_WITH_LIBWWIRE
+cmake_dependent_option(MSP_SKULD001
+    "Enable ${PROJECT_NAME} with SKULD001 support" ON
+    "MSP_SKULD001" ON)
+cmake_dependent_option(BUILD_WITH_WIRINGPI
     "Enable ${PROJECT_NAME} libwiring support" ON
-    "BUILD_WITH_LIBWWIRE" ON)
+    "BUILD_WITH_WIRINGPI" ON)
+
+message(CHECK_START "MSP_VERSION")
+if (MSP_SKULD001)
+  message(CHECK_PASS "found SKULD001")
+  set(MANIFEST_DESCRIPTION "Configuration for SKULD001")
+  set(MANIFEST_MULTITYPE "LANDDRONE_2W")
+  set(MANIFEST_MSPVERSION "SKULD001")
+  configure_file(resources/manifests/manifest.json.in resources/manifests/manifest.json @ONLY)
+else()
+  message(CHECK_FAILED "no MSP version found")
+endif()
+
+message(CHECK_START "wiringPi")
+if(BUILD_WITH_WIRINGPI)
+  message(CHECK_PASS "compiling with wiringPi")
+endif()
 
 set(CPACK_GENERATOR "DEB")    
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
@@ -22,26 +41,26 @@ set(CPACK_PACKAGE_CONTACT "Aaron Spiteri")
 set(CPACK_DEBIAN_FILE_NAME DEB-DEFAULT)
 set(CPACK_DEBIAN_PACKAGE_CONTROL_EXTRA "${CMAKE_CURRENT_SOURCE_DIR}/scripts/postinst")
 
-install(FILES scripts/fatcnt.service
+install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/scripts/fatcnt.service"
         DESTINATION /etc/systemd/system
         PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
 
-install(FILES resources/manifests/virtual.json
+install(FILES "${CMAKE_CURRENT_BINARY_DIR}/resources/manifests/manifest.json"
         DESTINATION /opt/fatcnt/etc/
         PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
 
-install(FILES build/bin/fatcnt DESTINATION 
+install(FILES "${CMAKE_CURRENT_BINARY_DIR}/bin/fatcnt" DESTINATION 
   /opt/fatcnt/bin 
   PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
 
-install(FILES build/lib/libctl.so DESTINATION 
+install(FILES "${CMAKE_CURRENT_BINARY_DIR}/lib/libctl.so" DESTINATION 
   /opt/fatcnt/lib 
   PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
 
 include(CPack)
 
 # For Land drone 1, libwire is used instead of a micro-controller.
-if(BUILD_WITH_LIBWWIRE)
+if(BUILD_WITH_WIRINGPI)
   set(CPACK_DEBIAN_PACKAGE_DEPENDS "wiringpi, wiringpi (>= 3.2)")
 endif()
 
@@ -69,7 +88,7 @@ set(fatcnt_SOURCES
   src/fatcnt/com/server.cpp
 )
 
-if (BUILD_WITH_LIBWWIRE)
+if (BUILD_WITH_WIRINGPI)
   list(APPEND fatcnt_SOURCES 
     src/fatcnt/events/catagorizer/ldsqu001mapper.cpp 
     src/fatcnt/events/hbridgecontroller.cpp)
@@ -93,11 +112,11 @@ add_library(ctl SHARED  ${fatcnt_SOURCES})
 target_link_libraries(ctl pthread)
 target_link_libraries(ctl ${LIBSERIAL_LIBRARIES})
 
-if (BUILD_WITH_LIBWWIRE)
+if (BUILD_WITH_WIRINGPI)
   target_link_libraries(ctl wiringPi)
 endif()
 
-add_executable(fatcnt src/fatcnt/fatcnt.hpp src/fatcnt/fatcnt.cpp  ${fatcnt_SOURCES})
+add_executable(fatcnt src/fatcnt/fatcnt.hpp src/fatcnt/fatcnt.cpp)
 target_link_libraries(fatcnt ctl)
 target_link_libraries(fatcnt dlib)
 target_link_libraries(fatcnt ${Boost_LIBRARIES})
@@ -160,7 +179,7 @@ set_target_properties(test_status_processor PROPERTIES RUNTIME_OUTPUT_DIRECTORY 
 target_link_libraries(test_status_processor GTest::gtest_main ctl dlib gmock)
 gtest_discover_tests(test_status_processor  WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/resources")
 
-if (BUILD_WITH_LIBWWIRE)
+if (BUILD_WITH_WIRINGPI)
   add_executable(test_hbridgehandler test/test_hbridgehandler.cpp)
   set_target_properties(test_hbridgehandler PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/test)
   target_link_libraries(test_hbridgehandler GTest::gtest_main ctl dlib gmock)

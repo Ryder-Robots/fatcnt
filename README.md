@@ -3,10 +3,9 @@
 Create debian file.
 
 ```
-cmake -S . -B build && cmake --build build
+mkdir build
 cd build
+cmake -S .. -B . && cmake --build . --target check
 cmake -DCMAKE_INSTALL_PREFIX=/opt/fatcnt ..
-
-# cmake -G Ninja -DCMAKE_BUILD_TYPE=Release ..
 cpack -G DEB 
 ```
