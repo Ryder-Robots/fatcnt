@@ -19,6 +19,7 @@ if (MSP_SKULD001)
   set(MANIFEST_MULTITYPE "LANDDRONE_2W")
   set(MANIFEST_MSPVERSION "SKULD001")
   configure_file(resources/manifests/manifest.json.in resources/manifests/manifest.json @ONLY)
+  configure_file(resources/fatcnt.env.in resources/fatcnt.env @ONLY)
 else()
   message(CHECK_FAILED "no MSP version found")
 endif()
@@ -40,6 +41,11 @@ set(CPACK_SOURCE_IGNORE_FILES "/gtest/;/googletest/")
 set(CPACK_PACKAGE_CONTACT "Aaron Spiteri")
 set(CPACK_DEBIAN_FILE_NAME DEB-DEFAULT)
 set(CPACK_DEBIAN_PACKAGE_CONTROL_EXTRA "${CMAKE_CURRENT_SOURCE_DIR}/scripts/postinst")
+
+install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/resources/fatcnt.env"
+  DESTINATION /opt/fatcnt/etc/
+  PERMISSIONS OWNER_READ OWNER_WRITE  GROUP_READ  WORLD_READ
+)
 
 install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/scripts/fatcnt.service"
         DESTINATION /etc/systemd/system
@@ -82,6 +88,7 @@ set(fatcnt_SOURCES
   src/fatcnt/events/uihandler.cpp
   src/fatcnt/events/statushandler.cpp
   src/fatcnt/protocols/common/curators/rrp/msp_ident_curator.cpp
+  src/fatcnt/protocols/common/curators/rrp/msp_mode_curator.cpp
   src/fatcnt/events/ui/jserializer.cpp
   src/fatcnt/events/catagorizer.cpp
   src/fatcnt/events/catagorizer/mapperfactory.cpp

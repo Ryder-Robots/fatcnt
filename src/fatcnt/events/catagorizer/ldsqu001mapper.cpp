@@ -2,6 +2,13 @@
 
 using namespace rrobot;
 
+dlib::logger dlog_mapper("rr_mapper");
+
+void LdSqu001Mapper::init(Environment* environment, StateIface* state, StateManagerIface* statusProcessor) {
+    CatagorizerMapperBase::init(environment, state, statusProcessor);
+    dlog_mapper.set_level(environment->getLogging().getLogLevel());
+}
+
 vector<RRP_QUEUES> LdSqu001Mapper::queueNames() {
     vector<RRP_QUEUES> queues = {CATEGORIZER, STATUS, USER_INTERFACE, MICROCONTROLLER,};
     return queues;
@@ -50,6 +57,7 @@ RRP_QUEUES LdSqu001Mapper::mapQueue(Event* eventRef) {
             }
             {
                 msp_mode mspMode = event.getPayload<msp_mode>();
+                dlog_mapper << dlib::LINFO << "mode change has been requested to " <<  mspMode.get_mode();
                 _statusProcessor->setMode(mspMode.get_mode());
                 msp_mode* payload = new msp_mode();
                 payload->set_mode(_statusProcessor->getMode());
@@ -63,12 +71,13 @@ RRP_QUEUES LdSqu001Mapper::mapQueue(Event* eventRef) {
                 break;
             } 
             {
+                dlog_mapper << dlib::LWARN << "attempt to send flight commmands but not in correct mode";
                 msp_error* payload = new msp_error();
                 payload->set_message("unsupported command for this drone"); 
                 eventRef = new Event(MSPCOMMANDS::MSP_ERROR, MSPDIRECTION::EXTERNAL_OUT, payload);
+                queue = RRP_QUEUES::USER_INTERFACE;
+                break;
             }
-            queue = RRP_QUEUES::USER_INTERFACE;
-            break;
     }
     return queue;
 }
