@@ -25,6 +25,8 @@ namespace rrobot {
 
             vector<RRP_QUEUES> queueNames() override;
 
+            void init(Environment* environment, StateIface* state, StateManagerIface* statusProcessor) override;
+
     };
 }
 #endif // LDSQU001MAPPER_HPP

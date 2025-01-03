@@ -20,6 +20,7 @@ class MockStatusProcessor : public StateManagerIface {
     MOCK_METHOD(void, setMode, (RR_CMODES), (override));
     MOCK_METHOD(StateIface*, getState, (), (override));
     MOCK_METHOD(Environment*, getEnv, (), (override));
+    MOCK_METHOD(int32_t, getFlags, (), (override));
 };
 
 // Mock classes

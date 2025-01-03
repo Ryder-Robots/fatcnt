@@ -20,5 +20,6 @@ namespace rrobot {
 }
 
 #define MODE_BITMASK(F) ((F & CMODE_MANUAL_FLIGHT) + (F & CMODE_NOT_SET))
+#define VALID_CMODES_INIT unordered_map<string, RR_CMODES> VALID_CMODES_KEYS = {{"CMODE_NOT_SET", CMODE_NOT_SET}, {"CMODE_MANUAL_FLIGHT", CMODE_MANUAL_FLIGHT}}
 
 #endif // CMODES_HPP

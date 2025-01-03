@@ -6,7 +6,6 @@
 #include "catgorizermapper.hpp"
 
 namespace rrobot {
-
     /**
      * @class CatagorizerMapperBase
      * @brief

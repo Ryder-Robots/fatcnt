@@ -2,6 +2,11 @@
 
 using namespace rrobot;
 
+int32_t StateManager::getFlags() {
+    int32_t flags = _state->getFlags();
+    return flags;
+}
+
 RR_CMODES StateManager::getMode() {
     int32_t flags = _state->getFlags();
     flags -= STATUS_BITMASK(flags);

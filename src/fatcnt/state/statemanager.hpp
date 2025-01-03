@@ -29,6 +29,8 @@ class StateManager : public StateManagerIface {
 
     Environment* getEnv() override {return _environment;}
 
+    int32_t getFlags() override;
+
    private:
     vector<EventHandler*> _eventHandlers = {};
     StateIface* _state;

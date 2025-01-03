@@ -107,7 +107,7 @@ endforeach()
 
 set(MSPCOMMANDS 
   "MSP_NONE 0 INVALID 1 1"
-  "MSP_MODE 1 EXTERNAL_IN 1 1 RR_CMODES mode"
+  "MSP_MODE 1 EXTERNAL_IN 0 0 RR_CMODES mode"
   "MSP_ERROR 2 EXTERNAL_OUT 1 1 string message"
   "MSP_AUTHKEY 7 EXTERNAL_IN 1 1 string key"
   "MSP_SONAR_ALTITUDE 58 EXTERNAL_OUT 1 1  uint32_t distance uint32_t temperature" 

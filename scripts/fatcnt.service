@@ -2,6 +2,7 @@
 Description=Fat Controller (Ryder Robot)
 
 [Service]
+EnvironmentFile=/opt/fatcnt/etc/fatcnt.env
 ExecStart=/opt/fatcnt/bin/fatcnt -m /opt/fatcnt/etc/manifest.json
 Restart=on-failure
 RestartPreventExitStatus=255
