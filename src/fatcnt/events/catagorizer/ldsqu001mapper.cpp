@@ -36,6 +36,7 @@ vector<EventHandler*> LdSqu001Mapper::createEventHandlers() {
 RRP_QUEUES LdSqu001Mapper::mapQueue(Event* eventRef) {
 
     if (eventRef == nullptr) {
+        dlog_mapper << dlib::LERROR << "null event was recieved";
         throw InvalidMessageSent("null event was recieved");
     }
 
@@ -53,6 +54,7 @@ RRP_QUEUES LdSqu001Mapper::mapQueue(Event* eventRef) {
             break;
         case MSPCOMMANDS::MSP_MODE:
             if (!event.hasPayload()) {
+                dlog_mapper << dlib::LERROR << "no mode was given";
                 throw MissingRequiredAttributeException("no mode was given");
             }
             {
