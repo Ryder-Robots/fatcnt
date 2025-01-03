@@ -33,11 +33,13 @@ Event* RrStatusHandler::produce(StateIface* state) {
             break;
         case MSP_STATUS:
             {
+                // Reset status before processing. In case one of the handlers has malfunctioned for whatever reason.
+                _statusProcessor->getStatus();
                 msp_status* mspStatus = new msp_status();
                 mspStatus->set_cycletime(state->getCycleTime());
                 mspStatus->set_i2c_errors_count(state->getErrorCount());
                 mspStatus->set_sensor(state->getSensors());
-                mspStatus->set_flag(_statusProcessor->getStatus());
+                mspStatus->set_flag(_statusProcessor->getFlags());
 
                 // The setting involves ACC_1G which is a current setting,  however this is not 
                 // on the drone hardware at the moment, so at the moment this is just set to '0'
