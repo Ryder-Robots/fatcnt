@@ -63,6 +63,14 @@ class StateManagerIface {
      * returns environment.
      */
     virtual Environment* getEnv() = 0;
+
+
+    /**
+     * @fn getFlags
+     * @brief
+     * returns flags in raw format.
+     */
+    virtual int32_t getFlags() = 0;
 };
 }  // namespace rrobot
 
