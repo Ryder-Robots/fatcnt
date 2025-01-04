@@ -4,28 +4,37 @@ using namespace rrobot;
 
 dlib::logger dlog_hnd("rr_robot_eventhandler");
 
+void EventHandler::push(Event* event) {
+    const std::lock_guard<std::mutex> lock(*_outbound_lock);
+    _outbound_queue->push(event);
+}
+
+Event* EventHandler::front() {
+     const std::lock_guard<std::mutex> lock(*_lock);
+     Event* event = _queue->front();
+     _queue->pop();
+     return event;
+}
 
 void EventHandler::handleProduceEvents(EventHandler* handler, StateIface* state) {
     dlog_hnd << dlib::LDEBUG << "producing events for " << handler->name();
-    const std::lock_guard<std::mutex> lock(*handler->_outbound_lock);
     for (int i = 0; i < handler->_limit; i++) {
         if (!handler->available()) {
             break;
         }
-        handler->_outbound_queue->push(handler->produce(state));
+        Event* event = handler->produce(state);
+        handler->push(event);
     }    
 }
 
 void EventHandler::handleConsumeEvents(EventHandler* handler, StateIface* state) {
     dlog_hnd << dlib::LDEBUG << "consuming events for " << handler->name();
-    const std::lock_guard<std::mutex> lock(*handler->_lock);
     for (int i = 0; i < handler->_limit; i++) {
         if (handler->_queue->empty()) {
             break;
         }
-        Event* event = handler->_queue->front();
+        Event* event = handler->front();
         handler->consume(event, state);
-        handler->_queue->pop();
     }
 }
 

@@ -132,6 +132,8 @@ class EventHandler {
 
     static void handleProduceEvents(EventHandler* handler, StateIface* state);
     static void handleConsumeEvents(EventHandler* handler, StateIface* state);
+    Event* front();
+    void push(Event* event);
 
     int _limit;
     chrono::milliseconds _thread_wait_time;
