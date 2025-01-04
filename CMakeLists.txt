@@ -1,5 +1,6 @@
 cmake_minimum_required(VERSION 3.25)
 project(fatcnt DESCRIPTION "MVP for Ryder Robots" LANGUAGES CXX)
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pg -O2")
 
 include(FetchContent)
 include(FindPkgConfig)
@@ -41,6 +42,7 @@ set(CPACK_SOURCE_IGNORE_FILES "/gtest/;/googletest/")
 set(CPACK_PACKAGE_CONTACT "Aaron Spiteri")
 set(CPACK_DEBIAN_FILE_NAME DEB-DEFAULT)
 set(CPACK_DEBIAN_PACKAGE_CONTROL_EXTRA "${CMAKE_CURRENT_SOURCE_DIR}/scripts/postinst")
+set(CPACK_DEBIAN_PACKAGE_CONTROL_EXTRA "${CMAKE_CURRENT_SOURCE_DIR}/scripts/prerm")
 
 install(FILES "${CMAKE_CURRENT_BINARY_DIR}/resources/fatcnt.env"
   DESTINATION /opt/fatcnt/etc/
