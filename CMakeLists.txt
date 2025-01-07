@@ -190,6 +190,16 @@ set_target_properties(test_status_processor PROPERTIES RUNTIME_OUTPUT_DIRECTORY 
 target_link_libraries(test_status_processor GTest::gtest_main ctl dlib gmock)
 gtest_discover_tests(test_status_processor  WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/resources")
 
+add_executable(test_ratio test/test_ratio.cpp)
+set_target_properties(test_ratio PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/test)
+target_link_libraries(test_ratio GTest::gtest_main ctl dlib gmock)
+gtest_discover_tests(test_ratio  WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/resources")
+
+add_executable(test_msp104_ctl_in test/test_msp104_ctl_in.cpp)
+set_target_properties(test_msp104_ctl_in PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/test)
+target_link_libraries(test_msp104_ctl_in GTest::gtest_main ctl dlib gmock)
+gtest_discover_tests(test_msp104_ctl_in  WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/resources")
+
 if (BUILD_WITH_WIRINGPI)
   add_executable(test_hbridgehandler test/test_hbridgehandler.cpp)
   set_target_properties(test_hbridgehandler PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/test)

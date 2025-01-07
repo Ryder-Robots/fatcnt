@@ -23,7 +23,6 @@ namespace rrobot {
      */
     class Msp104Ctl : public Serializer<Event*, matrix<uint8_t>> {
         public:
-
         /**
          * @fn serialize
          * @brief
@@ -39,8 +38,8 @@ namespace rrobot {
         matrix<uint8_t> deserialize(Event* event) override;
 
         private:
-        Ratio<int16_t, uint8_t> _inbound = Ratio<int16_t, uint8_t>(-1, 1, 0, 255);
-        Ratio<uint8_t, int16_t> _outbound = Ratio<uint8_t, int16_t>(0, 255, -1, 1);
+        Ratio<float, uint8_t> _inbound = Ratio<float, uint8_t>(-1, 1, 0, 255);
+        Ratio<uint8_t, float> _outbound = Ratio<uint8_t, float>(0, 255, -1, 1);
     };
 }
 
