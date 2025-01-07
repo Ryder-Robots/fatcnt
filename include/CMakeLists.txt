@@ -115,7 +115,6 @@ set(MSPCOMMANDS
   "MSP_IDENT 100 EXTERNAL_OUT 0 0 uint8_t version MULTITYPE_T multitype MSP_VERSION msp_version uint32_t capability"
   "MSP_STATUS 101 EXTERNAL_OUT 1 1 uint16_t cycletime uint16_t i2c_errors_count uint16_t sensor uint32_t flag uint8_t current_set"
   "MSP_MOTOR 104 EXTERNAL_OUT 1 1 int16_t roll int16_t pitch int16_t yaw int16_t throttle int16_t aux1 int16_t aux2 int16_t aux3 int16_t aux4"
-  "MSP_SET_MOTOR 214 EXTERNAL_OUT 1 1 uint16_t motor1 uint16_t motor2 uint16_t motor3 uint16_t motor4 uint16_t motor5 uint16_t motor6 uint16_t motor7 uint16_t motor8"
   "MSP_SET_MOTOR_HBRIDGE 215 EXTERNAL_IN 1 1 uint16_t motor1 uint16_t motor2 uint16_t motor3 uint16_t motor4 uint8_t in")
 
 

@@ -88,6 +88,7 @@ set(fatcnt_SOURCES
   src/fatcnt/events/eventhandler.cpp
   src/fatcnt/events/uihandler.cpp
   src/fatcnt/events/statushandler.cpp
+  src/fatcnt/events/msp104/msp104_ctl_in.cpp
   src/fatcnt/protocols/common/curators/rrp/msp_ident_curator.cpp
   src/fatcnt/protocols/common/curators/rrp/msp_mode_curator.cpp
   src/fatcnt/events/ui/jserializer.cpp
