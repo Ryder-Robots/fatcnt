@@ -12,7 +12,7 @@ namespace rrobot {
          * @brief
          * serialize event.
          */
-        virtual T serialize(Event* event) {return nullptr;};
+        virtual T serialize(E event) {return nullptr;};
 
         /**
          * @fn deserialize
