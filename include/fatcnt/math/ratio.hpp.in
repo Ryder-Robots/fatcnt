@@ -1,0 +1,44 @@
+#ifndef RATIO_HPP
+#define RATIO_HPP
+
+namespace rrobot {
+    /**
+     * @class Ratio
+     * @brief
+     * Used to scale numbers for networks.
+     * @param I input type
+     * @param O output type
+     */
+    template <typename I, typename O> 
+    class Ratio {
+    public:
+        /**
+         * @fn ScaleNumber
+         * @brief 
+         * class constructor
+         * @param min minimum output of x
+         * @param max maximum output of x
+         * @param a minumum input value
+         * @param b maximum input value
+         */
+        Ratio(I min, I max, O a, O b): 
+            _min(min), _max(max), _a(a), _b(b) {}
+
+        /**
+         * @fn scale
+         * @brief
+         * scale x to uint8_t to 
+         */
+        O scale(I x) {
+            return static_cast<O>((((_b - _a) * (x - _min)) / (_max - _min)) + _a);
+        }
+
+    private:
+        const O _a;
+        const O _b;
+        const I _min;
+        const I _max;
+    };
+}
+
+#endif

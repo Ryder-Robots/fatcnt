@@ -29,7 +29,7 @@ namespace rrobot {
              * @brief
              * initlize handler.
              */
-            void init(External *external, Environment* environment, StateIface* state, Serializer<json>* serializer);
+            void init(External *external, Environment* environment, StateIface* state, Serializer<json, Event*>* serializer);
 
             /**
              * @fn consume
@@ -62,7 +62,7 @@ namespace rrobot {
             External*         _external;
             const char        _delimiter = 0x1E;
             char*             _buffer;
-            Serializer<json>* _serializer;
+            Serializer<json, Event*>* _serializer;
             bool              _available = true;
             Environment      *_environment = nullptr;
             StateIface       *_state = nullptr;

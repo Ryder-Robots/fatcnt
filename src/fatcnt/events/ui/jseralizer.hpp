@@ -12,7 +12,7 @@
 using json = nlohmann::json;
 
 namespace rrobot {
-    class Jseralizer : public Serializer<json> {
+    class Jseralizer : public Serializer<json, Event*> {
         public:
         json serialize(Event* event) override;
         Event* deserialize(json j) override;

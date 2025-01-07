@@ -96,6 +96,8 @@ set(fatcnt_SOURCES
   src/fatcnt/com/server.cpp
 )
 
+#TODO: this needs to be re-integrated.
+#     src/fatcnt/events/msp104/msp104_hbridge_serializer.cpp
 if (BUILD_WITH_WIRINGPI)
   list(APPEND fatcnt_SOURCES 
     src/fatcnt/events/catagorizer/ldsqu001mapper.cpp 
