@@ -34,7 +34,7 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CPACK_PACKAGE_NAME "fatcnt")
 set(CPACK_PACKAGE_VERSION_MAJOR "0")
 set(CPACK_PACKAGE_VERSION_MINOR "0")
-set(CPACK_PACKAGE_VERSION_PATCH "2")
+set(CPACK_PACKAGE_VERSION_PATCH "3")
 set(CPACK_DEBIAN_PACKAGE_DEPENDS "libserial-dev")
 # set(CPACK_DEBIAN_PACKAGE_DEPENDS "dlib")
 set(CPACK_SOURCE_IGNORE_FILES "/gtest/;/googletest/")
@@ -96,11 +96,10 @@ set(fatcnt_SOURCES
   src/fatcnt/events/catagorizer/mapperfactory.cpp
   src/fatcnt/com/server.cpp
 )
-
-#TODO: this needs to be re-integrated.
-#     src/fatcnt/events/msp104/msp104_hbridge_serializer.cpp
+     
 if (BUILD_WITH_WIRINGPI)
-  list(APPEND fatcnt_SOURCES 
+  list(APPEND fatcnt_SOURCES
+    src/fatcnt/events/msp104/msp104_hbridge_serializer.cpp
     src/fatcnt/events/catagorizer/ldsqu001mapper.cpp 
     src/fatcnt/events/hbridgecontroller.cpp)
 endif()

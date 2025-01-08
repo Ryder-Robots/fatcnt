@@ -25,5 +25,10 @@
     },
     "logging": {
         "logLevel": "LINFO"
+    },
+    "ai": {
+        "ai_training_data" : {
+            "path": "/opt/fatcnt/var"
+        }
     }
 }
