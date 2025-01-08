@@ -28,7 +28,7 @@
     },
 
     "ai_training_data" : {
-        "data": "/opt/fatcnt/var/tset.1.trn.data",
-        "labels": "/opt/fatcnt/var/tset.1.lbl.data"
+        "data": "var/tset.1.trn.data",
+        "labels": "var/tset.1.lbl.data"
     }
 }

@@ -57,7 +57,19 @@ configure_file(fatcnt/environment/rrserial.hpp.in fatcnt/environment/rrserial.hp
 
 
 #Exceptions
-set(EXCEPTIONS InvalidManifestException MissingRequiredAttributeException QueueDoesNotExit ExceedMaxMessage InvalidMessageSent InvalidFormat InvalidCommand UnsupportedAttribute BadConnectionException FailedToInitilizeHandler NetworkIOException)
+set(EXCEPTIONS 
+  InvalidManifestException 
+  MissingRequiredAttributeException 
+  QueueDoesNotExit 
+  ExceedMaxMessage 
+  InvalidMessageSent 
+  InvalidFormat 
+  InvalidCommand 
+  UnsupportedAttribute 
+  BadConnectionException 
+  FailedToInitilizeHandler 
+  NetworkIOException
+  RrIOException)
 set(INCLUDE_CONTENT "")
 foreach(item ${EXCEPTIONS})
   set(EXCEPTION_NAME ${item})

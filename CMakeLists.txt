@@ -89,6 +89,7 @@ set(fatcnt_SOURCES
   src/fatcnt/events/uihandler.cpp
   src/fatcnt/events/statushandler.cpp
   src/fatcnt/events/msp104/msp104_ctl_in.cpp
+  src/fatcnt/events/ai/ai_training_data.cpp
   src/fatcnt/protocols/common/curators/rrp/msp_ident_curator.cpp
   src/fatcnt/protocols/common/curators/rrp/msp_mode_curator.cpp
   src/fatcnt/events/ui/jserializer.cpp
@@ -118,10 +119,15 @@ pkg_search_module(DLIB REQUIRED dlib-1)
 
 find_package(Boost 1.74.0 COMPONENTS program_options REQUIRED )
 
-add_library(ctl SHARED  ${fatcnt_SOURCES})
-target_link_libraries(ctl pthread)
-target_link_libraries(ctl ${LIBSERIAL_LIBRARIES})
+FetchContent_Declare(
+    lazycsv
+    GIT_REPOSITORY https://github.com/ashtum/lazycsv.git
+    GIT_TAG master
+)
+FetchContent_MakeAvailable(lazycsv)
 
+add_library(ctl SHARED  ${fatcnt_SOURCES})
+target_link_libraries(ctl pthread  ${LIBSERIAL_LIBRARIES} lazycsv)
 if (BUILD_WITH_WIRINGPI)
   target_link_libraries(ctl wiringPi)
 endif()
@@ -198,6 +204,11 @@ add_executable(test_msp104_ctl_in test/test_msp104_ctl_in.cpp)
 set_target_properties(test_msp104_ctl_in PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/test)
 target_link_libraries(test_msp104_ctl_in GTest::gtest_main ctl dlib gmock)
 gtest_discover_tests(test_msp104_ctl_in  WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/resources")
+
+add_executable(test_ai_training_data test/test_ai_training_data.cpp)
+set_target_properties(test_ai_training_data PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/test)
+target_link_libraries(test_ai_training_data GTest::gtest_main ctl dlib gmock)
+gtest_discover_tests(test_ai_training_data  WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/resources")
 
 if (BUILD_WITH_WIRINGPI)
   add_executable(test_hbridgehandler test/test_hbridgehandler.cpp)

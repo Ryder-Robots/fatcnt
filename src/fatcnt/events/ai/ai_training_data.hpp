@@ -7,9 +7,12 @@
 #include <string>
 #include <dlib/dnn.h>
 #include <dlib/logger.h>
+#include <filesystem>
+#include <cstdlib>
+#include <lazycsv.hpp>
+#include <fatcnt/exceptions/exceptions.hpp>
 #include <fatcnt/environment/environment.hpp>
 
-using namespace std;
 using namespace dlib;
 
 namespace rrobot {
@@ -23,25 +26,24 @@ namespace rrobot {
         public:
 
         AiGenerateData(Environment *env);
+        ~AiGenerateData();
 
         /**
          * @fn generate
          * @brief
          * Given inbound vector, and label append or create label files.
          * 
-         * @param trainingSet unique title that represents this dataset, if it exists it will be appended to.
          * @param training  vector representing a single use case.
          * @param label  expected result of training data.
          */    
-        void generate(string trainingSet, std::vector<uint8_t> training, std::vector<uint8_t> label);
+        void generate(std::vector<uint8_t> training, std::vector<uint8_t> label);
 
         /**
          * @fn getGenisis
          * @brief
          * return first index within the training set.
-         * @param trainingSet name of training set.
          */
-        uint64_t getGenisis(string trainingSet);
+        uint64_t getGenesis();
 
         /**
          * @fn retrieveTraining
@@ -49,7 +51,7 @@ namespace rrobot {
          * returns trainging data from position idx, until vector size is count, or till end of training data, whichever 
          * is true.  idx is updated to be the last index and vector[count - 1]
          */
-        matrix<std::vector<uint8_t>> retrieveTraining(string trainingSet, uint64_t* idx, size_t count);
+        matrix<std::vector<uint8_t>> retrieveTraining(uint64_t* idx, size_t count);
 
         /**
          * @fn retrieveLabels
@@ -59,16 +61,14 @@ namespace rrobot {
          * @param start beinging index
          * @param end last index in training set.
          */
-        matrix<std::vector<uint8_t>> retrieveLabels(string trainingSet, uint64_t start, uint64 end);
+        matrix<std::vector<uint8_t>> retrieveLabels(uint64_t start, uint64 end);
 
         private:
         uint64_t _idx = 0;  // unique index for each event
         ofstream _outstream_data;   // vector provided to AI DNN
         ofstream _outstream_labels; // expected result of vector
-        string _training_set_path;  // path where training sets can be located.
-
-        const string set_lbl_pfix = ".lbl.dat";
-        const string set_trn_pfix = ".trn.dat";
+        std::string _data_fname;
+        std::string _label_fname;
     };
 }
 
