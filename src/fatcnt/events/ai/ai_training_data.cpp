@@ -1,6 +1,7 @@
 #include <fatcnt/events/ai/ai_training_data.hpp>
 
 using namespace rrobot;
+namespace fs = std::filesystem;
 
 dlib::logger dlog_ai_td("training_data");
 
@@ -24,12 +25,51 @@ AiGenerateData::~AiGenerateData() {
    
 }
 
-void AiGenerateData::generate(std::vector<uint8_t> training, std::vector<uint8_t> label) {
+void AiGenerateData::generate(std::vector<string> headings, std::vector<uint8_t> training, std::vector<uint8_t> label) {
+    ios_base::openmode flags = ios::out;
+    
+    if (!_outstream_data.is_open()) {
+        if (fs::exists(_label_fname)) {
+            flags = flags | ios::app;
+            _idx = getGenesis();
+        } else {
+            flags = flags | ios::trunc;
+        }
+        _outstream_data.open(_data_fname, flags);
+        _outstream_labels.open(_label_fname, flags);
+
+        if (_outstream_data.fail() || _outstream_labels.fail()) {
+            throw new RrIOException("could not open training data");
+        }
+
+        if (flags & ios::trunc) {
+            dlog_ai_td << dlib::LINFO << "creating headings";
+            headings.insert(headings.begin(), "idx");
+            string hdr = boost::algorithm::join(headings, ",");
+            hdr += "\n";
+            _outstream_data.write(hdr.c_str(), static_cast<std::streamsize>(hdr.size()));
+            _outstream_labels.write(hdr.c_str(), static_cast<std::streamsize>(hdr.size()));
+        }
+    }
+    dlog_ai_td << dlib::LINFO << "adding data:" + _idx;
+    write_ai_data(training, &_outstream_data);
+    write_ai_data(label, &_outstream_labels);
+    _idx++;
+}
+
+void AiGenerateData::write_ai_data(std::vector<uint8_t> v, ofstream* s) {
+    std::vector<string> tt;
+    tt.insert(tt.begin(), std::to_string(_idx));
+    for (const auto& byte : v) {
+        tt.push_back(std::to_string(static_cast<int>(byte)));
+    }
+    string d = boost::algorithm::join(tt, ",") + "\n";
+    s->write(d.c_str(), static_cast<std::streamsize>(d.size()));
 }
 
 
 uint64_t AiGenerateData::getGenesis() {
-    if (std::filesystem::exists(_label_fname)) {
+    if (fs::exists(_label_fname)) {
         dlog_ai_td << dlib::LINFO << "found existing labels file";
 
         lazycsv::parser parser{_label_fname};

@@ -10,6 +10,7 @@
 #include <filesystem>
 #include <cstdlib>
 #include <lazycsv.hpp>
+#include <boost/algorithm/string.hpp>
 #include <fatcnt/exceptions/exceptions.hpp>
 #include <fatcnt/environment/environment.hpp>
 
@@ -33,10 +34,11 @@ namespace rrobot {
          * @brief
          * Given inbound vector, and label append or create label files.
          * 
+         * @param headings row headings
          * @param training  vector representing a single use case.
          * @param label  expected result of training data.
          */    
-        void generate(std::vector<uint8_t> training, std::vector<uint8_t> label);
+        void generate(std::vector<string> headings, std::vector<uint8_t> training, std::vector<uint8_t> label);
 
         /**
          * @fn getGenisis
@@ -64,6 +66,8 @@ namespace rrobot {
         matrix<std::vector<uint8_t>> retrieveLabels(uint64_t start, uint64 end);
 
         private:
+        void write_ai_data(std::vector<uint8_t> v, ofstream* s);
+
         uint64_t _idx = 0;  // unique index for each event
         ofstream _outstream_data;   // vector provided to AI DNN
         ofstream _outstream_labels; // expected result of vector
