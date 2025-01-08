@@ -32,6 +32,7 @@ namespace rrobot {
             static Queues   createQueues(json manifest);
             static Server   createServer(json server);
             static Logging  createLogging(json logging);
+            static EaiTrainingData createAiTrainingData(json ai_training);
 
     };
 }

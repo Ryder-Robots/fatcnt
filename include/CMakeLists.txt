@@ -78,6 +78,7 @@ set(fatcnt_INCLUDE
   fatcnt/environment/queues.hpp
   fatcnt/environment/rr_server.hpp
   fatcnt/environment/logging.hpp
+  fatcnt/environment/ai/eai_training_data.hpp
   fatcnt/events/Event.hpp
   fatcnt/protocols/common/mspdirection.hpp
   fatcnt/protocols/common/mspversion.hpp

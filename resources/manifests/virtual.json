@@ -26,9 +26,9 @@
     "logging": {
         "logLevel": "LINFO"
     },
-    "ai": {
-        "ai_training_data" : {
-            "path": "/opt/fatcnt/var"
-        }
+
+    "ai_training_data" : {
+        "data": "/opt/fatcnt/var/tset.1.trn.data",
+        "labels": "/opt/fatcnt/var/tset.1.lbl.data"
     }
 }

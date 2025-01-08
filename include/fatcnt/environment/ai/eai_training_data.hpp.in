@@ -1,0 +1,32 @@
+#ifndef EAI_TRAINING_DATA_HPP
+#define EAI_TRAINING_DATA_HPP
+
+#include <string>
+
+using namespace std;
+
+namespace rrobot {
+
+    /**
+     * @class EaiTrainingData
+     * @brief
+     * configuration to locate training, and label storage locations.
+     */
+    class EaiTrainingData {
+        public:
+
+        EaiTrainingData(string data_file, string label_file):
+            _data_file(data_file), _label_file(label_file) {}
+
+        const string getData_file() {return _data_file;}
+        const string getLabel_file() {return _label_file;}
+
+        private:
+        const string _data_file;
+        const string _label_file;
+    };
+}
+
+
+
+#endif // EAI_TRAINING_DATA_HPP
