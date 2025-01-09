@@ -63,6 +63,10 @@ std::vector<std::vector<uint8_t>>& labels) {
     _instream_data.seekg(idx);
 
     for (int i = 0; i < count; i++) {
+        if (_instream_data.eof() == true) {
+            break;
+        }
+
         _instream_data.read(reinterpret_cast<char*>(&ts), sizeof(ts));
         _instream_data.read(reinterpret_cast<char*>(&ls), sizeof(ls));
         vtrain.resize(ts);
@@ -73,8 +77,5 @@ std::vector<std::vector<uint8_t>>& labels) {
         training.push_back(vtrain);
         labels.push_back(vlabels);
     }
-
-    uint8_t x = vtrain[0];
-
     return _instream_data.tellg();
 }

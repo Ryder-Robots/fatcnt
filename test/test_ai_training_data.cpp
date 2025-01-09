@@ -59,14 +59,64 @@ TEST_F(TestAiTrainingData,  shouldGenerateData) {
 
     ai_data.close_write();
 
-    uint64_t idx = 1, end_idx = idx;
     ai_data.open_read();
-
-    // starting at index 1, retieve next two rows, this creates the mini batch
-
     std::vector<std::vector<uint8_t>> tdata;
     std::vector<std::vector<uint8_t>> ldata;
-    ai_data.retrieve_data(0, 1, tdata, ldata);
-    ai_data.close_read();
+    streampos idx = ai_data.retrieve_data(0, 1, tdata, ldata);
+   
+    EXPECT_EQ(128, tdata[0][0]);
+    EXPECT_EQ(127, tdata[0][1]);
+    EXPECT_EQ(230, tdata[0][2]);
+    EXPECT_EQ(245, tdata[0][3]);
+    EXPECT_EQ(127, tdata[0][4]);
+    EXPECT_EQ(127, tdata[0][5]);
+    EXPECT_EQ(127, tdata[0][6]);
+    EXPECT_EQ(127, tdata[0][7]);
 
+    EXPECT_EQ(5, ldata[0][0]);
+    EXPECT_EQ(230, ldata[0][1]);
+    EXPECT_EQ(230, ldata[0][2]);
+    EXPECT_EQ(0, ldata[0][3]);
+    EXPECT_EQ(0, ldata[0][4]);
+
+    tdata.clear();
+    ldata.clear();
+
+    // expect that the rest of the values are retrieved
+    idx = ai_data.retrieve_data(idx, 2, tdata, ldata);
+    EXPECT_EQ(2, tdata.size());
+
+    //r row 2
+    EXPECT_EQ(127, tdata[0][0]);
+    EXPECT_EQ(127, tdata[0][1]);
+    EXPECT_EQ(225, tdata[0][2]);
+    EXPECT_EQ(244, tdata[0][3]);
+    EXPECT_EQ(127, tdata[0][4]);
+    EXPECT_EQ(127, tdata[0][5]);
+    EXPECT_EQ(127, tdata[0][6]);
+    EXPECT_EQ(127, tdata[0][7]);
+
+    EXPECT_EQ(5, ldata[0][0]);
+    EXPECT_EQ(230, ldata[0][1]);
+    EXPECT_EQ(230, ldata[0][2]);
+    EXPECT_EQ(0, ldata[0][3]);
+    EXPECT_EQ(0, ldata[0][4]);
+
+    // row 3
+    EXPECT_EQ(127, tdata[1][0]);
+    EXPECT_EQ(127, tdata[1][1]);
+    EXPECT_EQ(220, tdata[1][2]);
+    EXPECT_EQ(243, tdata[1][3]);
+    EXPECT_EQ(127, tdata[1][4]);
+    EXPECT_EQ(127, tdata[1][5]);
+    EXPECT_EQ(127, tdata[1][6]);
+    EXPECT_EQ(127, tdata[1][7]);
+
+    EXPECT_EQ(5, ldata[1][0]);
+    EXPECT_EQ(230, ldata[1][1]);
+    EXPECT_EQ(230, ldata[1][2]);
+    EXPECT_EQ(0, ldata[1][3]);
+    EXPECT_EQ(0, ldata[1][4]);
+
+    ai_data.close_read();
 }
