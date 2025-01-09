@@ -46,14 +46,16 @@ TEST_F(TestAiTrainingData,  shouldGenerateData) {
 
     AiGenerateData ai_data(&env);
 
-    std::vector<uint8_t> training_data = {127,127,230,245,127,127,127,127};
+    std::vector<uint8_t> training_data1 = {128,127,230,245,127,127,127,127};
+    std::vector<uint8_t> training_data2 = {127,127,225,244,127,127,127,127};
+    std::vector<uint8_t> training_data3 = {127,127,220,243,127,127,127,127};
     std::vector<uint8_t> label_data = {5,230,230,0,0};
 
     ai_data.open_write();
 
-    ai_data.write_data(training_data, label_data);
-    ai_data.write_data(training_data, label_data);
-    ai_data.write_data(training_data, label_data);
+    ai_data.write_data(training_data1, label_data);
+    ai_data.write_data(training_data2, label_data);
+    ai_data.write_data(training_data3, label_data);
 
     ai_data.close_write();
 
@@ -62,7 +64,8 @@ TEST_F(TestAiTrainingData,  shouldGenerateData) {
 
     // starting at index 1, retieve next two rows, this creates the mini batch
 
-    matrix<std::vector<uint8_t>> tdata, ldata;
+    std::vector<std::vector<uint8_t>> tdata;
+    std::vector<std::vector<uint8_t>> ldata;
     ai_data.retrieve_data(0, 1, tdata, ldata);
     ai_data.close_read();
 

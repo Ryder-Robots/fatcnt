@@ -75,29 +75,15 @@ namespace rrobot {
          * returns trainging data from position idx, until vector size is count, or till end of training data, whichever 
          * is true.  idx is updated to be the last index and vector[count - 1]
          */
-        uint64_t retrieve_data(uint64_t idx, size_t count, 
-            const matrix<std::vector<uint8_t>>& training, 
-            const matrix<std::vector<uint8_t>>& labels);
+        streampos retrieve_data(streampos idx, size_t count, 
+        std::vector<std::vector<uint8_t>>& training, 
+        std::vector<std::vector<uint8_t>>& labels);
 
         private:
-
         uint64_t _idx = 0;  // unique index for each event
         ofstream _outstream_data;   // vectors serialized for label and training
-        ofstream _outstream_labels; // text file that contains index,start_pos,end_pos
-
         ifstream _instream_data;
-        ifstream _instream_labels;
-
         std::string _data_fname;
-        std::string _label_fname;
-
-        // position of data and labels in data file.
-        // 0 is the index
-        // 1 file position of training data
-        // 2 start position of label data
-        // 3 end position of label data
-        std::vector<uint64_t> _idx_position;
-        const streamoff IDX_POS_SZ = sizeof(uint64_t) * 4;
     };
 }
 
