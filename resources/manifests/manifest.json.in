@@ -28,7 +28,7 @@
     },
     "ai": {
         "ai_training_data" : {
-            "path": "/opt/fatcnt/var"
+            "data": "/opt/fatcnt/var/tset.2.trn.data"
         }
     }
 }

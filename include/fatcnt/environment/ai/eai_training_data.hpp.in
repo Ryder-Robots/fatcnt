@@ -15,15 +15,12 @@ namespace rrobot {
     class EaiTrainingData {
         public:
 
-        EaiTrainingData(string data_file, string label_file):
-            _data_file(data_file), _label_file(label_file) {}
+        EaiTrainingData(string data_file): _data_file(data_file) {}
 
         const string getData_file() {return _data_file;}
-        const string getLabel_file() {return _label_file;}
 
         private:
         const string _data_file;
-        const string _label_file;
     };
 }
 

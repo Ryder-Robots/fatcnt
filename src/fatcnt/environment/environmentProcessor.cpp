@@ -87,8 +87,8 @@ Logging EnviromentProcessor::createLogging(json manifest) {
 }
 
 EaiTrainingData EnviromentProcessor::createAiTrainingData(json manifest) {
-    vector<string> keys = {"data", "labels"};
+    vector<string> keys = {"data"};
     verify(manifest, keys, "ai_training_data");
 
-    return EaiTrainingData(manifest["ai_training_data"]["data"], manifest["ai_training_data"]["labels"]);
+    return EaiTrainingData(manifest["ai_training_data"]["data"]);
 }

@@ -28,7 +28,6 @@
     },
 
     "ai_training_data" : {
-        "data": "var/tset.1.trn.data",
-        "labels": "var/tset.1.lbl.data"
+        "data": "var/tset.1.trn.data"
     }
 }
