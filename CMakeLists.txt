@@ -98,7 +98,7 @@ set(fatcnt_SOURCES
   src/fatcnt/com/server.cpp
 )
      
-if (BUILD_WITH_WIRINGPI)
+if (MSP_SKULD001)
   list(APPEND fatcnt_SOURCES
     src/fatcnt/events/msp104/msp104_hbridge_serializer.cpp
     src/fatcnt/events/catagorizer/ldsqu001mapper.cpp 
