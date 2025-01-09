@@ -2,14 +2,13 @@
 #define AI_TRAINING_DATA_HPP
 
 #include <vector>
-#include <stdint.h>
+#include <cstdint>
 #include <fstream>
 #include <string>
 #include <dlib/dnn.h>
 #include <dlib/logger.h>
 #include <filesystem>
 #include <cstdlib>
-#include <lazycsv.hpp>
 #include <boost/algorithm/string.hpp>
 #include <fatcnt/exceptions/exceptions.hpp>
 #include <fatcnt/environment/environment.hpp>
@@ -30,7 +29,37 @@ namespace rrobot {
         ~AiGenerateData();
 
         /**
-         * @fn generate
+         * @fn open_write
+         * @brief
+         * open file for writing test data.
+         * @param theading training data headings.
+         * @param lheadigns label data headings.
+         */
+        void open_write();
+
+        /**
+         * @fn open_read
+         * @brief
+         * open training data for reading.
+         */
+        void open_read();
+
+        /**
+         * @fn close
+         * @brief
+         * close training data IO streams.
+         */
+        void close_write();
+
+        /**
+         * @fn close
+         * @brief
+         * close training data IO streams.
+         */
+        void close_read();
+
+        /**
+         * @fn write_data
          * @brief
          * Given inbound vector, and label append or create label files.
          * 
@@ -38,14 +67,7 @@ namespace rrobot {
          * @param training  vector representing a single use case.
          * @param label  expected result of training data.
          */    
-        void generate(std::vector<string> headings, std::vector<uint8_t> training, std::vector<uint8_t> label);
-
-        /**
-         * @fn getGenisis
-         * @brief
-         * return first index within the training set.
-         */
-        uint64_t getGenesis();
+        size_t write_data(std::vector<uint8_t> training, std::vector<uint8_t> label);
 
         /**
          * @fn retrieveTraining
@@ -53,26 +75,29 @@ namespace rrobot {
          * returns trainging data from position idx, until vector size is count, or till end of training data, whichever 
          * is true.  idx is updated to be the last index and vector[count - 1]
          */
-        matrix<std::vector<uint8_t>> retrieveTraining(uint64_t* idx, size_t count);
-
-        /**
-         * @fn retrieveLabels
-         * @brief
-         * retrieve data labels for index starting at "start" parameter and ending at "end" parameter.
-         * @param trainingSet name of the training set to retrieve
-         * @param start beinging index
-         * @param end last index in training set.
-         */
-        matrix<std::vector<uint8_t>> retrieveLabels(uint64_t start, uint64 end);
+        uint64_t retrieve_data(uint64_t idx, size_t count, 
+            const matrix<std::vector<uint8_t>>& training, 
+            const matrix<std::vector<uint8_t>>& labels);
 
         private:
-        void write_ai_data(std::vector<uint8_t> v, ofstream* s);
 
         uint64_t _idx = 0;  // unique index for each event
-        ofstream _outstream_data;   // vector provided to AI DNN
-        ofstream _outstream_labels; // expected result of vector
+        ofstream _outstream_data;   // vectors serialized for label and training
+        ofstream _outstream_labels; // text file that contains index,start_pos,end_pos
+
+        ifstream _instream_data;
+        ifstream _instream_labels;
+
         std::string _data_fname;
         std::string _label_fname;
+
+        // position of data and labels in data file.
+        // 0 is the index
+        // 1 file position of training data
+        // 2 start position of label data
+        // 3 end position of label data
+        std::vector<uint64_t> _idx_position;
+        const streamoff IDX_POS_SZ = sizeof(uint64_t) * 4;
     };
 }
 
