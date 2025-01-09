@@ -62,16 +62,17 @@ std::vector<std::vector<uint8_t>>& labels) {
     size_t ts, ls;
     _instream_data.seekg(idx);
 
+    for (int i = 0; i < count; i++) {
+        _instream_data.read(reinterpret_cast<char*>(&ts), sizeof(ts));
+        _instream_data.read(reinterpret_cast<char*>(&ls), sizeof(ls));
+        vtrain.resize(ts);
+        vlabels.resize(ls);
+        _instream_data.read(reinterpret_cast<char*>(vtrain.data()), ts * sizeof(uint8_t));
+        _instream_data.read(reinterpret_cast<char*>(vlabels.data()), ls * sizeof(uint8_t));
 
-    _instream_data.read(reinterpret_cast<char*>(&ts), sizeof(ts));
-    _instream_data.read(reinterpret_cast<char*>(&ls), sizeof(ls));
-    vtrain.resize(ts);
-    vlabels.resize(ls);
-    _instream_data.read(reinterpret_cast<char*>(vtrain.data()), ts * sizeof(uint8_t));
-    _instream_data.read(reinterpret_cast<char*>(vlabels.data()), ls * sizeof(uint8_t));
-
-    training.push_back(vtrain);
-    labels.push_back(vlabels);
+        training.push_back(vtrain);
+        labels.push_back(vlabels);
+    }
 
     uint8_t x = vtrain[0];
 
