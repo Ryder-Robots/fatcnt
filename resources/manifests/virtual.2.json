@@ -18,7 +18,7 @@
         "maxconnections": 3
     },
     "queues": {
-        "limit" : 100,
+        "limit" : 20,
         "thread_wait_time": 500,
         "thread_process_time": 10,
         "thread_time_out": 500
@@ -28,6 +28,7 @@
     },
 
     "ai_training_data" : {
-        "data": "var/tset.2.trn.data"
+        "data": "var/tset.2.trn.data",
+        "batch_size": 20
     }
 }

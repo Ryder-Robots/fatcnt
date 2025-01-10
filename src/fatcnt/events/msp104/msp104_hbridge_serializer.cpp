@@ -5,10 +5,10 @@ using namespace rrobot;
 /*
  *  implementation of deserialization, for this implementation only implented two directions.
  */
-Event* Msp104Serializer::deserialize(matrix<uint8_t> m) {
+Event* Msp104Serializer::deserialize(std::vector<uint8_t> m) {
     // For land drone the only concern is yaw and throttle.
-    float yaw = _ratioD.scale(m(0, 2));
-    float throttle = _ratioD.scale(m(0,3));
+    float yaw = _ratioD.scale(m[2]);
+    float throttle = _ratioD.scale(m[3]);
 
     uint16_t motor1 = T(throttle), motor2 = T(throttle), motor3 = 0, motor4 = 0;
     uint8_t in = 0;
@@ -41,7 +41,7 @@ Event* Msp104Serializer::deserialize(matrix<uint8_t> m) {
     return new Event(MSPCOMMANDS::MSP_SET_MOTOR_HBRIDGE, MSPDIRECTION::EXTERNAL_IN, payload);
 }
 
-matrix<uint8_t>  Msp104Serializer::serialize(Event* event) {
+std::vector<uint8_t>  Msp104Serializer::serialize(Event* event) {
     msp_set_motor_hbridge payload = event->getPayload<msp_set_motor_hbridge>();
     float yaw = 0, throttle = 0;
 
@@ -59,14 +59,16 @@ matrix<uint8_t>  Msp104Serializer::serialize(Event* event) {
         throttle = (payload.get_motor1() / 1000) * -1;
     }
     
-    matrix<uint8_t> m;
-    m(0,0) = _ratioS.scale(0);
-    m(0,1) = _ratioS.scale(0);
-    m(0,2) = _ratioS.scale(yaw);
-    m(0,3) = _ratioS.scale(throttle);
-    m(0,4) = _ratioS.scale(0);
-    m(0,5) = _ratioS.scale(0);
-    m(0,6) = _ratioS.scale(0);
-    m(0,7) = _ratioS.scale(0);
+    std::vector<uint8_t> m;
+    m.clear();
+    m.reserve(8);
+    m.push_back(_ratioS.scale(0));
+    m.push_back(_ratioS.scale(0));
+    m.push_back(_ratioS.scale(yaw));
+    m.push_back(_ratioS.scale(throttle));
+    m.push_back(_ratioS.scale(0));
+    m.push_back(_ratioS.scale(0));
+    m.push_back(_ratioS.scale(0));
+    m.push_back(_ratioS.scale(0));
     return m;
 }

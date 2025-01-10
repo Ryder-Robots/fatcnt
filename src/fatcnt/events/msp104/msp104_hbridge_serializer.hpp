@@ -1,13 +1,11 @@
 #ifndef MSP104_HBRIDGE_SERIALIZER
 #define MSP104_HBRIDGE_SERIALIZER
 
-#include <dlib/dnn.h>
+#include <vector>
 #include <fatcnt/events/serializer.hpp>
 #include <fatcnt/math/ratio.hpp>
 #include <fatcnt/protocols/common/curators/rrp/msp_motor.hpp>
 #include <fatcnt/protocols/common/curators/rrp/msp_set_motor_hbridge.hpp>
-
-using namespace dlib;
 
 namespace rrobot {
 
@@ -17,15 +15,15 @@ namespace rrobot {
      *  Converts inbound MSP 104 event to hbridge event.
      * 
      */ 
-    class Msp104Serializer : public Serializer<matrix<uint8_t>, Event*> {
+    class Msp104Serializer : public Serializer<std::vector<uint8_t>, Event*> {
         public:
         /**
          * @fn deserialize
          * @brief
          * After recieving an msp_motor event convert to hbridge event.
          */
-        Event* deserialize(matrix<uint8_t>) override;
-        matrix<uint8_t> serialize(Event* event) override;
+        Event* deserialize(std::vector<uint8_t>) override;
+        std::vector<uint8_t> serialize(Event* event) override;
 
         private:
             Ratio<uint8_t, float> _ratioD = Ratio<uint8_t, float>( -1, 1, 0, 255);

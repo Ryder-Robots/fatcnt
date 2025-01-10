@@ -30,16 +30,15 @@ TEST_F(TestMsp104In, TestDeserialize) {
     payload->set_aux4(0);
     Event* event = new Event(MSPCOMMANDS::MSP_MOTOR, MSPDIRECTION::EXTERNAL_IN, payload);
 
-    matrix<uint8_t> m = _msp10Ctl.deserialize(event);
+    std::vector<uint8_t> m = _msp10Ctl.deserialize(event);
 
-    uint8_t v = m(0,0);
     // 127 is 255/2 therfore equal to 0.
-    EXPECT_EQ(127, m(0, 0));
-    EXPECT_EQ(127, m(0, 1));
-    EXPECT_EQ(191, m(0, 2));
-    EXPECT_EQ(255, m(0, 3));
-    EXPECT_EQ(127, m(0, 4));
-    EXPECT_EQ(127, m(0, 5));
-    EXPECT_EQ(127, m(0, 6));
-    EXPECT_EQ(127, m(0, 7));
+    EXPECT_EQ(127, m[0]);
+    EXPECT_EQ(127, m[1]);
+    EXPECT_EQ(191, m[2]);
+    EXPECT_EQ(255, m[3]);
+    EXPECT_EQ(127, m[4]);
+    EXPECT_EQ(127, m[5]);
+    EXPECT_EQ(127, m[6]);
+    EXPECT_EQ(127, m[7]);
 }
