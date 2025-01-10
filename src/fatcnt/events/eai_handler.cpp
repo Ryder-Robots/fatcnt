@@ -36,9 +36,14 @@ void EaiHandler::init(Environment* env,
  */
 bool EaiHandler::consume(Event* event, StateIface* state) {
     bool rv = false;
+
+    if (_current_mode != _sp->getMode()) {
+        dlog_eai << dlib::LWARN << "detected mode change, attempting to change mode";
+        setUp();
+    }
+
     switch(_sp->getMode()) {
         case RR_CMODES::CMODE_MANUAL_FLIGHT:
-
             rv = consume_man_flight(event, state);
             break;
 
@@ -52,13 +57,16 @@ bool EaiHandler::consume(Event* event, StateIface* state) {
 }
 
 
+// TODO: complete this. in order to send events _available will need to be set to true.
 Event* EaiHandler::produce(StateIface* state) {
-
+    return nullptr;
 }
 
-
+/*
+ * indicates that event can be sent back.
+ */
 bool EaiHandler::available() {
-
+    return _available;
 }
 
 
@@ -72,12 +80,12 @@ bool EaiHandler::consume_man_flight(Event* event, StateIface* state) {
     switch(event->getCommand()) {
         case MSPCOMMANDS::MSP_MOTOR:
         {
-            std::vector<uint8_t> v_ctl = _s_ctl->deserialize(event);            
-            Event* fc_event = _s_out->deserialize(v_ctl);
+            std::vector<uint8_t> training = _s_ctl->deserialize(event);            
+            Event* fc_event = _s_out->deserialize(training);
             _sp->push_queue(_fc_queue, fc_event);
 
-            std::vector<uint8_t> v_fc = _s_out->serialize(event);
-
+            std::vector<uint8_t> label = _s_out->serialize(event);
+            _agd->write_data(training, label);
         }
         break;
 
@@ -86,4 +94,19 @@ bool EaiHandler::consume_man_flight(Event* event, StateIface* state) {
     }
 
     return true;
+}
+
+
+/*
+ * set up write handle
+ */
+void EaiHandler::setUp() {
+    if (_sp->getMode() == RR_CMODES::CMODE_MANUAL_FLIGHT) {
+        dlog_eai << dlib::LERROR << "CMODE_MANUAL_FLIGHT detected opening up training file";
+        _agd->open_write();
+    }
+}
+
+void EaiHandler::tearDown() {
+    _agd->close_write();
 }

@@ -72,6 +72,10 @@ namespace rrobot {
          */
         bool available() override;
 
+        void setUp() override;
+
+        void tearDown() override;
+
         private:
         Environment* _env;
         StateIface* _state;
@@ -81,6 +85,8 @@ namespace rrobot {
         AiGenerateData* _agd;
         RRP_QUEUES _fc_queue;
         RRP_QUEUES _mc_queue;
+        bool _available = false;
+        RR_CMODES _current_mode = RR_CMODES::CMODE_NOT_SET;
 
         bool consume_man_flight(Event* event, StateIface* state);
     };

@@ -123,10 +123,10 @@ class EventHandler {
     virtual void onError(const std::exception& e) {}
 
    protected:
-    queue<Event*>* _queue;
-    mutex* _lock;
-    queue<Event*>* _outbound_queue;
-    mutex* _outbound_lock;
+    std::queue<Event*>* _queue;
+    std::mutex* _lock;
+    std::queue<Event*>* _outbound_queue;
+    std::mutex* _outbound_lock;
 
    private:
 
