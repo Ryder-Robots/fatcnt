@@ -6,28 +6,30 @@ namespace fs = std::filesystem;
 dlib::logger dlog_ai_td("training_data");
 
 AiGenerateData::AiGenerateData(Environment* env) {
-    dlog_ai_td << dlib::LINFO << "initilizing AI Training Data";
     dlog_ai_td.set_level(env->getLogging().getLogLevel());
-
+    dlog_ai_td << dlib::LINFO << "initilizing AI Training Data";
     _data_fname = env->getAuTrainingData().getData_file();
 }
 
 AiGenerateData::~AiGenerateData() {}
 
 void AiGenerateData::open_write() {
-    dlog_ai_td << dlib::LINFO << "Opening training data files";
+    dlog_ai_td << dlib::LINFO << "opening training data files";
     _outstream_data.open(_data_fname, ios::app | ios::binary);
 
     if (!_outstream_data.is_open()) {
+        dlog_ai_td << dlib::LFATAL << "could not create training files";
         throw new RrIOException("could not create training files");
     }
 }
 
 void AiGenerateData::open_read() {
+    dlog_ai_td << dlib::LINFO << "opening training data files for read";
     _instream_data.open(_data_fname, ios::binary);
 
     if (!_instream_data.is_open()) {
-        throw new RrIOException("could not read training files");
+        dlog_ai_td << dlib::LFATAL << "could not open training files for read";
+        throw new RrIOException("could not read training files for read");
     }
 }
 
