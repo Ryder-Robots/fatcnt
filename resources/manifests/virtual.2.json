@@ -29,6 +29,8 @@
 
     "ai_training_data" : {
         "data": "var/tset.2.trn.data",
-        "batch_size": 20
+        "batch_size": 20,
+        "queue_fc": "MICROCONTROLLER",
+        "queue_mc": "MICROCONTROLLER"
     }
 }

@@ -87,8 +87,13 @@ Logging EnviromentProcessor::createLogging(json manifest) {
 }
 
 EaiTrainingData EnviromentProcessor::createAiTrainingData(json manifest) {
-    vector<string> keys = {"data"};
+    vector<string> keys = {"data", "batch_size", "queue_fc", "queue_mc"};
     verify(manifest, keys, "ai_training_data");
-
-    return EaiTrainingData(manifest["ai_training_data"]["data"]);
+    VALID_RRP_QUEUES_INIT;
+    return EaiTrainingData(
+        manifest["ai_training_data"]["data"],
+        manifest["ai_training_data"]["batch_size"],
+        VALID_RRP_QUEUES_KEYS.at(manifest["ai_training_data"]["queue_fc"]),
+        VALID_RRP_QUEUES_KEYS.at(manifest["ai_training_data"]["queue_mc"])
+    );
 }

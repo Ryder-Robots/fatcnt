@@ -4,8 +4,10 @@
 #include <cstdlib>
 #include <vector>
 #include <dlib/dnn.h>
+#include <fatcnt/state/statemanageriface.hpp>
 #include <fatcnt/events/serializer.hpp>
 #include <fatcnt/events/eventhandler.hpp>
+#include <fatcnt/events/ai/ai_training_data.hpp>
 
 using namespace dlib;
 using namespace std;
@@ -25,10 +27,16 @@ namespace rrobot {
          * inilizes EAI handler, including underlaying handler layer.
          * @param env global environment.
          * @param state current state
+         * @param state processor
          * @param inbound serilizer
          * @param outbound serializer
          */
-        void init(Environment* env, StateIface* state, Serializer<Event*, std::vector<uint8_t>>,  Serializer<std::vector<uint8_t>, Event*> out);
+        void init(Environment* env, 
+            StateIface* state,
+            StateManagerIface*  sp,
+            AiGenerateData* agd,
+            Serializer<Event*, std::vector<uint8_t>>* s_ctl,  
+            Serializer<std::vector<uint8_t>, Event*>* s_out);
 
         /**
          * @fn name
@@ -63,6 +71,16 @@ namespace rrobot {
          * handler is ready to recieve next request.
          */
         bool available() override;
+
+        private:
+        Environment* _env;
+        StateIface* _state;
+        Serializer<Event*, std::vector<uint8_t>>* _s_ctl;
+        Serializer<std::vector<uint8_t>, Event*>* _s_out;
+        StateManagerIface* _sp;
+        AiGenerateData* _agd;
+
+        bool consume_man_flight(Event* event, StateIface* state);
     };
 }
 

@@ -2,6 +2,7 @@
 #define EAI_TRAINING_DATA_HPP
 
 #include <string>
+#include <fatcnt/state/rrpqueues.hpp>
 
 using namespace std;
 
@@ -15,12 +16,20 @@ namespace rrobot {
     class EaiTrainingData {
         public:
 
-        EaiTrainingData(string data_file): _data_file(data_file) {}
+        EaiTrainingData(string data_file, int batch_sz, RRP_QUEUES queue_fc, RRP_QUEUES queue_mc): 
+            _data_file(data_file), _batch_sz(batch_sz), _queue_fc(queue_fc), _queue_mc(queue_mc)
+        {}
 
         const string getData_file() {return _data_file;}
+        const int get_batch_size() {return _batch_sz;}
+        const RRP_QUEUES get_queue_fc() {return _queue_fc;}
+        const RRP_QUEUES get_queue_mc() {return _queue_mc;}
 
         private:
         const string _data_file;
+        const int _batch_sz;
+        const RRP_QUEUES _queue_fc;
+        const RRP_QUEUES _queue_mc;
     };
 }
 
