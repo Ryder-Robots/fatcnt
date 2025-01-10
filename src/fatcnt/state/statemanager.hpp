@@ -31,6 +31,8 @@ class StateManager : public StateManagerIface {
 
     int32_t getFlags() override;
 
+    void push_queue(RRP_QUEUES qname, Event *event) override;
+
    private:
     vector<EventHandler*> _eventHandlers = {};
     StateIface* _state;

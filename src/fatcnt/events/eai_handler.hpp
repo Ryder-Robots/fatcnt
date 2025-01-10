@@ -79,6 +79,8 @@ namespace rrobot {
         Serializer<std::vector<uint8_t>, Event*>* _s_out;
         StateManagerIface* _sp;
         AiGenerateData* _agd;
+        RRP_QUEUES _fc_queue;
+        RRP_QUEUES _mc_queue;
 
         bool consume_man_flight(Event* event, StateIface* state);
     };

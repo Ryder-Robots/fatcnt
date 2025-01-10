@@ -23,6 +23,9 @@ void EaiHandler::init(Environment* env,
 
     dlog_eai.set_level(_env->getLogging().getLogLevel());
 
+    _fc_queue = _env->getAuTrainingData().get_queue_fc();
+    _mc_queue = _env->getAuTrainingData().get_queue_mc();
+
     // User interface instead of micro-controller, or flight controller is chosen as the output queue
     // because where processed actions will vary depending on which drone is getting used.
     EventHandler::init(_state->getQueues(), RRP_QUEUES::AI_ENGINE, RRP_QUEUES::USER_INTERFACE, _env);
@@ -69,11 +72,9 @@ bool EaiHandler::consume_man_flight(Event* event, StateIface* state) {
     switch(event->getCommand()) {
         case MSPCOMMANDS::MSP_MOTOR:
         {
-            std::vector<uint8_t> v_ctl = _s_ctl->deserialize(event);
-            
-            // event will be sent to flight controller, hbridge or micro-controller.
+            std::vector<uint8_t> v_ctl = _s_ctl->deserialize(event);            
             Event* fc_event = _s_out->deserialize(v_ctl);
-            // TODO: send event and get 
+            _sp->push_queue(_fc_queue, fc_event);
 
             std::vector<uint8_t> v_fc = _s_out->serialize(event);
 

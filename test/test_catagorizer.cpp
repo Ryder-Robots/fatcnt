@@ -21,6 +21,7 @@ class MockStatusProcessor : public StateManagerIface {
     MOCK_METHOD(StateIface*, getState, (), (override));
     MOCK_METHOD(Environment*, getEnv, (), (override));
     MOCK_METHOD(int32_t, getFlags, (), (override));
+    MOCK_METHOD(void, push_queue, (RRP_QUEUES qname, Event *event), (override));
 };
 
 // Mock classes
@@ -122,7 +123,6 @@ TEST_F(TestCatagorizer, TestIdent) {
     }
 
     EXPECT_EQ(0, queue->size());
-
 
     queue = state->getQueues()->getQueue(RRP_QUEUES::USER_INTERFACE);
     EXPECT_EQ(1, queue->size());

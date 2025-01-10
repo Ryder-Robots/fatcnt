@@ -18,6 +18,8 @@ if (MSP_SKULD001)
   set(MANIFEST_DESCRIPTION "Configuration for SKULD001")
   set(MANIFEST_MULTITYPE "LANDDRONE_2W")
   set(MANIFEST_MSPVERSION "SKULD001")
+  set(MANIFEST_AI_QUEUE_FC "MICROCONTROLLER")
+  set(MANIFEST_AI_QUEUE_MC "MICROCONTROLLER")
   configure_file(resources/manifests/manifest.json.in resources/manifests/manifest.json @ONLY)
   configure_file(resources/fatcnt.env.in resources/fatcnt.env @ONLY)
 else()
@@ -89,6 +91,7 @@ set(fatcnt_SOURCES
   src/fatcnt/events/uihandler.cpp
   src/fatcnt/events/statushandler.cpp
   src/fatcnt/events/msp104/msp104_ctl_in.cpp
+  src/fatcnt/events/eai_handler.cpp
   src/fatcnt/events/ai/ai_training_data.cpp
   src/fatcnt/protocols/common/curators/rrp/msp_ident_curator.cpp
   src/fatcnt/protocols/common/curators/rrp/msp_mode_curator.cpp
