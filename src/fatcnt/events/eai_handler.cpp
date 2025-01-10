@@ -69,7 +69,9 @@ bool EaiHandler::available() {
     return _available;
 }
 
-
+/*
+ * Handle manual flight event.
+ */
 bool EaiHandler::consume_man_flight(Event* event, StateIface* state) {
 
     if (!event->hasPayload()) {
@@ -96,14 +98,19 @@ bool EaiHandler::consume_man_flight(Event* event, StateIface* state) {
     return true;
 }
 
-
 /*
  * set up write handle
  */
 void EaiHandler::setUp() {
     if (_sp->getMode() == RR_CMODES::CMODE_MANUAL_FLIGHT) {
-        dlog_eai << dlib::LERROR << "CMODE_MANUAL_FLIGHT detected opening up training file";
+        dlog_eai << dlib::LINFO << "CMODE_MANUAL_FLIGHT detected opening up training file";
         _agd->open_write();
+        _current_mode = RR_CMODES::CMODE_MANUAL_FLIGHT;
+    } else if (_sp->getMode() == RR_CMODES::CMODE_NOT_SET) {
+        dlog_eai << dlib::LINFO << "CMODE_NOT_SET detected changing mode";
+         _current_mode = RR_CMODES::CMODE_NOT_SET;
+    } else {
+        dlog_eai << dlib::LERROR << "unsupported mode was sent, no idea what to do with this!";
     }
 }
 
