@@ -21,7 +21,7 @@ class StateManager : public StateManagerIface {
 
     void addHandler(EventHandler* handler) override { _eventHandlers.push_back(handler); }
 
-    vector<EventHandler*> getHandlers() { return _eventHandlers; }
+    std::vector<EventHandler*> getHandlers() { return _eventHandlers; }
 
     void setMode(RR_CMODES mode) override;
 
@@ -34,9 +34,9 @@ class StateManager : public StateManagerIface {
     void push_queue(RRP_QUEUES qname, Event *event) override;
 
    private:
-    vector<EventHandler*> _eventHandlers = {};
+    std::vector<EventHandler*> _eventHandlers = {};
     StateIface* _state;
-    mutex _lock;
+    std::mutex _lock;
     Environment* _environment;
 
     // Environment*       _environment;

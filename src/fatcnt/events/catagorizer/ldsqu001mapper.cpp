@@ -4,17 +4,27 @@ using namespace rrobot;
 
 dlib::logger dlog_mapper("rr_mapper");
 
+/*
+ * Performs inilization.
+ */
 void LdSqu001Mapper::init(Environment* environment, StateIface* state, StateManagerIface* statusProcessor) {
     CatagorizerMapperBase::init(environment, state, statusProcessor);
     dlog_mapper.set_level(environment->getLogging().getLogLevel());
 }
 
-vector<RRP_QUEUES> LdSqu001Mapper::queueNames() {
-    vector<RRP_QUEUES> queues = {CATEGORIZER, STATUS, USER_INTERFACE, MICROCONTROLLER,};
+
+/*
+ * returns list of supported queue names
+ */
+std::vector<RRP_QUEUES> LdSqu001Mapper::queueNames() {
+    std::vector<RRP_QUEUES> queues = {CATEGORIZER, STATUS, USER_INTERFACE, MICROCONTROLLER, AI_ENGINE,};
     return queues;
 }
 
-vector<EventHandler*> LdSqu001Mapper::createEventHandlers() {
+/*
+ * create event handlers. 
+ */
+std::vector<EventHandler*> LdSqu001Mapper::createEventHandlers() {
     RrStatusHandler* statusHandler = new RrStatusHandler();
     UiHandler* uiHandler = new UiHandler();
     statusHandler->init(_state, _environment,  _statusProcessor);
@@ -26,9 +36,16 @@ vector<EventHandler*> LdSqu001Mapper::createEventHandlers() {
     HbridgeController* hbridge = new HbridgeController();
     hbridge->init(_state, _environment);
 
+    EaiHandler* aiHandler = new EaiHandler();
+    aiHandler->init(_state, _environment, _statusProcessor, 
+        new AiGenerateData(_environment), 
+        new Msp104Ctl(),
+        new Msp104Serializer());
+
     _statusProcessor->addHandler(statusHandler);
     _statusProcessor->addHandler(uiHandler);
     _statusProcessor->addHandler(hbridge);
+    _statusProcessor->addHandler(aiHandler);
 
     return _statusProcessor->getHandlers();
 }
@@ -67,6 +84,22 @@ RRP_QUEUES LdSqu001Mapper::mapQueue(Event* eventRef) {
             }
             queue = RRP_QUEUES::USER_INTERFACE;
             break;
+
+        case MSPCOMMANDS::MSP_MOTOR:
+             if (_statusProcessor->getMode() == RR_CMODES::CMODE_MANUAL_FLIGHT) {
+                queue = RRP_QUEUES::AI_ENGINE;
+                break;
+            } 
+            {
+                dlog_mapper << dlib::LWARN << "attempt to send flight commmands but not in correct mode";
+                msp_error* payload = new msp_error();
+                payload->set_message("unsupported command for this drone"); 
+                eventRef = new Event(MSPCOMMANDS::MSP_ERROR, MSPDIRECTION::EXTERNAL_OUT, payload);
+                queue = RRP_QUEUES::USER_INTERFACE;
+                break;
+            }           
+
+        // TODO deprecate this once the new command works
         case MSPCOMMANDS::MSP_SET_MOTOR_HBRIDGE:
             if (_statusProcessor->getMode() == RR_CMODES::CMODE_MANUAL_FLIGHT) {
                 queue = RRP_QUEUES::MICROCONTROLLER;

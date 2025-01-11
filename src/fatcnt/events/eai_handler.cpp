@@ -7,8 +7,9 @@ dlib::logger dlog_eai("rr_robot_eai");
 /*
  * Perform initilization.
  */
-void EaiHandler::init(Environment* env, 
+void EaiHandler::init(
     StateIface* state,
+    Environment* env, 
     StateManagerIface*  sp, 
     AiGenerateData* agd,
     Serializer<Event*, std::vector<uint8_t>>* s_ctl,  

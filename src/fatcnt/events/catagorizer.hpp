@@ -52,7 +52,7 @@ namespace rrobot {
         private:
             RrCatagorizerMapper*  _mapper = nullptr;
             StateIface*           _state  = nullptr;
-            vector<thread*>       _threads;
+            std::vector<thread*>  _threads;
             RRP_STATUS            _status = RRP_STATUS::INITILIZING;
             Environment*          _environment;
             StateManagerIface* _statusProcessor = nullptr;

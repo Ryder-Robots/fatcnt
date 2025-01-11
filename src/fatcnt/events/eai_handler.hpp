@@ -31,8 +31,9 @@ namespace rrobot {
          * @param inbound serilizer
          * @param outbound serializer
          */
-        void init(Environment* env, 
+        void init(
             StateIface* state,
+            Environment* env,
             StateManagerIface*  sp,
             AiGenerateData* agd,
             Serializer<Event*, std::vector<uint8_t>>* s_ctl,  
