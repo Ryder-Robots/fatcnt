@@ -122,15 +122,8 @@ pkg_search_module(DLIB REQUIRED dlib-1)
 
 find_package(Boost 1.74.0 COMPONENTS program_options REQUIRED )
 
-FetchContent_Declare(
-    lazycsv
-    GIT_REPOSITORY https://github.com/ashtum/lazycsv.git
-    GIT_TAG master
-)
-FetchContent_MakeAvailable(lazycsv)
-
 add_library(ctl SHARED  ${fatcnt_SOURCES})
-target_link_libraries(ctl pthread  ${LIBSERIAL_LIBRARIES} lazycsv)
+target_link_libraries(ctl pthread  ${LIBSERIAL_LIBRARIES})
 if (BUILD_WITH_WIRINGPI)
   target_link_libraries(ctl wiringPi)
 endif()

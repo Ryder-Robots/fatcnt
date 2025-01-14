@@ -16,7 +16,7 @@ namespace rrobot {
  */
 class HbridgeController : public EventHandler {
    public:
-    HbridgeController(int in1 = 23, int in2 = 24, int in3 = 27, int in4 = 17, int ena = 12, int enb = 13)
+    HbridgeController(int in1 = 23, int in2 = 24, int in3 = 27, int in4 = 17, int ena = 18, int enb = 13)
         : _in1(in1), _in2(in2), _in3(in3), _in4(in4), _ena(ena), _enb(enb) {}
 
     /**
