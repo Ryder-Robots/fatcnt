@@ -7,6 +7,9 @@
 #include <fatcnt/events/uihandler.hpp>
 #include <fatcnt/events/statushandler.hpp>
 #include <fatcnt/events/hbridgecontroller.hpp>
+#include <fatcnt/events/eai_handler.hpp>
+#include <fatcnt/events/msp104/msp104_ctl_in.hpp>
+#include <fatcnt/events/msp104/msp104_hbridge_serializer.hpp>
 #include "catagorizermapperbase.hpp"
 
 namespace rrobot {
@@ -19,11 +22,11 @@ namespace rrobot {
     class LdSqu001Mapper : public CatagorizerMapperBase {
         public:
 
-            vector<EventHandler*> createEventHandlers() override;
+            std::vector<EventHandler*> createEventHandlers() override;
 
             RRP_QUEUES mapQueue(Event* event) override;
 
-            vector<RRP_QUEUES> queueNames() override;
+            std::vector<RRP_QUEUES> queueNames() override;
 
             void init(Environment* environment, StateIface* state, StateManagerIface* statusProcessor) override;
 

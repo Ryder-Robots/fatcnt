@@ -40,3 +40,11 @@ void StateManager::setMode(RR_CMODES mode) {
     int32_t statuses = STATUS_BITMASK(flags);    
     _state->setFlags(0 | statuses | mode);
 }
+
+void StateManager::push_queue(RRP_QUEUES qname, Event *event) {
+    queue<Event*>* queue = _state->getQueues()->getQueue(qname);
+    mutex* mtx = _state->getQueues()->getLock(qname);
+
+    const std::lock_guard<std::mutex> lock(*mtx);
+    queue->push(event);
+}

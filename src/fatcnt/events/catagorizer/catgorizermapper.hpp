@@ -31,7 +31,7 @@ namespace rrobot {
              * @brief
              * creates the event handler mapping.
              */
-            virtual vector<EventHandler*> createEventHandlers() = 0;
+            virtual std::vector<EventHandler*> createEventHandlers() = 0;
             
             /**
              * @fn mapDirection
@@ -45,7 +45,7 @@ namespace rrobot {
              * @brief
              * Returns a vector of queue names, this is used to create queues for drone.
              */
-            virtual vector<RRP_QUEUES> queueNames() = 0;
+            virtual std::vector<RRP_QUEUES> queueNames() = 0;
     };
 }
 

@@ -6,7 +6,7 @@ using json = nlohmann::json;
 
 dlib::logger dlog_ui("rr_robot_ui");
 
-void UiHandler::init(External* external, Environment* environment, StateIface* state, Serializer<json>* serializer) {
+void UiHandler::init(External* external, Environment* environment, StateIface* state, Serializer<json, Event*>* serializer) {
     /**
      * forwards messages from USER_INTERFACE to catagorizer, if they are authenticated
      * messages from catagorizer are sent to socket.

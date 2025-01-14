@@ -4,7 +4,7 @@
 #include <fatcnt/events/Event.hpp>
 
 namespace rrobot {
-    template <typename T> class Serializer {
+    template <typename T, typename E> class Serializer {
         public:
 
         /**
@@ -12,14 +12,14 @@ namespace rrobot {
          * @brief
          * serialize event.
          */
-        virtual T serialize(Event* event) {return nullptr;};
+        virtual T serialize(E event) = 0;
 
         /**
          * @fn deserialize
          * @brief
          * deserialize inbound event based upon the direction given in event.
          */
-        virtual Event* deserialize(T event) {return nullptr;};
+        virtual E deserialize(T event) = 0;
 
         /**
          * @fn deserialize
@@ -27,7 +27,7 @@ namespace rrobot {
          * when direction is defined then override the direction on the inbound variable.
          * 
          */
-        virtual Event* deserialize(T event, MSPDIRECTION direction) {return deserialize(event);}
+        virtual E deserialize(T event, MSPDIRECTION direction) {return deserialize(event);}
     };
 }
 

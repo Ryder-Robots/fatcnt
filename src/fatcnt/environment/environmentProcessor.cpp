@@ -10,8 +10,9 @@ Environment EnviromentProcessor::createEnvironment(json manifest) {
     Queues queues = createQueues(manifest);
     Server server = createServer(manifest);
     Logging logging = createLogging(manifest);
+    EaiTrainingData training_data = createAiTrainingData(manifest);
 
-    return Environment(hwModel, mc, version, queues, server, logging);
+    return Environment(hwModel, mc, version, queues, server, logging, training_data);
 }
 
 Environment* EnviromentProcessor::createEnvironmentRef(json manifest) {
@@ -22,8 +23,9 @@ Environment* EnviromentProcessor::createEnvironmentRef(json manifest) {
     Queues queues = createQueues(manifest);
     Server server = createServer(manifest);
     Logging logging = createLogging(manifest);
+    EaiTrainingData training_data = createAiTrainingData(manifest);
 
-    return new Environment(hwModel, mc, version, queues, server, logging);
+    return new Environment(hwModel, mc, version, queues, server, logging, training_data);
 }
 
 HwModel EnviromentProcessor::createHwModel(json manifest) {
@@ -82,4 +84,16 @@ Logging EnviromentProcessor::createLogging(json manifest) {
     VALID_LOGLEVELS;
     dlib::log_level logLevel = VALID_LOGLEVELS_KEYS.at(manifest["logging"]["logLevel"]);
     return Logging(logLevel);
+}
+
+EaiTrainingData EnviromentProcessor::createAiTrainingData(json manifest) {
+    vector<string> keys = {"data", "batch_size", "queue_fc", "queue_mc"};
+    verify(manifest, keys, "ai_training_data");
+    VALID_RRP_QUEUES_INIT;
+    return EaiTrainingData(
+        manifest["ai_training_data"]["data"],
+        manifest["ai_training_data"]["batch_size"],
+        VALID_RRP_QUEUES_KEYS.at(manifest["ai_training_data"]["queue_fc"]),
+        VALID_RRP_QUEUES_KEYS.at(manifest["ai_training_data"]["queue_mc"])
+    );
 }

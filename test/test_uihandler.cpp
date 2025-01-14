@@ -121,7 +121,7 @@ TEST(TestUniHandler, TestInit) {
     Environment environment = EnviromentProcessor::createEnvironment(manifest);
     Environment* env = EnviromentProcessor::createEnvironmentRef(manifest);
     State* state = StateFactory::createState(environment, directions);
-    Serializer<json>* serializer = new Jseralizer();
+    Serializer<json, Event*>* serializer = new Jseralizer();
 
     External* external = new MockExternal();
 
@@ -139,7 +139,7 @@ TEST(TestUiHandler, TestInBoundEvents) {
     vector<RRP_QUEUES> directions = {RRP_QUEUES::USER_INTERFACE, RRP_QUEUES::CATEGORIZER};
     Environment environment = EnviromentProcessor::createEnvironment(manifest);
     State* state = StateFactory::createState(environment, directions);
-    Serializer<json>* serializer = new Jseralizer();
+    Serializer<json, Event*>* serializer = new Jseralizer();
 
     MockExternal external = MockExternal();
     uihandler.init(&external, &environment, state, serializer);
@@ -208,7 +208,7 @@ TEST(TestUiHandler, TestOutBoundEvents) {
     vector<RRP_QUEUES> directions = {RRP_QUEUES::USER_INTERFACE, RRP_QUEUES::CATEGORIZER};
     Environment environment = EnviromentProcessor::createEnvironment(manifest);
     State* state = StateFactory::createState(environment, directions);
-    Serializer<json>* serializer = new Jseralizer();
+    Serializer<json, Event*>* serializer = new Jseralizer();
 
     MockExternal external = MockExternal();
     uihandler.init(&external, &environment, state, serializer);
@@ -248,7 +248,7 @@ TEST(TestUiHandler, TestIoNetworkException) {
     Environment environment = EnviromentProcessor::createEnvironment(manifest);
     Environment* env = EnviromentProcessor::createEnvironmentRef(manifest);
     State* state = StateFactory::createState(environment, directions);
-    Serializer<json>* serializer = new Jseralizer();
+    Serializer<json, Event*>* serializer = new Jseralizer();
     MockExternal2 external = MockExternal2();
 
     EXPECT_CALL(external, recv_rr(_, _)).WillOnce(Return(-1));

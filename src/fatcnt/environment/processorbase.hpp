@@ -12,7 +12,7 @@ using json = nlohmann::json;
 namespace rrobot {
     class ProcessorBase {
         protected:
-            static bool verify(json manifest, vector<string> keys, string container);
+            static bool verify(json manifest, std::vector<string> keys, string container);
     };
 }
 

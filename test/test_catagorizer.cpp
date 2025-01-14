@@ -13,6 +13,7 @@ using namespace rrobot;
 namespace fs = std::filesystem;
 
 class MockStatusProcessor : public StateManagerIface {
+    public:
     MOCK_METHOD(RR_CMODES, getMode, (), (override));
     MOCK_METHOD(RRP_STATUS, getStatus, (), (override));
     MOCK_METHOD(void, addHandler, (EventHandler*), (override));
@@ -21,6 +22,12 @@ class MockStatusProcessor : public StateManagerIface {
     MOCK_METHOD(StateIface*, getState, (), (override));
     MOCK_METHOD(Environment*, getEnv, (), (override));
     MOCK_METHOD(int32_t, getFlags, (), (override));
+
+    void push_queue(RRP_QUEUES qname, Event *event) override {
+        _state->getQueues()->getQueue(qname)->push(event);
+    }
+
+    StateIface* _state = nullptr;
 };
 
 // Mock classes
@@ -82,6 +89,7 @@ class TestCatagorizer : public ::testing::Test {
         env = EnviromentProcessor::createEnvironmentRef(manifest);
         state = StateFactory::createState(*env, queuesNames);
         mapper = new MockRrCatagorizerMapper();
+        _mockStatusProcessor->_state = state;
         mapper->init(env, state, _mockStatusProcessor);
         catagorizer->init(state, env, mapper, _mockStatusProcessor);
     }
@@ -122,7 +130,6 @@ TEST_F(TestCatagorizer, TestIdent) {
     }
 
     EXPECT_EQ(0, queue->size());
-
 
     queue = state->getQueues()->getQueue(RRP_QUEUES::USER_INTERFACE);
     EXPECT_EQ(1, queue->size());

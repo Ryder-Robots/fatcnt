@@ -7,6 +7,7 @@
 #include <fatcnt/environment/queues.hpp>
 #include <fatcnt/environment/rr_server.hpp>
 #include <fatcnt/environment/logging.hpp>
+#include <fatcnt/environment/ai/eai_training_data.hpp>
 
 namespace rrobot {
 
@@ -19,13 +20,14 @@ namespace rrobot {
     class Environment {
         public:
             Environment(const HwModel hwmodel, const RrSerial mc, const RrVersion rrVersion, const Queues queues, 
-                const Server server, const Logging logging) :
+                const Server server, const Logging logging, const EaiTrainingData ai_training_data) :
                 _hwModel(hwmodel),
                 _mc(mc),
                 _version(rrVersion),
                 _queues(queues),
                 _server(server),
-                _logging(logging) {}
+                _logging(logging),
+                _ai_training_data(ai_training_data) {}
 
             HwModel   getHwModel() {return _hwModel;}
             RrSerial  getMc() {return _mc;}
@@ -33,6 +35,8 @@ namespace rrobot {
             Queues    getQueues() {return _queues;}
             Server    getServer() {return _server;}
             Logging   getLogging() {return _logging;}
+            EaiTrainingData getAuTrainingData() {return _ai_training_data;}
+
             
         private:
             const HwModel   _hwModel;
@@ -41,6 +45,7 @@ namespace rrobot {
             const Queues    _queues;
             const Server    _server;
             const Logging   _logging;
+            const EaiTrainingData _ai_training_data;
     };
 }
 

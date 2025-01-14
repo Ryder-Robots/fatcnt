@@ -15,13 +15,7 @@ StateManagerIface*  statusProcessor) {
 }
 
 bool RrCatagorizer::consume(Event* event, StateIface* state) {
-    RRP_QUEUES queueName = _mapper->mapQueue(event);
-    queue<Event*>* queue = state->getQueues()->getQueue(queueName);
-    mutex* mtx = state->getQueues()->getLock(queueName);
-
-    const std::lock_guard<std::mutex> lock(*mtx);
-    queue->push(event);
-
+    _statusProcessor->push_queue(_mapper->mapQueue(event), event);
     return true;
 }
 

@@ -18,6 +18,8 @@ if (MSP_SKULD001)
   set(MANIFEST_DESCRIPTION "Configuration for SKULD001")
   set(MANIFEST_MULTITYPE "LANDDRONE_2W")
   set(MANIFEST_MSPVERSION "SKULD001")
+  set(MANIFEST_AI_QUEUE_FC "MICROCONTROLLER")
+  set(MANIFEST_AI_QUEUE_MC "MICROCONTROLLER")
   configure_file(resources/manifests/manifest.json.in resources/manifests/manifest.json @ONLY)
   configure_file(resources/fatcnt.env.in resources/fatcnt.env @ONLY)
 else()
@@ -34,7 +36,7 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CPACK_PACKAGE_NAME "fatcnt")
 set(CPACK_PACKAGE_VERSION_MAJOR "0")
 set(CPACK_PACKAGE_VERSION_MINOR "0")
-set(CPACK_PACKAGE_VERSION_PATCH "2")
+set(CPACK_PACKAGE_VERSION_PATCH "3")
 set(CPACK_DEBIAN_PACKAGE_DEPENDS "libserial-dev")
 # set(CPACK_DEBIAN_PACKAGE_DEPENDS "dlib")
 set(CPACK_SOURCE_IGNORE_FILES "/gtest/;/googletest/")
@@ -88,6 +90,9 @@ set(fatcnt_SOURCES
   src/fatcnt/events/eventhandler.cpp
   src/fatcnt/events/uihandler.cpp
   src/fatcnt/events/statushandler.cpp
+  src/fatcnt/events/msp104/msp104_ctl_in.cpp
+  src/fatcnt/events/eai_handler.cpp
+  src/fatcnt/events/ai/ai_training_data.cpp
   src/fatcnt/protocols/common/curators/rrp/msp_ident_curator.cpp
   src/fatcnt/protocols/common/curators/rrp/msp_mode_curator.cpp
   src/fatcnt/events/ui/jserializer.cpp
@@ -95,9 +100,10 @@ set(fatcnt_SOURCES
   src/fatcnt/events/catagorizer/mapperfactory.cpp
   src/fatcnt/com/server.cpp
 )
-
-if (BUILD_WITH_WIRINGPI)
-  list(APPEND fatcnt_SOURCES 
+     
+if (MSP_SKULD001)
+  list(APPEND fatcnt_SOURCES
+    src/fatcnt/events/msp104/msp104_hbridge_serializer.cpp
     src/fatcnt/events/catagorizer/ldsqu001mapper.cpp 
     src/fatcnt/events/hbridgecontroller.cpp)
 endif()
@@ -117,9 +123,7 @@ pkg_search_module(DLIB REQUIRED dlib-1)
 find_package(Boost 1.74.0 COMPONENTS program_options REQUIRED )
 
 add_library(ctl SHARED  ${fatcnt_SOURCES})
-target_link_libraries(ctl pthread)
-target_link_libraries(ctl ${LIBSERIAL_LIBRARIES})
-
+target_link_libraries(ctl pthread  ${LIBSERIAL_LIBRARIES})
 if (BUILD_WITH_WIRINGPI)
   target_link_libraries(ctl wiringPi)
 endif()
@@ -186,6 +190,21 @@ add_executable(test_status_processor test/test_status_processor.cpp)
 set_target_properties(test_status_processor PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/test)
 target_link_libraries(test_status_processor GTest::gtest_main ctl dlib gmock)
 gtest_discover_tests(test_status_processor  WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/resources")
+
+add_executable(test_ratio test/test_ratio.cpp)
+set_target_properties(test_ratio PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/test)
+target_link_libraries(test_ratio GTest::gtest_main ctl dlib gmock)
+gtest_discover_tests(test_ratio  WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/resources")
+
+add_executable(test_msp104_ctl_in test/test_msp104_ctl_in.cpp)
+set_target_properties(test_msp104_ctl_in PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/test)
+target_link_libraries(test_msp104_ctl_in GTest::gtest_main ctl dlib gmock)
+gtest_discover_tests(test_msp104_ctl_in  WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/resources")
+
+add_executable(test_ai_training_data test/test_ai_training_data.cpp)
+set_target_properties(test_ai_training_data PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/test)
+target_link_libraries(test_ai_training_data GTest::gtest_main ctl dlib gmock)
+gtest_discover_tests(test_ai_training_data  WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/resources")
 
 if (BUILD_WITH_WIRINGPI)
   add_executable(test_hbridgehandler test/test_hbridgehandler.cpp)
