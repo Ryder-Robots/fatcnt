@@ -6,29 +6,24 @@ include(FindPkgConfig)
 include(CMakeDependentOption)
 
 cmake_dependent_option(MSP_SKULD001
-    "Enable ${PROJECT_NAME} with SKULD001 support" ON
-    "MSP_SKULD001" ON)
-cmake_dependent_option(BUILD_WITH_WIRINGPI
-    "Enable ${PROJECT_NAME} libwiring support" ON
-    "BUILD_WITH_WIRINGPI" ON)
+    "Enable ${PROJECT_NAME} with SKULD001 support" OFF
+    "MSP_SKULD001" OFF)
+  
+cmake_dependent_option(MSP_SKULD002
+    "Enable ${PROJECT_NAME} with SKULD002 support" ON
+    "MSP_SKULD002" ON)
 
 message(CHECK_START "MSP_VERSION")
 if (MSP_SKULD001)
-  message(CHECK_PASS "found SKULD001")
-  set(MANIFEST_DESCRIPTION "Configuration for SKULD001")
-  set(MANIFEST_MULTITYPE "LANDDRONE_2W")
+  message(CHECK_PASS  "found SKULD001")
   set(MANIFEST_MSPVERSION "SKULD001")
-  set(MANIFEST_AI_QUEUE_FC "MICROCONTROLLER")
-  set(MANIFEST_AI_QUEUE_MC "MICROCONTROLLER")
-  configure_file(resources/manifests/manifest.json.in resources/manifests/manifest.json @ONLY)
-  configure_file(resources/fatcnt.env.in resources/fatcnt.env @ONLY)
+  set(MANIFEST_DESCRIPTION "Configuration for SKULD001")
+elseif (MSP_SKULD002) 
+  message(CHECK_PASS " found SKULD002")
+  set(MANIFEST_MSPVERSION "SKULD002")
+  set(MANIFEST_DESCRIPTION "Configuration for SKULD002")
 else()
-  message(CHECK_FAILED "no MSP version found")
-endif()
-
-message(CHECK_START "wiringPi")
-if(BUILD_WITH_WIRINGPI)
-  message(CHECK_PASS "compiling with wiringPi")
+  message(CHECK_FAILED "MSP_VERSION NOT SET!")  
 endif()
 
 set(CPACK_GENERATOR "DEB")    
@@ -36,9 +31,10 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CPACK_PACKAGE_NAME "fatcnt")
 set(CPACK_PACKAGE_VERSION_MAJOR "0")
 set(CPACK_PACKAGE_VERSION_MINOR "0")
-set(CPACK_PACKAGE_VERSION_PATCH "3")
+set(CPACK_PACKAGE_VERSION_PATCH "4")
+
+# TODO: Move this EXTRA_LIB for drone that needs it
 set(CPACK_DEBIAN_PACKAGE_DEPENDS "libserial-dev")
-# set(CPACK_DEBIAN_PACKAGE_DEPENDS "dlib")
 set(CPACK_SOURCE_IGNORE_FILES "/gtest/;/googletest/")
 set(CPACK_PACKAGE_CONTACT "Aaron Spiteri")
 set(CPACK_DEBIAN_FILE_NAME DEB-DEFAULT)
@@ -68,11 +64,6 @@ install(FILES "${CMAKE_CURRENT_BINARY_DIR}/lib/libctl.so" DESTINATION
 
 include(CPack)
 
-# For Land drone 1, libwire is used instead of a micro-controller.
-if(BUILD_WITH_WIRINGPI)
-  set(CPACK_DEBIAN_PACKAGE_DEPENDS "wiringpi, wiringpi (>= 3.2)")
-endif()
-
 set(VERSION ${CPACK_PACKAGE_VERSION_MAJOR}.${CPACK_PACKAGE_VERSION_MINOR}.${CPACK_PACKAGE_VERSION_PATCH})
 set(JSON_VERSION v3.11.3)
 
@@ -81,6 +72,21 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/arc)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_TEST ${CMAKE_BINARY_DIR}/test)
 
+# Include directory
+add_subdirectory(include)
+
+FetchContent_Declare(json URL https://github.com/nlohmann/json/releases/download/${JSON_VERSION}/json.tar.xz)
+FetchContent_MakeAvailable(json)
+list(APPEND CMAKE_MODULE_PATH ${nlohmann_json})
+
+pkg_check_modules(LIBSERIAL REQUIRED libserial)
+
+include_directories(${json_SOURCE_DIR}/include src ${LIBSERIAL_INCLUDE_DIRS} ${PROJECT_BINARY_DIR}/include)
+pkg_search_module(DLIB REQUIRED dlib-1)
+
+find_package(Boost 1.74.0 COMPONENTS program_options REQUIRED )
+
+# Sources common to all drones
 set(fatcnt_SOURCES
   src/fatcnt/environment/environmentProcessor.cpp
   src/fatcnt/environment/processorbase.cpp
@@ -100,33 +106,24 @@ set(fatcnt_SOURCES
   src/fatcnt/events/catagorizer/mapperfactory.cpp
   src/fatcnt/com/server.cpp
 )
-     
-if (MSP_SKULD001)
+
+# SOURCE CODE SPECIFIC LD drones without micro-processors
+set(EXTRA_LIBS "")
+if (MSP_SKULD001 OR MSP_SKULD002)
+  set(EXTRA_LIBS "wiringPi")
+  set(MANIFEST_MULTITYPE "LANDDRONE_2W")
+  set(MANIFEST_AI_QUEUE_FC "MICROCONTROLLER")
+  set(MANIFEST_AI_QUEUE_MC "MICROCONTROLLER")
+  configure_file(resources/manifests/manifest.json.in resources/manifests/manifest.json @ONLY)
+  configure_file(resources/fatcnt.env.in resources/fatcnt.env @ONLY)
   list(APPEND fatcnt_SOURCES
     src/fatcnt/events/msp104/msp104_hbridge_serializer.cpp
     src/fatcnt/events/catagorizer/ldsqu001mapper.cpp 
     src/fatcnt/events/hbridgecontroller.cpp)
+  set(CPACK_DEBIAN_PACKAGE_DEPENDS "wiringpi, wiringpi (>= 3.2)")
 endif()
-
-# Include directory
-add_subdirectory(include)
-
-FetchContent_Declare(json URL https://github.com/nlohmann/json/releases/download/${JSON_VERSION}/json.tar.xz)
-FetchContent_MakeAvailable(json)
-list(APPEND CMAKE_MODULE_PATH ${nlohmann_json})
-
-pkg_check_modules(LIBSERIAL REQUIRED libserial)
-
-include_directories(${json_SOURCE_DIR}/include src ${LIBSERIAL_INCLUDE_DIRS} ${PROJECT_BINARY_DIR}/include)
-pkg_search_module(DLIB REQUIRED dlib-1)
-
-find_package(Boost 1.74.0 COMPONENTS program_options REQUIRED )
-
 add_library(ctl SHARED  ${fatcnt_SOURCES})
-target_link_libraries(ctl pthread  ${LIBSERIAL_LIBRARIES})
-if (BUILD_WITH_WIRINGPI)
-  target_link_libraries(ctl wiringPi)
-endif()
+target_link_libraries(ctl pthread  ${LIBSERIAL_LIBRARIES} ${EXTRA_LIBS})
 
 add_executable(fatcnt src/fatcnt/fatcnt.hpp src/fatcnt/fatcnt.cpp)
 target_link_libraries(fatcnt ctl)
@@ -140,7 +137,6 @@ FetchContent_Declare(
   GIT_TAG release-1.11.0
 )
 FetchContent_MakeAvailable(googletest)
-
 
 enable_testing()
 include(GoogleTest)
@@ -206,7 +202,7 @@ set_target_properties(test_ai_training_data PROPERTIES RUNTIME_OUTPUT_DIRECTORY 
 target_link_libraries(test_ai_training_data GTest::gtest_main ctl dlib gmock)
 gtest_discover_tests(test_ai_training_data  WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/resources")
 
-if (BUILD_WITH_WIRINGPI)
+if (MSP_SKULD001 OR MSP_SKULD002)
   add_executable(test_hbridgehandler test/test_hbridgehandler.cpp)
   set_target_properties(test_hbridgehandler PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/test)
   target_link_libraries(test_hbridgehandler GTest::gtest_main ctl dlib gmock)
