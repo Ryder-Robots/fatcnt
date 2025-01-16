@@ -14,18 +14,30 @@ AiGenerateData::AiGenerateData(Environment* env) {
 AiGenerateData::~AiGenerateData() {}
 
 void AiGenerateData::open_write() {
-    dlog_ai_td << dlib::LINFO << "opening training data files";
-    _outstream_data.open(_data_fname, ios::app | ios::binary);
+    _outstream_data.exceptions(ofstream::failbit | ofstream::badbit);
+    dlog_ai_td << dlib::LINFO << "opening training data files for write";
+    try {
+        _outstream_data.open(_data_fname, ios::app | ios::binary);
+    } catch (const ofstream::failure& e) {
+        dlog_ai_td << dlib::LFATAL << "could not create training files: " << _data_fname << " : reported error was: " << e.what();
+        throw new RrIOException("could not create training files");
+    }
 
     if (!_outstream_data.is_open()) {
-        dlog_ai_td << dlib::LFATAL << "could not create training files";
+        dlog_ai_td << dlib::LFATAL << "could not create training files for an unknown reason";
         throw new RrIOException("could not create training files");
     }
 }
 
 void AiGenerateData::open_read() {
+    _instream_data.exceptions(ofstream::failbit | ofstream::badbit | ofstream::eofbit);
     dlog_ai_td << dlib::LINFO << "opening training data files for read";
-    _instream_data.open(_data_fname, ios::binary);
+    try {
+        _instream_data.open(_data_fname, ios::binary);
+    } catch (const ofstream::failure& e) {
+        dlog_ai_td << dlib::LFATAL << "could not read training files: " << e.what();
+        throw new RrIOException("could not read training files");
+    }
 
     if (!_instream_data.is_open()) {
         dlog_ai_td << dlib::LFATAL << "could not open training files for read";

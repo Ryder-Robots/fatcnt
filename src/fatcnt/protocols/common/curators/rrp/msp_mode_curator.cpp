@@ -16,6 +16,11 @@ Event* msp_mode_curator::deserialize(json in) {
     return event;
 }
 
+// direction is always the default
+Event* msp_mode_curator::deserialize(json in, MSPDIRECTION direction) {
+    return  deserialize(in);
+}
+
 json msp_mode_curator::serialize(Event *in) {
     string command = getCommandString();
     msp_mode payload = in->getPayload<msp_mode>();

@@ -9,7 +9,7 @@
             "type": "cppdbg",
             "request": "launch",
             "program": "${workspaceFolder}/build/bin/fatcnt",
-            "args": ["-m ${workspaceFolder}/build/resources/manifests/manifest.json"],
+            "args": ["-m ${workspaceFolder}/resources/manifests/virtual.2.json"],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}/resources",
             "environment": [],

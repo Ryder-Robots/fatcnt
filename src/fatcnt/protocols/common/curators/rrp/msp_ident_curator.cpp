@@ -35,6 +35,11 @@ Event* msp_ident_curator::deserialize(json in) {
     return event;
 }
 
+// direction is always the default
+Event* msp_ident_curator::deserialize(json in, MSPDIRECTION direction) {
+    return  deserialize(in);
+}
+
 /**
  * @fn serialize
  * @brief
