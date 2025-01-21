@@ -7,11 +7,11 @@ using namespace rrobot;
  */
 Event* Msp104Serializer::deserialize(std::vector<uint8_t> m) {
     // For land drone the only concern is yaw and throttle.
+    _pitch = _ratioD.scale(m[1]);
     _yaw = _ratioD.scale(m[2]);
-    _throttle = _ratioD.scale(m[3]);
+    _throttle = _ratioTd.scale(m[3]);
 
-    uint16_t motor1 = T(_throttle), motor2 = T(_throttle), motor3 = 0, motor4 = 0;
-    uint8_t in = (_throttle >= 0) ? EN_FORWARD: EN_BACKWARD;
+    uint8_t in = (_pitch >= 0) ? EN_FORWARD: EN_BACKWARD;
     if (_yaw > 0) {
         in = EN_RIGHT;
     } else if (_yaw < 0) {
@@ -20,10 +20,10 @@ Event* Msp104Serializer::deserialize(std::vector<uint8_t> m) {
 
     msp_set_motor_hbridge *payload = new msp_set_motor_hbridge();
     payload->set_in(in);
-    payload->set_motor1(motor1);
-    payload->set_motor1(motor2);
-    payload->set_motor1(motor3);
-    payload->set_motor1(motor4);
+    payload->set_motor1(_throttle);
+    payload->set_motor2(_throttle);
+    payload->set_motor3(0);
+    payload->set_motor4(0);
 
     return new Event(MSPCOMMANDS::MSP_SET_MOTOR_HBRIDGE, MSPDIRECTION::EXTERNAL_IN, payload);
 }
@@ -32,7 +32,7 @@ std::vector<uint8_t>  Msp104Serializer::serialize(Event* event) {
     
     std::vector<uint8_t> m {
         _ratioS.scale(0),
-        _ratioS.scale(0),
+        _ratioS.scale(_pitch),
         _ratioS.scale(_yaw),
         _ratioS.scale(_throttle),
         _ratioS.scale(0),
