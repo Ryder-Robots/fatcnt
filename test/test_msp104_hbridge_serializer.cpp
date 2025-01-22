@@ -45,3 +45,30 @@ TEST_F(TestHbridgeSerializer, TestBackward) {
     EXPECT_EQ(0, payload.get_motor3());
     EXPECT_EQ(0, payload.get_motor4());   
 }
+
+TEST_F(TestHbridgeSerializer, TestLeftForward) {
+    std::vector<uint8_t> m = {255,0,0,127,0,0,0,0};
+    Event* event = _hbridgeSerializer.deserialize(m);
+
+    msp_set_motor_hbridge payload = event->getPayload<msp_set_motor_hbridge>();
+
+    EXPECT_EQ(0b0110, payload.get_in());
+    EXPECT_EQ(498, payload.get_motor1());
+    EXPECT_EQ(498, payload.get_motor2());
+    EXPECT_EQ(0, payload.get_motor3());
+    EXPECT_EQ(0, payload.get_motor4());   
+}
+
+TEST_F(TestHbridgeSerializer, TestRightForward) {
+    std::vector<uint8_t> m = {255,0,255,127,0,0,0,0};
+    Event* event = _hbridgeSerializer.deserialize(m);
+
+    msp_set_motor_hbridge payload = event->getPayload<msp_set_motor_hbridge>();
+
+    EXPECT_EQ(0b1001, payload.get_in());
+    EXPECT_EQ(498, payload.get_motor1());
+    EXPECT_EQ(498, payload.get_motor2());
+    EXPECT_EQ(0, payload.get_motor3());
+    EXPECT_EQ(0, payload.get_motor4());   
+}
+
