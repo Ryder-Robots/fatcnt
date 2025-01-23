@@ -36,8 +36,12 @@ namespace rrobot {
         std::vector<uint8_t> deserialize(Event* event) override;
 
         private:
-        Ratio<float, uint8_t> _inbound = Ratio<float, uint8_t>(-1, 1, 0, 255);
-        Ratio<uint8_t, float> _outbound = Ratio<uint8_t, float>(0, 255, -1, 1);
+        Ratio<int8_t, uint8_t> _inbound = Ratio<int8_t, uint8_t>(-1, 1, 0, 255);
+        Ratio<uint8_t, int8_t> _outbound = Ratio<uint8_t, int8_t>(0, 255, -1, 1);
+
+        Ratio<uint8_t, uint16_t> _ratioTs = Ratio<uint8_t, uint16_t>(0, 255, 0, 1000);
+        Ratio<uint16_t, uint8_t> _ratioTd = Ratio<uint16_t, uint8_t>(0, 1000, 0, 255);
+
     };
 }
 

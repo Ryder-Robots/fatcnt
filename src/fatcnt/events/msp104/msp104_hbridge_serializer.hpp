@@ -36,7 +36,7 @@ namespace rrobot {
 
             int8_t _yaw;
             uint16_t _throttle;
-            int8_t _roll;
+            int8_t _pitch;
 
             const uint8_t EN_BACKWARD =  0b0101;
             const uint8_t EN_FORWARD =  0b1010;

@@ -17,11 +17,13 @@ class TestHbridgeSerializer : public ::testing::Test {
 };
 
 TEST_F(TestHbridgeSerializer, TestForward) {
-    // pitch = 0 : 127
-    // yaw = -1 : 0
-    // throttle 500 : 0
+    // 0 = roll
+    // 1 = pitch
+    // 2 = yaw
+    // 3 = throttle
 
-    std::vector<uint8_t> m = {255,0,128,127,0,0,0,0};
+
+    std::vector<uint8_t> m = {0,255,128,127,0,0,0,0};
     Event* event = _hbridgeSerializer.deserialize(m);
 
     msp_set_motor_hbridge payload = event->getPayload<msp_set_motor_hbridge>();
@@ -47,7 +49,7 @@ TEST_F(TestHbridgeSerializer, TestBackward) {
 }
 
 TEST_F(TestHbridgeSerializer, TestLeftForward) {
-    std::vector<uint8_t> m = {255,0,0,127,0,0,0,0};
+    std::vector<uint8_t> m = {0,255,0,127,0,0,0,0};
     Event* event = _hbridgeSerializer.deserialize(m);
 
     msp_set_motor_hbridge payload = event->getPayload<msp_set_motor_hbridge>();
@@ -60,7 +62,7 @@ TEST_F(TestHbridgeSerializer, TestLeftForward) {
 }
 
 TEST_F(TestHbridgeSerializer, TestRightForward) {
-    std::vector<uint8_t> m = {255,0,255,127,0,0,0,0};
+    std::vector<uint8_t> m = {0,255,255,127,0,0,0,0};
     Event* event = _hbridgeSerializer.deserialize(m);
 
     msp_set_motor_hbridge payload = event->getPayload<msp_set_motor_hbridge>();

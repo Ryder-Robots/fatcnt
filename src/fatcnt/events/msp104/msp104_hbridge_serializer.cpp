@@ -7,11 +7,11 @@ using namespace rrobot;
  */
 Event* Msp104Serializer::deserialize(std::vector<uint8_t> m) {
     // For land drone the only concern is yaw and throttle.
-    _roll = _ratioD.scale(m[0]);
+    _pitch = _ratioD.scale(m[1]);
     _yaw = _ratioD.scale(m[2]);
     _throttle = _ratioTd.scale(m[3]);
 
-    uint8_t in = (_roll >= 0) ? EN_FORWARD: EN_BACKWARD;
+    uint8_t in = (_pitch >= 0) ? EN_FORWARD: EN_BACKWARD;
     if (_yaw > 0) {
         in = EN_RIGHT;
     } else if (_yaw < 0) {
@@ -31,8 +31,8 @@ Event* Msp104Serializer::deserialize(std::vector<uint8_t> m) {
 std::vector<uint8_t>  Msp104Serializer::serialize(Event* event) {
     
     std::vector<uint8_t> m {
-        _ratioS.scale(_roll),
         _ratioS.scale(0),
+        _ratioS.scale(_pitch),
         _ratioS.scale(_yaw),
         _ratioTs.scale(_throttle),
         _ratioS.scale(0),
