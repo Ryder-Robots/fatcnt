@@ -1,12 +1,11 @@
 #ifndef MSP104_HBRIDGE_SERIALIZER
 #define MSP104_HBRIDGE_SERIALIZER
 
-#include <vector>
 #include <algorithm>
-#include <fatcnt/events/serializer.hpp>
-#include <fatcnt/math/ratio.hpp>
 #include <fatcnt/protocols/common/curators/rrp/msp_motor.hpp>
+#include <fatcnt/protocols/common/curators/rrp/msp_motor_curator.hpp>
 #include <fatcnt/protocols/common/curators/rrp/msp_set_motor_hbridge.hpp>
+#include <fatcnt/events/Event.hpp>
 
 namespace rrobot {
 
@@ -15,29 +14,19 @@ namespace rrobot {
      *  @brief
      *  Converts inbound MSP 104 event to hbridge event.
      * 
+     * TODO: May move this to robot repository.
+     * 
      */ 
-    class Msp104Serializer : public Serializer<std::vector<uint8_t>, Event*> {
+    class Msp104Serializer  {
         public:
         /**
          * @fn deserialize
          * @brief
          * After recieving an msp_motor event convert to hbridge event.
          */
-        Event* deserialize(std::vector<uint8_t>) override;
-        std::vector<uint8_t> serialize(Event* event) override;
+        Event* convert(Event* event);
 
         private:
-            Ratio<uint8_t, uint16_t> _ratioTd = Ratio<uint8_t, uint16_t>(0, 255, 0, 1000);
-            Ratio<uint8_t, int8_t> _ratioD = Ratio<uint8_t, int8_t>(0, 255, -1, 1);
-
-
-            Ratio<uint16_t, uint8_t> _ratioTs = Ratio<uint16_t, uint8_t>(0, 1000, 0, 255);
-            Ratio<int8_t, uint8_t> _ratioS = Ratio<int8_t, uint8_t>(-1, 1, 0, 255);
-
-            int8_t _yaw;
-            uint16_t _throttle;
-            int8_t _pitch;
-
             const uint8_t EN_BACKWARD =  0b0101;
             const uint8_t EN_FORWARD =  0b1010;
             const uint8_t EN_LEFT = 0b0110;

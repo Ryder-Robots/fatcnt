@@ -1,5 +1,7 @@
 #include "fatcnt.hpp"
 
+// TODO: move this code to a common location, so that mappers can be added to separate
+// repositories for different drones.
 /**
  * MIT License
  *

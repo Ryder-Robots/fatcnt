@@ -7,7 +7,7 @@
 #include <fatcnt/state/statemanageriface.hpp>
 #include <fatcnt/events/serializer.hpp>
 #include <fatcnt/events/eventhandler.hpp>
-#include <fatcnt/events/ai/ai_training_data.hpp>
+#include <fatcnt/events/ai/ai_predictor.hpp>
 
 using namespace dlib;
 using namespace std;
@@ -25,19 +25,16 @@ namespace rrobot {
          * @fn init
          * @brief
          * inilizes EAI handler, including underlaying handler layer.
-         * @param env global environment.
          * @param state current state
+         * @param env global environment.
          * @param state processor
-         * @param inbound serilizer
-         * @param outbound serializer
+         * @param dnn predictor/trainer
          */
         void init(
             StateIface* state,
             Environment* env,
             StateManagerIface*  sp,
-            AiGenerateData* agd,
-            Serializer<Event*, std::vector<uint8_t>>* s_ctl,  
-            Serializer<std::vector<uint8_t>, Event*>* s_out);
+            AiPredictor* s_ctl);
 
         /**
          * @fn name
@@ -80,16 +77,14 @@ namespace rrobot {
         private:
         Environment* _env;
         StateIface* _state;
-        Serializer<Event*, std::vector<uint8_t>>* _s_ctl;
-        Serializer<std::vector<uint8_t>, Event*>* _s_out;
+        AiPredictor* _s_ctl;
         StateManagerIface* _sp;
-        AiGenerateData* _agd;
         RRP_QUEUES _fc_queue;
         RRP_QUEUES _mc_queue;
         bool _available = false;
         RR_CMODES _current_mode = RR_CMODES::CMODE_NOT_SET;
 
-        bool consume_man_flight(Event* event, StateIface* state);
+        bool predict(Event* event, StateIface* state);
     };
 }
 

@@ -37,10 +37,9 @@ std::vector<EventHandler*> LdSqu001Mapper::createEventHandlers() {
     hbridge->init(_state, _environment);
 
     EaiHandler* aiHandler = new EaiHandler();
-    aiHandler->init(_state, _environment, _statusProcessor, 
-        new AiGenerateData(_environment), 
-        new Msp104Ctl(),
-        new Msp104Serializer());
+    AiVirtualPredictor* aiVirtualPredictor = new AiVirtualPredictor();
+    aiVirtualPredictor->init(_state, _environment, _statusProcessor);
+    aiHandler->init(_state, _environment, _statusProcessor, aiVirtualPredictor);
 
     _statusProcessor->addHandler(statusHandler);
     _statusProcessor->addHandler(uiHandler);

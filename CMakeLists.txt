@@ -104,6 +104,7 @@ set(fatcnt_SOURCES
   src/fatcnt/events/ui/jserializer.cpp
   src/fatcnt/events/catagorizer.cpp
   src/fatcnt/events/catagorizer/mapperfactory.cpp
+  src/fatcnt/events/ai/ai_virtual_predictor.cpp
   src/fatcnt/com/server.cpp
 )
 

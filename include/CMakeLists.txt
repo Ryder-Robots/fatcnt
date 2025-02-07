@@ -103,6 +103,7 @@ set(fatcnt_INCLUDE
   fatcnt/events/catagorizer/cmodes.hpp
   fatcnt/state/statemanageriface.hpp
   fatcnt/math/ratio.hpp
+  fatcnt/events/ai/ai_predictor.hpp
 )
 foreach(item ${fatcnt_INCLUDE})
   configure_file("${item}.in" ${item} @ONLY)

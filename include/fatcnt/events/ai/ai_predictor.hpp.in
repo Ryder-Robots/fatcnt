@@ -1,0 +1,49 @@
+/**
+ * 
+ */
+
+
+#ifndef AI_PREDICTOR_HPP
+#define AI_PREDICTOR_HPP
+
+#include <fatcnt/state/statemanageriface.hpp>
+#include <fatcnt/events/Event.hpp>
+
+namespace rrobot {
+
+    /**
+     * @class AiPredictor
+     * @brief
+     * Interface to DNN that makes prediction.
+     */
+    class AiPredictor {
+        public:
+        /**
+         * @fn addFeature
+         * @param event the event to add.
+         * @brief
+         * adds feature to DNN for next prediction.
+         */
+        virtual void addFeature(Event* event) = 0;
+
+        /**
+         * @fn predict
+         * @brief
+         * returns the next prediction, this can get sent to the flight controller.
+         */
+        virtual Event* predict() = 0;
+
+        /**
+         * @fn init()
+         * @param State interface
+         * @param environment (constants)
+         * @param statusProcessor
+         * 
+         * @brief
+         * when implenting the following variables should be kept to check for state changes.
+         */
+        virtual void init(StateIface *state, Environment *environment, StateManagerIface* statusProcessor) = 0;
+    };
+}
+
+#endif
