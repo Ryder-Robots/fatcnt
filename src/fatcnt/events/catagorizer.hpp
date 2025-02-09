@@ -5,7 +5,7 @@
 #include <vector>
 #include <fatcnt/state/state.hpp>
 #include <fatcnt/environment/environment.hpp>
-#include <fatcnt/events/catagorizer/catgorizermapper.hpp>
+#include <fatcnt/events/catagorizer/catagorizermapper.hpp>
 #include <fatcnt/protocols/common/curators/rrp/rrpcurator.hpp>
 #include "eventhandler.hpp"
 

@@ -3,7 +3,7 @@
 
 #include <mutex>
 #include <fatcnt/protocols/common/curators/rrp/msp_mode.hpp>
-#include "catgorizermapper.hpp"
+#include <fatcnt/events/catagorizer/catagorizermapper.hpp>
 
 namespace rrobot {
     /**

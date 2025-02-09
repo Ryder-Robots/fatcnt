@@ -104,6 +104,9 @@ set(fatcnt_INCLUDE
   fatcnt/state/statemanageriface.hpp
   fatcnt/math/ratio.hpp
   fatcnt/events/ai/ai_predictor.hpp
+  fatcnt/main.hpp
+  fatcnt/events/catagorizer/catagorizermapperbase.hpp
+  fatcnt/events/catagorizer/catagorizermapper.hpp
 )
 foreach(item ${fatcnt_INCLUDE})
   configure_file("${item}.in" ${item} @ONLY)

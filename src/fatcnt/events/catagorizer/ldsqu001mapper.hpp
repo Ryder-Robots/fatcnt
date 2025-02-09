@@ -9,7 +9,7 @@
 #include <fatcnt/events/hbridgecontroller.hpp>
 #include <fatcnt/events/eai_handler.hpp>
 #include <fatcnt/events/ai/ai_virtual_predictor.hpp>
-#include "catagorizermapperbase.hpp"
+#include <fatcnt/events/catagorizer/catagorizermapperbase.hpp>
 
 namespace rrobot {
 

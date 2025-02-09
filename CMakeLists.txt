@@ -103,9 +103,9 @@ set(fatcnt_SOURCES
   src/fatcnt/protocols/common/curators/rrp/msp_mode_curator.cpp
   src/fatcnt/events/ui/jserializer.cpp
   src/fatcnt/events/catagorizer.cpp
-  src/fatcnt/events/catagorizer/mapperfactory.cpp
   src/fatcnt/events/ai/ai_virtual_predictor.cpp
   src/fatcnt/com/server.cpp
+  src/fatcnt/main.cpp
 )
 
 # SOURCE CODE SPECIFIC LD drones without micro-processors
@@ -124,13 +124,11 @@ if (MSP_SKULD001 OR MSP_SKULD002)
   set(CPACK_DEBIAN_PACKAGE_DEPENDS "wiringpi, wiringpi (>= 3.2)")
 endif()
 add_library(ctl SHARED  ${fatcnt_SOURCES})
-target_link_libraries(ctl pthread  ${LIBSERIAL_LIBRARIES} ${EXTRA_LIBS})
+target_link_libraries(ctl pthread  ${LIBSERIAL_LIBRARIES} ${EXTRA_LIBS}  ${Boost_LIBRARIES})
 
 add_executable(fatcnt src/fatcnt/fatcnt.hpp src/fatcnt/fatcnt.cpp)
 target_link_libraries(fatcnt ctl)
 target_link_libraries(fatcnt dlib)
-target_link_libraries(fatcnt ${Boost_LIBRARIES})
-
 
 FetchContent_Declare(
   googletest

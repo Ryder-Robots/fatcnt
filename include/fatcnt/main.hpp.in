@@ -1,0 +1,38 @@
+#ifndef MAIN_HPP
+#define MAIN_HPP
+
+#include <signal.h>
+#include <csignal>
+#include <string>
+#include <boost/algorithm/string.hpp>
+#include <fatcnt/environment/environmentProcessor.hpp>
+#include <fatcnt/state/statefactory.hpp>
+#include <fatcnt/state/statemanager.hpp>
+#include <fatcnt/events/catagorizer.hpp>
+
+namespace rrobot {
+
+    /**
+     * Interface to the main application, calling program executes the run() method and 
+     * that should get the program running. 
+     */
+    class FatController {
+        public:
+        int run(int argc, char *argv[]);
+
+        /**
+         * @fn setMapper
+         * @brief
+         * Mapper is defined by the application and is the allows the robot to use the SDK.
+         */
+        void setMapper(RrCatagorizerMapper* mapper) {
+            _mapper = mapper;
+        }
+
+        private:
+        static void signalHandler(int signum);
+        RrCatagorizerMapper* _mapper;
+    };
+}
+
+#endif
