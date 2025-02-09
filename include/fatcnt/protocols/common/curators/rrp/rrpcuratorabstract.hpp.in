@@ -20,8 +20,11 @@ namespace rrobot {
          * @fn deserialize
          * @brief
          * desialize event with payload.
+         * @param in json object representing payload
+         * @param direction optional parameter, that if argued will set directon in event.
          */
         virtual Event* deserialize(json in) = 0;
+        virtual Event* deserialize(json in, MSPDIRECTION direction) = 0;
 
         /**
          * @fn serialize

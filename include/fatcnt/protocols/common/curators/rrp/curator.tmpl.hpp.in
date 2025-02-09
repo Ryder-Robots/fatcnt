@@ -40,8 +40,21 @@ class @CURATOR_CLASS_NAME@ : public RrpCuratorAbstract {
 @CURATOR_SETTERS@
             return event;
         }
+
+        /*
+         * Overrides defaulted dirction, and uses the one specified to allow for two way commands. 
+         */
+        Event* deserialize(json in, MSPDIRECTION direction) override {
+            Event* event;
+                @CLASS_NAME@* payload = new @CLASS_NAME@(); 
+                event = new Event(@MSP_COMMAND@, direction, payload);
+@CURATOR_SETTERS@
+            return event;
+        }
+
         #else
         Event* deserialize(json in) override;
+        Event* deserialize(json in, MSPDIRECTION direction) override;
         #endif
 
         #if @MCURATATOR_SERIALIZER@ == 1

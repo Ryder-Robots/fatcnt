@@ -9,18 +9,14 @@ dlib::logger dlog_eai("rr_robot_eai");
  */
 void EaiHandler::init(
     StateIface* state,
-    Environment* env, 
-    StateManagerIface*  sp, 
-    AiGenerateData* agd,
-    Serializer<Event*, std::vector<uint8_t>>* s_ctl,  
-    Serializer<std::vector<uint8_t>, Event*>* s_out) {
+    Environment* env,
+    StateManagerIface*  sp,
+    AiPredictor* s_ctl) {
 
     _env = env;
     _state = state;
     _s_ctl = s_ctl;
-    _s_out = s_out;
     _sp = sp;
-    _agd = agd;
 
     dlog_eai.set_level(_env->getLogging().getLogLevel());
 
@@ -44,8 +40,10 @@ bool EaiHandler::consume(Event* event, StateIface* state) {
     }
 
     switch(_sp->getMode()) {
+
+        // Put prediction modes at top, they can fall through to predict() method.
         case RR_CMODES::CMODE_MANUAL_FLIGHT:
-            rv = consume_man_flight(event, state);
+            rv = predict(event, state);
             break;
 
         // Print message to logger.
@@ -71,30 +69,20 @@ bool EaiHandler::available() {
 }
 
 /*
- * Handle manual flight event.
+ * Recieve flight controller event, serialize the event based upon requirements of DNN, 
+ * get preditction form DNN and send the event to a closed loop.
  */
-bool EaiHandler::consume_man_flight(Event* event, StateIface* state) {
+bool EaiHandler::predict(Event* event, StateIface* state) {
 
     if (!event->hasPayload()) {
         dlog_eai << dlib::LERROR << "no payload is bound to event - ignoring";
         return false;
     }
+    dlog_eai << dlib::LDEBUG << "AI command";
+    _s_ctl->addFeature(event);
+    Event* fc_event = _s_ctl->predict();
+    _sp->push_queue(_fc_queue, fc_event);
 
-    switch(event->getCommand()) {
-        case MSPCOMMANDS::MSP_MOTOR:
-        {
-            std::vector<uint8_t> training = _s_ctl->deserialize(event);            
-            Event* fc_event = _s_out->deserialize(training);
-            _sp->push_queue(_fc_queue, fc_event);
-
-            std::vector<uint8_t> label = _s_out->serialize(event);
-            _agd->write_data(training, label);
-        }
-        break;
-
-        default:
-        dlog_eai << dlib::LERROR << "non supported command was given";
-    }
 
     return true;
 }
@@ -105,7 +93,6 @@ bool EaiHandler::consume_man_flight(Event* event, StateIface* state) {
 void EaiHandler::setUp() {
     if (_sp->getMode() == RR_CMODES::CMODE_MANUAL_FLIGHT) {
         dlog_eai << dlib::LINFO << "CMODE_MANUAL_FLIGHT detected opening up training file";
-        _agd->open_write();
         _current_mode = RR_CMODES::CMODE_MANUAL_FLIGHT;
     } else if (_sp->getMode() == RR_CMODES::CMODE_NOT_SET) {
         dlog_eai << dlib::LINFO << "CMODE_NOT_SET detected changing mode";
@@ -116,5 +103,5 @@ void EaiHandler::setUp() {
 }
 
 void EaiHandler::tearDown() {
-    _agd->close_write();
+    
 }

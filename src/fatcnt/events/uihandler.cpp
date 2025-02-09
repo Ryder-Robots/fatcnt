@@ -104,7 +104,7 @@ void UiHandler::setUp() {
         throw BadConnectionException("sommething went wrong when accepting connection: " + to_string(errno) + ": " +
                                      strerror(errno));
     }
-    dlog_ui << dlib::LINFO << " established successful connection";
+    dlog_ui << dlib::LINFO << "established successful connection";
 }
 
 void UiHandler::tearDown() {
@@ -131,4 +131,17 @@ void UiHandler::reload() {
     }
     setStatus(RRPSTATUS_HPP::ACTIVE);
     dlog_ui << dlib::LINFO << " established successful connection";
+}
+
+
+void  UiHandler::onError(const std::exception& e) {
+    dlog_ui << dlib::LWARN << "known exception has occurred, checking to see if it is fatal";
+    if (_external->available() > 0) {
+        dlog_ui << dlib::LINFO << "error is not fatal, retaining current connection - resetting to active";
+        setStatus(RRP_STATUS::ACTIVE);
+        return;
+    }
+
+    dlog_ui << dlib::LFATAL << "connection has been broken, resarting";
+    reload();
 }

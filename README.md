@@ -21,3 +21,13 @@ cpack -G DEB
 systemctl start fatcnt
 journalctl -u fatcnt -f
 ```
+
+
+# DESIGN
+
+```
+
+RRP_COMMAND, STATE, MODE, ENV ->  EaiHandler -> AiPredictor->addFeature()
+FC <-  EaiHandler <- AiPredictor.predict()
+
+```

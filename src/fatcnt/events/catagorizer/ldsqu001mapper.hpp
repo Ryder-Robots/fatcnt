@@ -8,8 +8,7 @@
 #include <fatcnt/events/statushandler.hpp>
 #include <fatcnt/events/hbridgecontroller.hpp>
 #include <fatcnt/events/eai_handler.hpp>
-#include <fatcnt/events/msp104/msp104_ctl_in.hpp>
-#include <fatcnt/events/msp104/msp104_hbridge_serializer.hpp>
+#include <fatcnt/events/ai/ai_virtual_predictor.hpp>
 #include "catagorizermapperbase.hpp"
 
 namespace rrobot {

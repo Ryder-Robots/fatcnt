@@ -12,6 +12,7 @@ RrCatagorizerMapper* MapperFactory::getMapper(rrobot::Environment env) {
     switch(env.getHwModel().getMspVersion()) {
         case MSP_VERSION::VIRTUAL:
         case MSP_VERSION::SKULD001:
+        case MSP_VERSION::SKULD002:
             mapper = reinterpret_cast<RrCatagorizerMapper*>(new LdSqu001Mapper());
     }
 

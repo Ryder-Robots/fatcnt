@@ -58,6 +58,14 @@ namespace rrobot {
 
             string name() override {return "uihandler";}
 
+            /**
+             * @fn onError
+             * @brief
+             * checks to see if the error is fatal or not,  fatal is lost connection. 
+             * Connection will be reset. Otherwise status is set back to active.
+             */
+            void onError(const std::exception& e) override;
+
         private:
             External*         _external;
             const char        _delimiter = 0x1E;

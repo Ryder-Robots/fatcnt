@@ -16,6 +16,7 @@ namespace rrobot {
         public:
         json serialize(Event* event) override;
         Event* deserialize(json j) override;
+        Event* deserialize(json event, MSPDIRECTION direction) override;
 
         /*
          * Use constructor to maintain state.

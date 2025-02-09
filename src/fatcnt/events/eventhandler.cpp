@@ -61,7 +61,7 @@ void EventHandler::handleEvent(EventHandler* handler, StateIface* state) {
 
         } catch (const std::exception& e) {
             state->incremementErrorCount();
-            dlog_hnd << dlib::LERROR << "error occured while handling event " << e.what();
+            dlog_hnd << dlib::LERROR << "handler: " <<  handler->name() << "reported :" << "error occured while handling event: " << e.what();
             status = RRP_STATUS::ERROR;
             handler->setStatus(status);
             handler->onError(e);
@@ -70,7 +70,7 @@ void EventHandler::handleEvent(EventHandler* handler, StateIface* state) {
         status = handler->status();
 
         if (status != RRP_STATUS::ACTIVE) {
-            dlog_hnd << dlib::LWARN << "handler status was not active attempting to reload";
+            dlog_hnd << dlib::LWARN << "handler" <<  handler->name() << ": handler status was not active attempting to reload";
             handler->reload();
         }
     }

@@ -12,7 +12,8 @@ enum class MSPDIRECTION {
     ERROR,         // An internal error has occurred
     EXTERNAL_IN,   // Comming from an external entity inbound
     EXTERNAL_OUT,  // goint to an external entity outbound
-    INVALID,
+    INVALID,       // direction was not set in the correct conext
+    NOT_SET,       // direction has not been set, depending on context use default, or override.
 };
 }
 
