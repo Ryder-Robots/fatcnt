@@ -70,7 +70,7 @@ int FatController::run(int argc, char *argv[]) {
         json manifest = json::parse(ifs);
         ifs.close();
 
-        Environment environment = EnviromentProcessor::createEnvironment(manifest);
+        Environment environment =  _mapper->getEnvironmentalProcessor()->createEnvironment(manifest);
         dlog_main.set_level(environment.getLogging().getLogLevel());
 
         dlog_main << dlib::LINFO << "creating state";
