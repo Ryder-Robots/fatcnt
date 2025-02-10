@@ -40,6 +40,8 @@ using namespace rrobot;
 int main(int argc, char *argv[]) {
 
     FatController fatCnt = FatController();
+
+    // Mapper is set here, so that there is an interface to robots sepcific characteritics.
     fatCnt.setMapper(new LdSqu001Mapper());
     fatCnt.run(argc, argv);
     return EXIT_SUCCESS;

@@ -11,7 +11,7 @@ namespace rrobot {
      * @brief
      * base class for catagorizermapper, provides mode mapping.
      */
-    class CatagorizerMapperBase : RrCatagorizerMapper {
+    class CatagorizerMapperBase : public RrCatagorizerMapper {
         public:
             void init(Environment* environment, StateIface* state, StateManagerIface* statusProcessor) override {
                 _environment = environment;

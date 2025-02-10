@@ -91,6 +91,9 @@ set(fatcnt_INCLUDE
   fatcnt/environment/rr_server.hpp
   fatcnt/environment/logging.hpp
   fatcnt/environment/ai/eai_training_data.hpp
+  fatcnt/environment/environment.hpp
+  fatcnt/environment/environmentProcessor.hpp
+  fatcnt/environment/processorbase.hpp
   fatcnt/events/Event.hpp
   fatcnt/protocols/common/mspdirection.hpp
   fatcnt/protocols/common/mspversion.hpp
