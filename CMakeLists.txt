@@ -31,7 +31,7 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CPACK_PACKAGE_NAME "fatcnt")
 set(CPACK_PACKAGE_VERSION_MAJOR "0")
 set(CPACK_PACKAGE_VERSION_MINOR "0")
-set(CPACK_PACKAGE_VERSION_PATCH "4")
+set(CPACK_PACKAGE_VERSION_PATCH "5")
 
 # TODO: Move this EXTRA_LIB for drone that needs it
 set(CPACK_DEBIAN_PACKAGE_DEPENDS "libserial-dev")
@@ -41,26 +41,36 @@ set(CPACK_DEBIAN_FILE_NAME DEB-DEFAULT)
 set(CPACK_DEBIAN_PACKAGE_CONTROL_EXTRA "${CMAKE_CURRENT_SOURCE_DIR}/scripts/postinst")
 set(CPACK_DEBIAN_PACKAGE_CONTROL_EXTRA "${CMAKE_CURRENT_SOURCE_DIR}/scripts/prerm")
 
-install(FILES "${CMAKE_CURRENT_BINARY_DIR}/resources/fatcnt.env"
-  DESTINATION /opt/fatcnt/etc/
-  PERMISSIONS OWNER_READ OWNER_WRITE  GROUP_READ  WORLD_READ
-)
 
-install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/scripts/fatcnt.service"
-        DESTINATION /etc/systemd/system
-        PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
+# TODO: creation of manifest and binary should be done by robot specific code and is not part of the library iteself
+# install(FILES "${CMAKE_CURRENT_BINARY_DIR}/resources/fatcnt.env"
+#   DESTINATION /opt/fatcnt/etc/
+#   PERMISSIONS OWNER_READ OWNER_WRITE  GROUP_READ  WORLD_READ
+# )
 
-install(FILES "${CMAKE_CURRENT_BINARY_DIR}/resources/manifests/manifest.json"
-        DESTINATION /opt/fatcnt/etc/
-        PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
+# install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/scripts/fatcnt.service"
+#         DESTINATION /etc/systemd/system
+#         PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
 
-install(FILES "${CMAKE_CURRENT_BINARY_DIR}/bin/fatcnt" DESTINATION 
-  /opt/fatcnt/bin 
-  PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
+# install(FILES "${CMAKE_CURRENT_BINARY_DIR}/resources/manifests/manifest.json"
+#         DESTINATION /opt/fatcnt/etc/
+#         PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
+
+# install(FILES "${CMAKE_CURRENT_BINARY_DIR}/bin/fatcnt" DESTINATION 
+#   /opt/fatcnt/bin 
+#   PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
+
+#END TODO:
 
 install(FILES "${CMAKE_CURRENT_BINARY_DIR}/lib/libctl.so" DESTINATION 
-  /opt/fatcnt/lib 
+  /usr/local/lib/ 
   PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
+
+
+# file(GLOB_RECURSE INCLUDE_FILES "${CMAKE_CURRENT_BINARY_DIR}/include/fatcnt/*" )
+install(FILES "${CMAKE_CURRENT_BINARY_DIR}/include/fatcnt/" 
+  DESTINATION  /usr/local/include/fatcnt/ 
+  COMPONENT devel)
 
 include(CPack)
 
@@ -125,6 +135,8 @@ if (MSP_SKULD001 OR MSP_SKULD002)
 endif()
 add_library(ctl SHARED  ${fatcnt_SOURCES})
 target_link_libraries(ctl pthread  ${LIBSERIAL_LIBRARIES} ${EXTRA_LIBS}  ${Boost_LIBRARIES})
+
+
 
 add_executable(fatcnt src/fatcnt/fatcnt.hpp src/fatcnt/fatcnt.cpp)
 target_link_libraries(fatcnt ctl)
