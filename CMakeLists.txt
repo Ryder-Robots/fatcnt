@@ -35,7 +35,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_TEST ${CMAKE_BINARY_DIR}/test)
 
 # Include directory
 add_subdirectory(include)
-install(DIRECTORY ${PROJECT_BINARY_DIR}/include
+install(DIRECTORY ${PROJECT_BINARY_DIR}/include/fatcnt
         DESTINATION /usr/local/include
 )
 
