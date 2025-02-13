@@ -149,7 +149,7 @@ configure_file(
   @ONLY
 )
 install(
-    FILES ${CMAKE_CURRENT_BINARY_DIR}/resources/rrobot.pc.in
+    FILES ${CMAKE_CURRENT_BINARY_DIR}/rrobot.pc
     DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig
 )
 
