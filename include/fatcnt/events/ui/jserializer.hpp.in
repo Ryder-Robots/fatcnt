@@ -12,7 +12,7 @@
 using json = nlohmann::json;
 
 namespace rrobot {
-    class Jseralizer : public Serializer<json, Event*> {
+    class Jserializer : public Serializer<json, Event*> {
         public:
         json serialize(Event* event) override;
         Event* deserialize(json j) override;
@@ -21,7 +21,7 @@ namespace rrobot {
         /*
          * Use constructor to maintain state.
          */
-        Jseralizer() {
+        Jserializer() {
             VALID_MSPCOMMANDS;
             _validMspCommands = VALID_MSPCOMMANDS_KEYS;
             CURATOR_MAP_INIT;

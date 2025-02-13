@@ -110,6 +110,9 @@ set(fatcnt_INCLUDE
   fatcnt/main.hpp
   fatcnt/events/catagorizer/catagorizermapperbase.hpp
   fatcnt/events/catagorizer/catagorizermapper.hpp
+  fatcnt/events/ui/jserializer.hpp
+  fatcnt/events/eai_handler.hpp
+  fatcnt/events/uihandler.hpp
 )
 foreach(item ${fatcnt_INCLUDE})
   configure_file("${item}.in" ${item} @ONLY)

@@ -1,18 +1,18 @@
-#include "jseralizer.hpp"
+#include <fatcnt/events/ui/jserializer.hpp>
 
 using namespace rrobot;
 
-json Jseralizer::serialize(Event* event) {
+json Jserializer::serialize(Event* event) {
     RrpCuratorAbstract* curator = _curatorMap.at(event->getCommand());
     return curator->serialize(event);
 }
 
 //TODO: Add deserializer that allows for direction.
-Event* Jseralizer::deserialize(json j) {
+Event* Jserializer::deserialize(json j) {
     return deserialize(j, MSPDIRECTION::EXTERNAL_IN);
 }
 
-Event* Jseralizer::deserialize(json j, MSPDIRECTION direction) {
+Event* Jserializer::deserialize(json j, MSPDIRECTION direction) {
     if(!(
         j.contains("command") && (_validMspCommands.find(j["command"]) != _validMspCommands.end())
     )) {

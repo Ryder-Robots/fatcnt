@@ -70,17 +70,19 @@ set(fatcnt_SOURCES
   src/fatcnt/events/ai/ai_virtual_predictor.cpp
   src/fatcnt/com/server.cpp
   src/fatcnt/main.cpp
+
+  src/fatcnt/events/msp104/msp104_hbridge_serializer.cpp
 )
 
 # SOURCE CODE SPECIFIC LD drones without micro-processors
 #TODO: This is to be removed
 #if (MSP_SKULD001 OR MSP_SKULD002)
-list(APPEND fatcnt_SOURCES
-    src/fatcnt/events/msp104/msp104_hbridge_serializer.cpp
-    src/fatcnt/events/catagorizer/ldsqu001mapper.cpp 
-    src/fatcnt/events/hbridgecontroller.cpp)
-set(CPACK_DEBIAN_PACKAGE_DEPENDS "wiringpi, wiringpi (>= 3.2)")
-set(EXTRA_LIBS "wiringPi")
+# list(APPEND fatcnt_SOURCES
+#     src/fatcnt/events/msp104/msp104_hbridge_serializer.cpp
+#     src/fatcnt/events/catagorizer/ldsqu001mapper.cpp 
+#     src/fatcnt/events/hbridgecontroller.cpp)
+# set(CPACK_DEBIAN_PACKAGE_DEPENDS "wiringpi, wiringpi (>= 3.2)")
+# set(EXTRA_LIBS "wiringPi")
 #endif()
 
 add_library(rrobot SHARED  ${fatcnt_SOURCES})
@@ -97,9 +99,9 @@ install(
     DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig
 )
 
-add_executable(fatcnt src/fatcnt/fatcnt.hpp src/fatcnt/fatcnt.cpp)
-target_link_libraries(fatcnt rrobot)
-target_link_libraries(fatcnt dlib)
+# add_executable(fatcnt src/fatcnt/fatcnt.hpp src/fatcnt/fatcnt.cpp)
+# target_link_libraries(fatcnt rrobot)
+# target_link_libraries(fatcnt dlib)
 
 FetchContent_Declare(
   googletest
@@ -173,15 +175,15 @@ target_link_libraries(test_ai_training_data GTest::gtest_main rrobot dlib gmock)
 gtest_discover_tests(test_ai_training_data  WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/resources")
 
 
-#TODO Move this 
-if (MSP_SKULD001 OR MSP_SKULD002)
-  add_executable(test_hbridgehandler test/test_hbridgehandler.cpp)
-  set_target_properties(test_hbridgehandler PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/test)
-  target_link_libraries(test_hbridgehandler GTest::gtest_main rrobot dlib gmock)
-  gtest_discover_tests(test_hbridgehandler  WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/resources")
+# #TODO Move this 
+# if (MSP_SKULD001 OR MSP_SKULD002)
+#   add_executable(test_hbridgehandler test/test_hbridgehandler.cpp)
+#   set_target_properties(test_hbridgehandler PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/test)
+#   target_link_libraries(test_hbridgehandler GTest::gtest_main rrobot dlib gmock)
+#   gtest_discover_tests(test_hbridgehandler  WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/resources")
 
-  add_executable(test_msp104_hbridge_serializer test/test_msp104_hbridge_serializer.cpp)
-  set_target_properties(test_msp104_hbridge_serializer PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/test)
-  target_link_libraries(test_msp104_hbridge_serializer GTest::gtest_main rrobot dlib gmock)
-  gtest_discover_tests(test_msp104_hbridge_serializer  WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/resources") 
-endif()
+#   add_executable(test_msp104_hbridge_serializer test/test_msp104_hbridge_serializer.cpp)
+#   set_target_properties(test_msp104_hbridge_serializer PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/test)
+#   target_link_libraries(test_msp104_hbridge_serializer GTest::gtest_main rrobot dlib gmock)
+#   gtest_discover_tests(test_msp104_hbridge_serializer  WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/resources") 
+# endif()
