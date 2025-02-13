@@ -1,4 +1,0 @@
-systemctl stop fatcnt
-systemctl disable fatcnt
-systemctl daemon-reload
-systemctl reset-failed

@@ -6,29 +6,6 @@ include(FindPkgConfig)
 include(CMakeDependentOption)
 include(GNUInstallDirs)
 
-#TODO: This needs to be removed.
-# cmake_dependent_option(MSP_SKULD001
-#     "Enable ${PROJECT_NAME} with SKULD001 support" OFF
-#     "MSP_SKULD001" OFF)
-  
-# cmake_dependent_option(MSP_SKULD002
-#     "Enable ${PROJECT_NAME} with SKULD002 support" ON
-#     "MSP_SKULD002" ON)
-
-#TODO: This needs to be removed can be done at application level
-# message(CHECK_START "MSP_VERSION")
-# if (MSP_SKULD001)
-#   message(CHECK_PASS  "found SKULD001")
-#   set(MANIFEST_MSPVERSION "SKULD001")
-#   set(MANIFEST_DESCRIPTION "Configuration for SKULD001")
-# elseif (MSP_SKULD002) 
-#   message(CHECK_PASS " found SKULD002")
-#   set(MANIFEST_MSPVERSION "SKULD002")
-#   set(MANIFEST_DESCRIPTION "Configuration for SKULD002")
-# else()
-#   message(CHECK_FAILED "MSP_VERSION NOT SET!")  
-# endif()
-
 set(CPACK_GENERATOR "DEB")    
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CPACK_PACKAGE_NAME "rrobot")
@@ -36,52 +13,21 @@ set(CPACK_PACKAGE_VERSION_MAJOR "0")
 set(CPACK_PACKAGE_VERSION_MINOR "0")
 set(CPACK_PACKAGE_VERSION_PATCH "5")
 
-# TODO: Move this EXTRA_LIB for drone that needs it
 set(CPACK_DEBIAN_PACKAGE_DEPENDS "libserial-dev")
 set(CPACK_SOURCE_IGNORE_FILES "/gtest/;/googletest/")
 set(CPACK_PACKAGE_CONTACT "Aaron Spiteri")
 set(CPACK_DEBIAN_FILE_NAME DEB-DEFAULT)
 
-# This is done at an application level
-# set(CPACK_DEBIAN_PACKAGE_CONTROL_EXTRA "${CMAKE_CURRENT_SOURCE_DIR}/scripts/postinst")
-# set(CPACK_DEBIAN_PACKAGE_CONTROL_EXTRA "${CMAKE_CURRENT_SOURCE_DIR}/scripts/prerm")
 
-
-# TODO: creation of manifest and binary should be done by robot specific code and is not part of the library iteself
-# install(FILES "${CMAKE_CURRENT_BINARY_DIR}/resources/fatcnt.env"
-#   DESTINATION /opt/fatcnt/etc/
-#   PERMISSIONS OWNER_READ OWNER_WRITE  GROUP_READ  WORLD_READ
-# )
-
-# install(FILES "${CMAKE_CURRENT_SOURCE_DIR}/scripts/fatcnt.service"
-#         DESTINATION /etc/systemd/system
-#         PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
-
-# install(FILES "${CMAKE_CURRENT_BINARY_DIR}/resources/manifests/manifest.json"
-#         DESTINATION /opt/fatcnt/etc/
-#         PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
-
-# install(FILES "${CMAKE_CURRENT_BINARY_DIR}/bin/fatcnt" DESTINATION 
-#   /opt/fatcnt/bin 
-#   PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
-
-#END TODO:
-
-install(FILES "${CMAKE_CURRENT_BINARY_DIR}/lib/librrobot.so" DESTINATION 
-  /usr/local/lib/ 
+install(FILES "${CMAKE_CURRENT_BINARY_DIR}/lib/librrobot.so" 
+  DESTINATION /usr/local/lib/ 
   PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
 
-
-# file(GLOB_RECURSE INCLUDE_FILES "${CMAKE_CURRENT_BINARY_DIR}/include/fatcnt/*" )
-# install(FILES "${CMAKE_CURRENT_BINARY_DIR}/include/fatcnt/" 
-#   DESTINATION  /usr/local/include/fatcnt/ 
-#   COMPONENT devel)
 
 include(CPack)
 
 set(VERSION ${CPACK_PACKAGE_VERSION_MAJOR}.${CPACK_PACKAGE_VERSION_MINOR}.${CPACK_PACKAGE_VERSION_PATCH})
 set(JSON_VERSION v3.11.3)
-
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/lib)
 set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/arc)
@@ -89,6 +35,9 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_TEST ${CMAKE_BINARY_DIR}/test)
 
 # Include directory
 add_subdirectory(include)
+install(DIRECTORY ${PROJECT_BINARY_DIR}/include
+        DESTINATION /usr/local/include
+)
 
 FetchContent_Declare(json URL https://github.com/nlohmann/json/releases/download/${JSON_VERSION}/json.tar.xz)
 FetchContent_MakeAvailable(json)
@@ -124,21 +73,16 @@ set(fatcnt_SOURCES
 )
 
 # SOURCE CODE SPECIFIC LD drones without micro-processors
-set(EXTRA_LIBS "")
 #TODO: This is to be removed
 #if (MSP_SKULD001 OR MSP_SKULD002)
-  set(EXTRA_LIBS "wiringPi")
-  set(MANIFEST_MULTITYPE "LANDDRONE_2W")
-  set(MANIFEST_AI_QUEUE_FC "MICROCONTROLLER")
-  set(MANIFEST_AI_QUEUE_MC "MICROCONTROLLER")
-  configure_file(resources/manifests/manifest.json.in resources/manifests/manifest.json @ONLY)
-  configure_file(resources/fatcnt.env.in resources/fatcnt.env @ONLY)
-  list(APPEND fatcnt_SOURCES
+list(APPEND fatcnt_SOURCES
     src/fatcnt/events/msp104/msp104_hbridge_serializer.cpp
     src/fatcnt/events/catagorizer/ldsqu001mapper.cpp 
     src/fatcnt/events/hbridgecontroller.cpp)
-  set(CPACK_DEBIAN_PACKAGE_DEPENDS "wiringpi, wiringpi (>= 3.2)")
+set(CPACK_DEBIAN_PACKAGE_DEPENDS "wiringpi, wiringpi (>= 3.2)")
+set(EXTRA_LIBS "wiringPi")
 #endif()
+
 add_library(rrobot SHARED  ${fatcnt_SOURCES})
 target_link_libraries(rrobot pthread  ${LIBSERIAL_LIBRARIES} ${EXTRA_LIBS}  ${Boost_LIBRARIES})
 
@@ -152,7 +96,6 @@ install(
     FILES ${CMAKE_CURRENT_BINARY_DIR}/rrobot.pc
     DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig
 )
-
 
 add_executable(fatcnt src/fatcnt/fatcnt.hpp src/fatcnt/fatcnt.cpp)
 target_link_libraries(fatcnt rrobot)
@@ -229,6 +172,8 @@ set_target_properties(test_ai_training_data PROPERTIES RUNTIME_OUTPUT_DIRECTORY 
 target_link_libraries(test_ai_training_data GTest::gtest_main rrobot dlib gmock)
 gtest_discover_tests(test_ai_training_data  WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/resources")
 
+
+#TODO Move this 
 if (MSP_SKULD001 OR MSP_SKULD002)
   add_executable(test_hbridgehandler test/test_hbridgehandler.cpp)
   set_target_properties(test_hbridgehandler PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/test)
