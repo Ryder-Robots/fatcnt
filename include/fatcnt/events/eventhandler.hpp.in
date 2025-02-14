@@ -1,33 +1,49 @@
-#ifndef EVENTHANDLERIFACE_HPP
-#define EVENTHANDLERIFACE_HPP
+#ifndef EVENTHANDLER_HPP
+#define EVENTHANDLER_HPP
 
-#include <string>
+#include <dlib/logger.h>
+
+#include <chrono>
+#include <fatcnt/environment/environment.hpp>
 #include <fatcnt/events/Event.hpp>
+#include <fatcnt/state/stateiface.hpp>
+#include <fatcnt/state/statefactory.hpp>
 #include <fatcnt/state/rrpqueues.hpp>
-#include <fatcnt/state/statemanageriface.hpp>
+#include <fatcnt/exceptions/exceptions.hpp>
+#include <fatcnt/protocols/rrp/rrpstatus.hpp>
+#include <mutex>
+#include <queue>
+
+using namespace std;
 
 namespace rrobot {
+
 /**
- * @class EventHandlerIface
+ * @class EventHandler
+ *
  * @brief
- * interface for event handlers.
+ * Event handlers, handle a specific type of event.
  */
 class EventHandler {
    public:
     /**
      * @fn init
+     * @param environment environment class
      * @brief
-     * used by mapper to alocate queues, and locks to handler.
+     * This method is called when program is reloaded, or initialization time by the queue manger
+     *
      */
-    virtual void init(StateManagerIface* sm, RRP_QUEUES direction, RRP_QUEUES inbound, RRP_QUEUES outbound) = 0;
+    void init(RrQueues* queues, RRP_QUEUES inbound, RRP_QUEUES outbound, Environment* environment);
 
     /**
      * @fn handleEvent
      * @brief
      * Called within the thread to allow execution of the handler.
-     *
+     * 
+     * @param handler (this object)
+     * @param state  reference to state object
      */
-    virtual void handleEvent() = 0;
+    static void handleEvent(EventHandler* handler, StateIface *state);
 
     /**
      * @fn consume
@@ -37,7 +53,7 @@ class EventHandler {
      * @param state reference to current state file.
      * @return true on success.
      */
-    virtual bool consume(Event* event) = 0;
+    virtual bool consume(Event* event, StateIface* state) = 0;
 
     /**
      * @fn name
@@ -48,12 +64,12 @@ class EventHandler {
 
     /**
      * @fn produce
-     * @brief
-     * when available method returns true, then call this method that will produce events for
-     * other handlers.
+     * @brief 
+     when available method returns true, then call this method that will produce events for
+     other handlers.
      */
-    virtual Event* produce() = 0;
-
+    virtual Event* produce(StateIface* state) = 0;
+    
     /**
      * @fn available
      * @brief
@@ -61,10 +77,17 @@ class EventHandler {
      */
     virtual bool available() = 0;
 
+
     /**
      * Current status of the handler.
      */
-    virtual RRP_STATUS status() = 0;
+    RRP_STATUS status() {
+        return _status;
+    }
+
+    void setStatus(RRP_STATUS status) {
+        _status = status;
+    }
 
     /**
      * @fn setUp
@@ -90,15 +113,33 @@ class EventHandler {
 
     /**
      * @fn onError
-     * @brief
+     * @brief 
      * when in implmented called when an error has occured within handler.
-     *
+     * 
      * It is up to the handler to set the status to active if the exception has been handled.
-     *
+     * 
      * @param exception that has occured.
      */
     virtual void onError(const std::exception& e) {}
+
+   protected:
+    std::queue<Event*>* _queue;
+    std::mutex* _lock;
+    std::queue<Event*>* _outbound_queue;
+    std::mutex* _outbound_lock;
+
+   private:
+
+    static void handleProduceEvents(EventHandler* handler, StateIface* state);
+    static void handleConsumeEvents(EventHandler* handler, StateIface* state);
+    Event* front();
+    void push(Event* event);
+
+    int _limit;
+    chrono::milliseconds _thread_wait_time;
+
+    RRP_STATUS        _status = RRP_STATUS::INITILIZING;
 };
 }  // namespace rrobot
 
-#endif
+#endif  // EVENTHANDLER_HPP

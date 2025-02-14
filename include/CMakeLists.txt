@@ -113,6 +113,13 @@ set(fatcnt_INCLUDE
   fatcnt/events/ui/jserializer.hpp
   fatcnt/events/eai_handler.hpp
   fatcnt/events/uihandler.hpp
+  fatcnt/events/statushandler.hpp
+  fatcnt/events/serializer.hpp
+  fatcnt/events/eventhandler.hpp
+  fatcnt/events/catagorizer.hpp
+  fatcnt/events/ai/ai_training_data.hpp
+  fatcnt/com/server.hpp
+  fatcnt/com/external.hpp
 )
 foreach(item ${fatcnt_INCLUDE})
   configure_file("${item}.in" ${item} @ONLY)
