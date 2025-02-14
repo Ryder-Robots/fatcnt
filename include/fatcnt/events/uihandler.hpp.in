@@ -8,7 +8,7 @@
 #include <fatcnt/exceptions/exceptions.hpp>
 #include <fatcnt/state/rrpqueues.hpp>
 
-#include "eventhandler.hpp"
+#include <fatcnt/events/eventhandler.hpp>
 
 using json = nlohmann::json;
 

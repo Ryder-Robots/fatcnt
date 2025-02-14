@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include <fatcnt/events/ui/jseralizer.hpp>
+#include <fatcnt/events/ui/jserializer.hpp>
 #include <fatcnt/state/rrpqueues.hpp>
 
 using namespace rrobot;
@@ -17,7 +17,7 @@ class TestJserializer : public ::testing::Test {
 };
 
 TEST(TestJserializer, TestSerialize) {
-    Jseralizer jserializer = Jseralizer();
+    Jserializer jserializer = Jserializer();
 
     msp_authkey *mspAuthKey = new msp_authkey();
     mspAuthKey->set_key("test");
@@ -36,7 +36,7 @@ TEST(TestJserializer, TestDeserialize) {
 
     cout << "json in = " + in.dump() << "\n";
 
-    Jseralizer jserializer = Jseralizer();
+    Jserializer jserializer = Jserializer();
     Event* event = jserializer.deserialize(in);
     msp_authkey payload = event->getPayload<msp_authkey>();
 

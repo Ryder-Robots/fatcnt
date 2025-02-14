@@ -1,5 +1,0 @@
-#!/bin/bash
-
-# for land drone
-systemctl daemon-reload
-systemctl enable --now fatcnt

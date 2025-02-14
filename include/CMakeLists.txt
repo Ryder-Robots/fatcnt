@@ -91,6 +91,9 @@ set(fatcnt_INCLUDE
   fatcnt/environment/rr_server.hpp
   fatcnt/environment/logging.hpp
   fatcnt/environment/ai/eai_training_data.hpp
+  fatcnt/environment/environment.hpp
+  fatcnt/environment/environmentProcessor.hpp
+  fatcnt/environment/processorbase.hpp
   fatcnt/events/Event.hpp
   fatcnt/protocols/common/mspdirection.hpp
   fatcnt/protocols/common/mspversion.hpp
@@ -104,6 +107,19 @@ set(fatcnt_INCLUDE
   fatcnt/state/statemanageriface.hpp
   fatcnt/math/ratio.hpp
   fatcnt/events/ai/ai_predictor.hpp
+  fatcnt/main.hpp
+  fatcnt/events/catagorizer/catagorizermapperbase.hpp
+  fatcnt/events/catagorizer/catagorizermapper.hpp
+  fatcnt/events/ui/jserializer.hpp
+  fatcnt/events/eai_handler.hpp
+  fatcnt/events/uihandler.hpp
+  fatcnt/events/statushandler.hpp
+  fatcnt/events/serializer.hpp
+  fatcnt/events/eventhandler.hpp
+  fatcnt/events/catagorizer.hpp
+  fatcnt/events/ai/ai_training_data.hpp
+  fatcnt/com/server.hpp
+  fatcnt/com/external.hpp
 )
 foreach(item ${fatcnt_INCLUDE})
   configure_file("${item}.in" ${item} @ONLY)

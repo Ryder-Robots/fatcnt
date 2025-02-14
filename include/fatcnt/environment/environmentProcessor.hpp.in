@@ -7,7 +7,7 @@
 #include <dlib/logger.h>
 #include <fatcnt/environment/environment.hpp>
 #include <fatcnt/exceptions/exceptions.hpp>
-#include "processorbase.hpp"
+#include <fatcnt/environment/processorbase.hpp>
 
 using namespace std;
 using json = nlohmann::json;
@@ -25,8 +25,18 @@ namespace rrobot {
              */
             static Environment createEnvironment(json manifest);
             static Environment* createEnvironmentRef(json manifest);
+
+            /**
+             * @fn getObject
+             * @brief
+             * when implemented method allows for robot specific variables to be set. The object returned is not directly 
+             * injected into environment objects.
+             */
+            virtual void getObject(json manifest, void* object) {}
         
         private:
+
+            // Common vairables that are used ditrectly by fat controller are defined here.
             static HwModel  createHwModel(json manifest);
             static RrSerial createMc(json manifest);
             static Queues   createQueues(json manifest);

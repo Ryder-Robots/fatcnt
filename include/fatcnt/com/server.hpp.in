@@ -10,7 +10,7 @@
 #include <fatcnt/exceptions/exceptions.hpp>
 #include <fatcnt/environment/environment.hpp>
 #include <fatcnt/state/stateiface.hpp>
-#include "external.hpp"
+#include <fatcnt/com/external.hpp>
 
 namespace rrobot {
     class RrServer : public External {

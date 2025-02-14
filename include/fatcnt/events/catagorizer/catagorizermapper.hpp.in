@@ -11,6 +11,7 @@
 #include <fatcnt/events/Event.hpp>
 #include <fatcnt/events/catagorizer/cmodes.hpp>
 #include <fatcnt/com/server.hpp>
+#include <fatcnt/environment/environmentProcessor.hpp>
 
 using namespace std;
 
@@ -46,6 +47,16 @@ namespace rrobot {
              * Returns a vector of queue names, this is used to create queues for drone.
              */
             virtual std::vector<RRP_QUEUES> queueNames() = 0;
+
+            /**
+             * @fn getEnvironmentalProcessor
+             * @brief
+             * by default return standard environmental processor,  if special options are needed for the drone
+             * override method to include bespoke environmentalProcessor.
+             */
+            virtual EnviromentProcessor* getEnvironmentalProcessor() {
+                return new EnviromentProcessor();
+            }
     };
 }
 
