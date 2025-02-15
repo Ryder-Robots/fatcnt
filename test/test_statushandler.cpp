@@ -62,7 +62,7 @@ TEST_F(TestStatusHandler, testMSP_IDENT) {
     Event* response = sh.produce(_state);
 
     msp_ident mspIdent = response->getPayload<msp_ident>();
-    EXPECT_EQ(0, mspIdent.get_version());
+    EXPECT_EQ(1, mspIdent.get_version());
     EXPECT_EQ(LANDDRONE_4W, mspIdent.get_multitype());
 }
 
