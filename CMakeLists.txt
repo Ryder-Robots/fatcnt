@@ -60,18 +60,14 @@ set(fatcnt_SOURCES
   src/fatcnt/events/eventhandler.cpp
   src/fatcnt/events/uihandler.cpp
   src/fatcnt/events/statushandler.cpp
-  src/fatcnt/events/msp104/msp104_ctl_in.cpp
   src/fatcnt/events/eai_handler.cpp
   src/fatcnt/events/ai/ai_training_data.cpp
   src/fatcnt/protocols/common/curators/rrp/msp_ident_curator.cpp
   src/fatcnt/protocols/common/curators/rrp/msp_mode_curator.cpp
   src/fatcnt/events/ui/jserializer.cpp
   src/fatcnt/events/catagorizer.cpp
-  src/fatcnt/events/ai/ai_virtual_predictor.cpp
   src/fatcnt/com/server.cpp
   src/fatcnt/main.cpp
-
-  src/fatcnt/events/msp104/msp104_hbridge_serializer.cpp
 )
 
 # SOURCE CODE SPECIFIC LD drones without micro-processors
@@ -110,9 +106,14 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(googletest)
 
+#  src/fatcnt/events/ai/ai_virtual_predictor.cpp
+#  src/fatcnt/events/msp104/msp104_ctl_in.cpp
+#   src/fatcnt/events/msp104/msp104_hbridge_serializer.cpp
+
 enable_testing()
 include(GoogleTest)
 include(Dart)
+include_directories(${json_SOURCE_DIR}/include src ${LIBSERIAL_INCLUDE_DIRS} ${PROJECT_BINARY_DIR}/include ${CMAKE_CURRENT_SOURCE_DIR}/test)
 
 add_executable(test_environmentprocessor test/test_environmentprocessor.cpp)
 set_target_properties(test_environmentprocessor PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/test)
@@ -164,7 +165,7 @@ set_target_properties(test_ratio PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BIN
 target_link_libraries(test_ratio GTest::gtest_main rrobot dlib gmock)
 gtest_discover_tests(test_ratio  WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/resources")
 
-add_executable(test_msp104_ctl_in test/test_msp104_ctl_in.cpp)
+add_executable(test_msp104_ctl_in test/test_msp104_ctl_in.cpp test/fatcnt/events/msp104/msp104_ctl_in.cpp)
 set_target_properties(test_msp104_ctl_in PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/test)
 target_link_libraries(test_msp104_ctl_in GTest::gtest_main rrobot dlib gmock)
 gtest_discover_tests(test_msp104_ctl_in  WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/resources")
