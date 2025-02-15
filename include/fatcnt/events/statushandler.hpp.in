@@ -5,7 +5,7 @@
 #include <vector>
 #include <fatcnt/state/statemanageriface.hpp>
 #include <fatcnt/protocols/common/curators/rrp/mspevent.hpp>
-#include "eventhandler.hpp"
+#include <fatcnt/events/eventhandler.hpp>
 
 using namespace std;
 

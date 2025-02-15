@@ -1,4 +1,22 @@
-# fatcnt
+# FAT CONTROLLER
+
+## Overview
+
+This Minimum Viable Product (MVP) aims to create a basic framework for connecting robots to machine learning techniques that affect their physical functioning, specifically designed for Raspberry Pi architecture and implemented in C++.
+
+##  Features
+
+- Implementation of an algorithm that allow various controllers to work on indivisual threads.
+- Ability to collect data and write to SD card, for use of training.
+- ML Model Interface: That is created by implementing interface AiPredictor 
+- Data Collection: Implement basic data logging for sensor readings and robot actions. This is performed using the EaiTrainingData interface, and AiGenerateData
+- Remote control functionality based on JSON Ryder Robot Protocol (RRP), and using TCP/IP
+- State, and environment control provided through manifest.json file, and using interfaces StateIface, and StateManagerIface
+- Event queuing and event handling provided through implementation of EventHandler
+
+## Implementation 
+
+for implementation of this software refer to [LD001](https://github.com/Ryder-Robots/ld001)
 
 
 
