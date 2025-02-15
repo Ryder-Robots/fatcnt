@@ -31,6 +31,11 @@ cmake --build . --target test
 cpack -G DEB 
 ```
 
+# PUBLISHING
+
+```
+gh release create 1.0.0 --generate-notes ./build/lib/librrobot.so
+```
 
 # INSTALLING SERVICE
 
@@ -38,8 +43,8 @@ Before using these instructions, a GitHub token must be created and the environm
 GH_TOKEN must be set up.
 
 ```
-gh release -R git@github.com:Ryder-Robots/fatcnt.git download 0.0.4
-dpkg -i ./fatcnt_0.0.4_arm64.deb 
+gh release -R git@github.com:Ryder-Robots/fatcnt.git download --pattern '*.deb'
+dpkg -i rrobot_*.deb 
 ```
 
 
