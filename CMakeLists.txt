@@ -11,7 +11,7 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CPACK_PACKAGE_NAME "rrobot")
 set(CPACK_PACKAGE_VERSION_MAJOR "1")
 set(CPACK_PACKAGE_VERSION_MINOR "0")
-set(CPACK_PACKAGE_VERSION_PATCH "1")
+set(CPACK_PACKAGE_VERSION_PATCH "2")
 
 set(CPACK_DEBIAN_PACKAGE_DEPENDS "libserial-dev")
 set(CPACK_SOURCE_IGNORE_FILES "/gtest/;/googletest/")
@@ -52,7 +52,6 @@ find_package(Boost 1.74.0 COMPONENTS program_options REQUIRED )
 
 # Sources common to all drones
 set(fatcnt_SOURCES
-  src/fatcnt/environment/environmentProcessor.cpp
   src/fatcnt/environment/processorbase.cpp
   src/fatcnt/state/statefactory.cpp
   src/fatcnt/state/statemanager.cpp

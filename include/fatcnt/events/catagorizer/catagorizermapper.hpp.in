@@ -57,6 +57,16 @@ namespace rrobot {
             virtual EnviromentProcessor* getEnvironmentalProcessor() {
                 return new EnviromentProcessor();
             }
+
+            /**
+             * @fn createEnvironment
+             * @brief
+             * called by main class to create the environment, this allows for a bit of flexibility, also helps deal
+             * with some weirdness going on in JSON which I have not solved properly as of yet.
+             */
+            virtual Environment createEnvironment(std::string content) {
+                return getEnvironmentalProcessor()->createEnvironment(json::parse(content));
+            }
     };
 }
 

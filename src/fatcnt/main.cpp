@@ -67,10 +67,10 @@ int FatController::run(int argc, char *argv[]) {
         string filepath = vm["manifest"].as<string>();
         boost::trim(filepath);
         std::ifstream ifs(filepath);
-        json manifest = json::parse(ifs);
+        std::string content((std::istreambuf_iterator<char>(ifs)), std::istreambuf_iterator<char>());
         ifs.close();
 
-        Environment environment =  _mapper->getEnvironmentalProcessor()->createEnvironment(manifest);
+        Environment environment = _mapper->createEnvironment(content);
         dlog_main.set_level(environment.getLogging().getLogLevel());
 
         dlog_main << dlib::LINFO << "creating state";
