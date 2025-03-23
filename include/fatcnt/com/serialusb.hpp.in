@@ -1,0 +1,22 @@
+#ifndef SERIALUSB_HPP
+#define SERIALUSB_HPP
+
+#include <libserial/SerialPort.h>
+#include <fatcnt/com/external.hpp>
+
+namespace rrobot {
+
+    /**
+     * @class SerialUsb
+     * @brief
+     * 
+     * integrates USB interface with rrobot
+     */
+    class SerialUsb : public External {
+
+        private:
+        LibSerial::SerialPort _serial_port;
+    };
+}
+
+#endif
