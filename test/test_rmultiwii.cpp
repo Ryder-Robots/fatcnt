@@ -9,7 +9,7 @@ using json = nlohmann::json;
 
 namespace fs = std::filesystem;
 
-class TestRatio : public ::testing::Test {
+class TestMultiWii : public ::testing::Test {
     protected:
      void SetUp() override {
          // Setup code
@@ -20,7 +20,7 @@ class TestRatio : public ::testing::Test {
      }
  };
 
- TEST_F(TestRatio, shouldEncodeStatus) {
+ TEST_F(TestMultiWii, shouldEncodeStatus) {
     const fs::path filepath = "manifests/virtual.json";
     ifstream ifs(filepath);
     json manifest = json::parse(ifs);
@@ -35,11 +35,11 @@ class TestRatio : public ::testing::Test {
     ASSERT_EQ(MSPCOMMANDS::MSP_STATUS, multiWii.getCommand());
     ASSERT_EQ(0, multiWii.getSize());
     
-    // uint8_t* data2 = multiWii.encode(crc);
+    uint8_t* data2 = multiWii.encode(crc);
 
-    // for (int i = 0; i < 8; i++) {
-    //     ASSERT_EQ(data[i], data2[i]);
-    // }
+    for (int i = 0; i < 8; i++) {
+        ASSERT_EQ(data[i], data2[i]);
+    }
  }
 
 int main(int argc, char** argv) {

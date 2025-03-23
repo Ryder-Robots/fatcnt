@@ -37,4 +37,29 @@ RmMultiWii RmMultiWii::createInstance(uint8_t* data, Crc32 crc, Environment* env
     }
 }
 
-uint8_t* RmMultiWii::encode(Crc32 crc) { return nullptr; }
+uint8_t* RmMultiWii::encode(Crc32 crc) {
+    uint8_t* data = reinterpret_cast<uint8_t*>(malloc(sizeof(char) * 8 + sizeof(char) * _sz));
+    data[0] = static_cast<uint8_t>(_cmd);
+    
+    // size
+    data[1] = (_sz >> 8) & 0xFF;
+    data[2] = _sz & 0xFF;
+
+    // calculate CRC
+    uint32_t crc32 = 0;
+
+    if (_sz != 0) {
+        crc32 = crc.calculate(getPayload(), _sz);
+    }
+    data[3] = (_sz >> 24) & 0xFF;
+    data[4] = (_sz >> 16) & 0xFF;
+    data[5] = (_sz >> 8) & 0xFF;
+    data[6] = _sz & 0xFF;
+
+    if (_sz != 0) {
+        for (int i = 0;i < _sz; i++) 
+            data[7 + i] = _payload[i];
+    }
+    data[7 + _sz] = _TERMINATION_CHAR & 0xFF;
+    return data; 
+}
