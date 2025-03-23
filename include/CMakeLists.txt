@@ -103,6 +103,8 @@ set(fatcnt_INCLUDE
   fatcnt/state/rrpqueues.hpp
   fatcnt/protocols/common/curators/rrp/rrpcuratorabstract.hpp
   fatcnt/protocols/rrp/rrpstatus.hpp
+  fatcnt/protocols/rmultiwii/rmultiwii.hpp
+  fatcnt/protocols/rmultiwii/crc.hpp
   fatcnt/events/catagorizer/cmodes.hpp
   fatcnt/state/statemanageriface.hpp
   fatcnt/math/ratio.hpp

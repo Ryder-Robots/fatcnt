@@ -18,7 +18,6 @@ set(CPACK_SOURCE_IGNORE_FILES "/gtest/;/googletest/")
 set(CPACK_PACKAGE_CONTACT "Aaron Spiteri")
 set(CPACK_DEBIAN_FILE_NAME DEB-DEFAULT)
 
-
 install(FILES "${CMAKE_CURRENT_BINARY_DIR}/lib/librrobot.so" 
   DESTINATION /usr/local/lib/ 
   PERMISSIONS OWNER_READ OWNER_WRITE OWNER_EXECUTE GROUP_READ GROUP_EXECUTE WORLD_READ WORLD_EXECUTE)
@@ -63,22 +62,12 @@ set(fatcnt_SOURCES
   src/fatcnt/events/ai/ai_training_data.cpp
   src/fatcnt/protocols/common/curators/rrp/msp_ident_curator.cpp
   src/fatcnt/protocols/common/curators/rrp/msp_mode_curator.cpp
+  src/fatcnt/protocols/rmultiwii/rmultiwii.cpp
   src/fatcnt/events/ui/jserializer.cpp
   src/fatcnt/events/catagorizer.cpp
   src/fatcnt/com/server.cpp
   src/fatcnt/main.cpp
 )
-
-# SOURCE CODE SPECIFIC LD drones without micro-processors
-#TODO: This is to be removed
-#if (MSP_SKULD001 OR MSP_SKULD002)
-# list(APPEND fatcnt_SOURCES
-#     src/fatcnt/events/msp104/msp104_hbridge_serializer.cpp
-#     src/fatcnt/events/catagorizer/ldsqu001mapper.cpp 
-#     src/fatcnt/events/hbridgecontroller.cpp)
-# set(CPACK_DEBIAN_PACKAGE_DEPENDS "wiringpi, wiringpi (>= 3.2)")
-# set(EXTRA_LIBS "wiringPi")
-#endif()
 
 add_library(rrobot SHARED  ${fatcnt_SOURCES})
 target_link_libraries(rrobot pthread  ${LIBSERIAL_LIBRARIES} ${EXTRA_LIBS}  ${Boost_LIBRARIES})
@@ -94,20 +83,12 @@ install(
     DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig
 )
 
-# add_executable(fatcnt src/fatcnt/fatcnt.hpp src/fatcnt/fatcnt.cpp)
-# target_link_libraries(fatcnt rrobot)
-# target_link_libraries(fatcnt dlib)
-
 FetchContent_Declare(
   googletest
   GIT_REPOSITORY https://github.com/google/googletest.git
   GIT_TAG release-1.11.0
 )
 FetchContent_MakeAvailable(googletest)
-
-#  src/fatcnt/events/ai/ai_virtual_predictor.cpp
-#  src/fatcnt/events/msp104/msp104_ctl_in.cpp
-#   src/fatcnt/events/msp104/msp104_hbridge_serializer.cpp
 
 enable_testing()
 include(GoogleTest)
