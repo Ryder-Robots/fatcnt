@@ -2,21 +2,44 @@
 #define SERIALUSB_HPP
 
 #include <libserial/SerialPort.h>
+
 #include <fatcnt/com/external.hpp>
 
 namespace rrobot {
 
-    /**
-     * @class SerialUsb
-     * @brief
-     * 
-     * integrates USB interface with rrobot
-     */
-    class SerialUsb : public External {
+/**
+ * @class SerialUsb
+ * @brief
+ *
+ * integrates USB interface with rrobot
+ */
+class SerialUsb : public External {
+   public:
 
-        private:
-        LibSerial::SerialPort _serial_port;
-    };
-}
+   // TODO: add some sensible defaults here.
+   /**
+    * @fn SerialUsb
+    * @brief
+    * Class constructor
+    */
+    void setUp(LibSerial::BaudRate baud, LibSerial::CharacterSize char_size, LibSerial::FlowControl flow_control,
+              LibSerial::Parity parity, LibSerial::StopBits stop_bits) {
+        _serial_port.SetBaudRate(baud);
+        _serial_port.SetCharacterSize(char_size);
+        _serial_port.SetFlowControl(flow_control);
+        _serial_port.SetParity(parity);
+        _serial_port.SetStopBits(stop_bits);
+    }
+
+    void tearDown() {
+        if (_serial_port.IsOpen()) {
+            _serial_port.Close();
+        }
+    }
+
+   private:
+    LibSerial::SerialPort _serial_port;
+};
+}  // namespace rrobot
 
 #endif
