@@ -103,7 +103,6 @@ set(fatcnt_INCLUDE
   fatcnt/state/rrpqueues.hpp
   fatcnt/protocols/common/curators/rrp/rrpcuratorabstract.hpp
   fatcnt/protocols/rrp/rrpstatus.hpp
-  fatcnt/protocols/rmultiwii/rmultiwii.hpp
   fatcnt/protocols/rmultiwii/crc.hpp
   fatcnt/events/catagorizer/cmodes.hpp
   fatcnt/state/statemanageriface.hpp
@@ -142,16 +141,16 @@ endforeach()
 # 5..n members in pairs, type [attribute]
 
 set(MSPCOMMANDS 
-  "MSP_NONE 0 INVALID 1 1"
-  "MSP_MODE 1 EXTERNAL_IN 0 0 RR_CMODES mode"
-  "MSP_ERROR 2 EXTERNAL_OUT 1 1 string message"
-  "MSP_AUTHKEY 7 EXTERNAL_IN 1 1 string key"
-  "MSP_SONAR_ALTITUDE 58 EXTERNAL_OUT 1 1  uint32_t distance uint32_t temperature" 
-  "MSP_IDENT 100 EXTERNAL_OUT 0 0 uint8_t version MULTITYPE_T multitype MSP_VERSION msp_version uint32_t capability"
-  "MSP_STATUS 101 EXTERNAL_OUT 1 1 uint16_t cycletime uint16_t i2c_errors_count uint16_t sensor uint32_t flag uint8_t current_set"
-  "MSP_MOTOR 104 EXTERNAL_OUT 1 1 int8_t roll int8_t pitch int8_t yaw uint16_t throttle int8_t aux1 int8_t aux2 int8_t aux3 int8_t aux4"
-  "MSP_SET_MOTOR_HBRIDGE 215 EXTERNAL_IN 1 1 uint16_t motor1 uint16_t motor2 uint16_t motor3 uint16_t motor4 uint8_t in"
-  "MSP_SENSOR 216 EXTERNAL_IN 1 1 uint32_t acc_avail float acc_x float acc_y float acc_z uint32_t gyro_avail float gyro_x float gyro_y float gyro_z uint32_t mag_avail float mag_x float mag_y float mag_z")
+  "MSP_NONE 0 INVALID 1 1 1"
+  "MSP_MODE 1 EXTERNAL_IN 0 0 0 RR_CMODES mode"
+  "MSP_ERROR 2 EXTERNAL_OUT 1 1 1 string message"
+  "MSP_AUTHKEY 7 EXTERNAL_IN 1 1 0 string key"
+  "MSP_SONAR_ALTITUDE 58 EXTERNAL_OUT 1 1 1 uint32_t distance uint32_t temperature" 
+  "MSP_IDENT 100 EXTERNAL_OUT 0 0 0 uint8_t version MULTITYPE_T multitype MSP_VERSION msp_version uint32_t capability"
+  "MSP_STATUS 101 EXTERNAL_OUT 1 1 1 uint16_t cycletime uint16_t i2c_errors_count uint16_t sensor uint32_t flag uint8_t current_set"
+  "MSP_MOTOR 104 EXTERNAL_OUT 1 1 1 int8_t roll int8_t pitch int8_t yaw uint16_t throttle int8_t aux1 int8_t aux2 int8_t aux3 int8_t aux4"
+  "MSP_SET_MOTOR_HBRIDGE 215 EXTERNAL_IN 1 1 0 uint16_t motor1 uint16_t motor2 uint16_t motor3 uint16_t motor4 uint8_t in"
+  "MSP_SENSOR 216 EXTERNAL_IN 1 1 1 uint32_t acc_avail float acc_x float acc_y float acc_z uint32_t gyro_avail float gyro_x float gyro_y float gyro_z uint32_t mag_avail float mag_x float mag_y float mag_z")
 
 
 set(LOOP_CONTENT "")
@@ -159,6 +158,8 @@ set(VALID_MSPCOMMANDS "")
 set(INCLUDE_CONTENT "")
 set(INCLUDE_CURATOR_CONTENT "")
 set(CURATOR_PAIR "")
+set(MULTIWII_COMMANDS "")
+set(MULTWII_I 0)
 foreach(item ${MSPCOMMANDS})
   separate_arguments(_elements UNIX_COMMAND ${item})
   list(LENGTH _elements _length)
@@ -167,6 +168,7 @@ foreach(item ${MSPCOMMANDS})
   list(GET _elements 2 _direction)
   list(GET _elements 3 _serializer)
   list(GET _elements 4 _deserializer)
+  list(GET _elements 5 _multiwii_supported)
 
   set(CURATATOR_SERIALIZER ${_serializer})
   set(CURATATOR_DESERIALIZER ${_deserializer})
@@ -193,9 +195,14 @@ foreach(item ${MSPCOMMANDS})
   set(DIRECTION ${_direction})
   set(CURATOR_SERIALIZER_SETTERS "")
   
+  if(${_multiwii_supported})
+    string(APPEND MULTIWII_COMMANDS "        _mspCommands[${MULTWII_I}] = static_cast<uint8_t>(MSPCOMMANDS::${_key});\n")
+    math(EXPR MULTWII_I "${MULTWII_I} + 1")
+  endif()
+  
   math(EXPR last_index "${_length} - 1")
-  if (${_length} GREATER 5)
-    set(start_index 5)
+  if (${_length} GREATER 6)
+    set(start_index 6)
     foreach(i RANGE ${start_index} ${last_index} 2)
       list(SUBLIST _elements ${i} 2 pair)
       list(GET pair 0 type)
@@ -213,4 +220,4 @@ configure_file(fatcnt/protocols/common/mspcommands.hpp.in fatcnt/protocols/commo
 configure_file(fatcnt/protocols/common/curators/rrp/mspevent.hpp.in fatcnt/protocols/common/curators/rrp/mspevent.hpp)
 configure_file(fatcnt/protocols/common/curators/rrp/rrpcurator.hpp.in fatcnt/protocols/common/curators/rrp/rrpcurator.hpp)
 
-
+configure_file(fatcnt/protocols/rmultiwii/rmultiwii.hpp.in fatcnt/protocols/rmultiwii/rmultiwii.hpp @ONLY)

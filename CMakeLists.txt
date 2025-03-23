@@ -155,16 +155,7 @@ set_target_properties(test_ai_training_data PROPERTIES RUNTIME_OUTPUT_DIRECTORY 
 target_link_libraries(test_ai_training_data GTest::gtest_main rrobot dlib gmock)
 gtest_discover_tests(test_ai_training_data  WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/resources")
 
-
-# #TODO Move this 
-# if (MSP_SKULD001 OR MSP_SKULD002)
-#   add_executable(test_hbridgehandler test/test_hbridgehandler.cpp)
-#   set_target_properties(test_hbridgehandler PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/test)
-#   target_link_libraries(test_hbridgehandler GTest::gtest_main rrobot dlib gmock)
-#   gtest_discover_tests(test_hbridgehandler  WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/resources")
-
-#   add_executable(test_msp104_hbridge_serializer test/test_msp104_hbridge_serializer.cpp)
-#   set_target_properties(test_msp104_hbridge_serializer PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/test)
-#   target_link_libraries(test_msp104_hbridge_serializer GTest::gtest_main rrobot dlib gmock)
-#   gtest_discover_tests(test_msp104_hbridge_serializer  WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/resources") 
-# endif()
+add_executable(test_rmultiwii test/test_rmultiwii.cpp)
+set_target_properties(test_rmultiwii PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/test)
+target_link_libraries(test_rmultiwii GTest::gtest_main rrobot dlib gmock)
+gtest_discover_tests(test_rmultiwii  WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/resources")

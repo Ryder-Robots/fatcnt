@@ -2,9 +2,13 @@
 #define RMMULTIWII_HPP
 
 #include <stdint.h>
+#include <stdexcept>
+#include <dlib/logger.h>
 
-#include <fatcnt/protocols/rmultiwii/crc.hpp>
 #include <fatcnt/protocols/common/mspcommands.hpp>
+#include <fatcnt/protocols/rmultiwii/crc.hpp>
+#include <fatcnt/environment/environment.hpp>
+#include <fatcnt/exceptions/exceptions.hpp>
 
 namespace rrobot {
 
@@ -31,42 +35,43 @@ class RmMultiWii {
      *
      */
     // TODO needs to compute CRC and termination character.
-    RmMultiWii(MSPCOMMANDS cmd, uint16_t sz) : _cmd(cmd), _sz(sz) {}
+    RmMultiWii(MSPCOMMANDS cmd, uint16_t sz) : _cmd(cmd), _sz(sz) {
+    }
 
     /**
      * @fn createInstance
      * @brief
      * Creates object instance baased upon inbound data recieved from external source.
      */
-    static RmMultiWii createInstance(uint8_t* data, Crc32 crc);
+    static RmMultiWii createInstance(uint8_t* data, Crc32 crc, Environment* environment);
 
     /**
      * @fn getCommand()
      * @brief
      * Returns command.
      */
-    MSPCOMMANDS getCommand() { return _cmd;}
+    MSPCOMMANDS getCommand() { return _cmd; }
 
     /**
      * @fn getSize()
      * @brief
      * Returns byte size of object. This excludes headers termination etc.
      */
-    uint16_t getSize() {return _sz;}
+    uint16_t getSize() { return _sz; }
 
     /**
      * @fn setPayload
      * @brief
      * sets payload if one exists.
      */
-    void setPayload(uint8_t *payload) {_payload = payload;}
+    void setPayload(uint8_t* payload) { _payload = payload; }
 
     /**
      * @fn getPayload()
      * @brief
      * returns payload.
      */
-    uint8_t* getPayload() {return _payload;}
+    uint8_t* getPayload() { return _payload; }
 
     /**
      * @fn encode
@@ -80,7 +85,20 @@ class RmMultiWii {
     uint16_t _sz;
     uint8_t* _payload;
 
-    const uint8_t _TERMINATION_CHAR =  0x1E;
+    static const uint8_t _TERMINATION_CHAR = 0x1E;
+    static MSPCOMMANDS getSupportCommand(uint8_t c) {
+        MSPCOMMANDS rv = MSPCOMMANDS::MSP_ERROR;
+        uint8_t _mspCommands[@MULTWII_I@];
+        @MULTIWII_COMMANDS@
+        for (int i = 0; i < @MULTWII_I@; i++) {
+            if (_mspCommands[i] == c) {
+                rv = static_cast<MSPCOMMANDS>(_mspCommands[i]);
+                break;
+            }
+        }
+
+        return rv;
+    }
 };
 }  // namespace rrobot
 
