@@ -66,5 +66,5 @@ bool RrStatusHandler::available() {
 
 bool RrStatusHandler::consume(Event* event, StateIface* state) {
     _request = event;
-    return true;
+    return false;
 }

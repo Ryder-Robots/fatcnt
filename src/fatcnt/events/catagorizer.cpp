@@ -16,7 +16,7 @@ StateManagerIface*  statusProcessor) {
 
 bool RrCatagorizer::consume(Event* event, StateIface* state) {
     _statusProcessor->push_queue(_mapper->mapQueue(event), event);
-    return true;
+    return false;
 }
 
 Event* RrCatagorizer::produce(StateIface* state) { return nullptr; }

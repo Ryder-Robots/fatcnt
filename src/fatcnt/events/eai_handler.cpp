@@ -32,7 +32,7 @@ void EaiHandler::init(
  * consume event and perform action.
  */
 bool EaiHandler::consume(Event* event, StateIface* state) {
-    bool rv = false;
+    bool rv = true;
 
     if (_current_mode != _sp->getMode()) {
         dlog_eai << dlib::LWARN << "detected mode change, attempting to change mode";

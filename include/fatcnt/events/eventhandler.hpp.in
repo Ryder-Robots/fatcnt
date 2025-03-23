@@ -51,7 +51,7 @@ class EventHandler {
      * this method must be implemented when another handler directs an event to this handler.
      * @param event event that is to be consumed
      * @param state reference to current state file.
-     * @return true on success.
+     * @return true to delete the event on exit, this should be the default, otherwise return false.
      */
     virtual bool consume(Event* event, StateIface* state) = 0;
 

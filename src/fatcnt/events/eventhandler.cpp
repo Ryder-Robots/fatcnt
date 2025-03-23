@@ -34,7 +34,10 @@ void EventHandler::handleConsumeEvents(EventHandler* handler, StateIface* state)
             break;
         }
         Event* event = handler->front();
-        handler->consume(event, state);
+        if (handler->consume(event, state)) {
+            dlog_hnd << dlib::LDEBUG << "deleting event for: " << handler->name();
+            delete(event);
+        }
     }
 }
 
