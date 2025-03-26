@@ -66,6 +66,7 @@ set(fatcnt_SOURCES
   src/fatcnt/events/ui/jserializer.cpp
   src/fatcnt/events/catagorizer.cpp
   src/fatcnt/com/server.cpp
+  src/fatcnt/com/rrserialmc.cpp
   src/fatcnt/main.cpp
 )
 

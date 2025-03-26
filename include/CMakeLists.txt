@@ -121,6 +121,7 @@ set(fatcnt_INCLUDE
   fatcnt/events/ai/ai_training_data.hpp
   fatcnt/com/server.hpp
   fatcnt/com/external.hpp
+  fatcnt/com/rrserialmc.hpp
   fatcnt/state/statefactory.hpp
   fatcnt/state/rrqueues.hpp
   fatcnt/state/statemanager.hpp
