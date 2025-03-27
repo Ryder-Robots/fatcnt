@@ -62,6 +62,7 @@ set(fatcnt_SOURCES
   src/fatcnt/events/ai/ai_training_data.cpp
   src/fatcnt/protocols/common/curators/rrp/msp_ident_curator.cpp
   src/fatcnt/protocols/common/curators/rrp/msp_mode_curator.cpp
+  src/fatcnt/protocols/common/curators/rmultiwii/rmultiwii_curator.cpp
   src/fatcnt/protocols/rmultiwii/rmultiwii.cpp
   src/fatcnt/events/ui/jserializer.cpp
   src/fatcnt/events/catagorizer.cpp

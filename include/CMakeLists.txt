@@ -102,6 +102,7 @@ set(fatcnt_INCLUDE
   fatcnt/state/stateiface.hpp
   fatcnt/state/rrpqueues.hpp
   fatcnt/protocols/common/curators/rrp/rrpcuratorabstract.hpp
+  fatcnt/protocols/common/curators/rmultiwii/rmultiwii_curator.hpp
   fatcnt/protocols/rrp/rrpstatus.hpp
   fatcnt/protocols/rmultiwii/crc.hpp
   fatcnt/events/catagorizer/cmodes.hpp
