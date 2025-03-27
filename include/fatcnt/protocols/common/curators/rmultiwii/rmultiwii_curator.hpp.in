@@ -1,0 +1,23 @@
+#ifndef RMULTIWII_CURATOR_HPP
+#define RMULTIWII_CURATOR_HPP
+
+#include <fatcnt/events/Event.hpp>
+#include <fatcnt/protocols/rmultiwii/rmultiwii.hpp>
+
+namespace rrobot {
+class AbstractRmultiiCurator {
+   public:
+    virtual Event* deserialize(RmMultiWii& in);
+    virtual uint8_t* serialize(Event* in);
+
+    private:
+    virtual uint8_t* serializePayload(Event* in) = 0;
+    virtual Event* deserializePayload(RmMultiWii& in) = 0;
+
+    private:
+    Crc32 _crc;
+    
+};
+}  // namespace rrobot
+
+#endif  // RMULTIWII_CURATOR_HPP
