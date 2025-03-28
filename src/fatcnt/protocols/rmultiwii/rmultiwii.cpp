@@ -63,3 +63,7 @@ uint8_t* RmMultiWii::encode(Crc32 crc) {
     data[7 + _sz] = _TERMINATION_CHAR & 0xFF;
     return data; 
 }
+
+RmMultiWii::~RmMultiWii() {
+    if (_sz > 0) free(_payload);
+}

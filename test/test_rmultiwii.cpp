@@ -40,6 +40,7 @@ class TestMultiWii : public ::testing::Test {
     for (int i = 0; i < 8; i++) {
         ASSERT_EQ(data[i], data2[i]);
     }
+    delete(environment);
  }
 
 int main(int argc, char** argv) {

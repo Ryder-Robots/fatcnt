@@ -6,6 +6,9 @@
 #include <fatcnt/protocols/common/mspdirection.hpp>
 #include <fatcnt/protocols/common/mspcommands.hpp>
 
+//TODO: All commands need to be imported here, so that they can be deferenced properly.
+#include <fatcnt/protocols/common/curators/rrp/msp_none.hpp>
+
 namespace rrobot {
 /**
  *  @brief events are added to queues.
@@ -25,6 +28,26 @@ class Event {
     Event(MSPCOMMANDS command, MSPDIRECTION direction)        
         : _command(command), 
           _direction(direction) {}
+
+    // TODO:  payload should only be freed using deconstructor. This file needs to be configured.
+    ~Event() {
+        if (hasPayload()) {
+            switch(_command) {
+                case MSP_NONE:
+                    delete(reinterpret_cast<msp_none*>(_payload));
+                    break;
+                // MSP_MODE = 1,
+                // MSP_ERROR = 2,
+                // MSP_AUTHKEY = 7,
+                // MSP_SONAR_ALTITUDE = 58,
+                // MSP_IDENT = 100,
+                // MSP_STATUS = 101,
+                // MSP_MOTOR = 104,
+                // MSP_SET_MOTOR_HBRIDGE = 215,
+                // MSP_SENSOR = 216,
+            }
+        }
+    }
 
     /**
      * @fn hasPayload

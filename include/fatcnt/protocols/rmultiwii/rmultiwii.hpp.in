@@ -34,9 +34,15 @@ class RmMultiWii {
      * construct object based upon inbound data recieved.
      *
      */
-    // TODO needs to compute CRC and termination character.
     RmMultiWii(MSPCOMMANDS cmd, uint16_t sz) : _cmd(cmd), _sz(sz) {
     }
+
+    /**
+     * @fn ~RmMultiWii
+     * @brief
+     * class deconstructor, on deconstruction removes any references.
+     */
+    ~RmMultiWii();
 
     /**
      * @fn createInstance

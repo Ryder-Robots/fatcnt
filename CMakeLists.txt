@@ -95,6 +95,7 @@ FetchContent_MakeAvailable(googletest)
 enable_testing()
 include(GoogleTest)
 include(Dart)
+
 include_directories(${json_SOURCE_DIR}/include src ${LIBSERIAL_INCLUDE_DIRS} ${PROJECT_BINARY_DIR}/include ${CMAKE_CURRENT_SOURCE_DIR}/test)
 
 add_executable(test_environmentprocessor test/test_environmentprocessor.cpp)

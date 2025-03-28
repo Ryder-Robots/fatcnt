@@ -1,0 +1,14 @@
+#ifndef RRMULTIWII_NONE_CURATOR_HPP
+#define RRMULTIWII_NONE_CURATOR_HPP
+
+#include <fatcnt/protocols/common/curators/rmultiwii/rmultiwii_curator.hpp>
+
+namespace rrobot {
+    class RrMultiWiiCuratorNone : public AbstractRmultiiCurator {
+        uint8_t* serializePayload(Event* in) override;
+
+        Event* deserializePayload(RmMultiWii& in) override;
+    };
+}
+
+#endif

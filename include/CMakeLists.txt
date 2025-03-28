@@ -94,7 +94,6 @@ set(fatcnt_INCLUDE
   fatcnt/environment/environment.hpp
   fatcnt/environment/environmentProcessor.hpp
   fatcnt/environment/processorbase.hpp
-  fatcnt/events/Event.hpp
   fatcnt/protocols/common/mspdirection.hpp
   fatcnt/protocols/common/mspversion.hpp
   fatcnt/protocols/common/mspsensors.hpp
@@ -103,6 +102,7 @@ set(fatcnt_INCLUDE
   fatcnt/state/rrpqueues.hpp
   fatcnt/protocols/common/curators/rrp/rrpcuratorabstract.hpp
   fatcnt/protocols/common/curators/rmultiwii/rmultiwii_curator.hpp
+  fatcnt/protocols/common/curators/rmultiwii/rmultiwii_none_curator.hpp
   fatcnt/protocols/rrp/rrpstatus.hpp
   fatcnt/protocols/rmultiwii/crc.hpp
   fatcnt/events/catagorizer/cmodes.hpp
@@ -214,12 +214,12 @@ foreach(item ${MSPCOMMANDS})
       string(APPEND CURATOR_SETTERS "                validate(\"${member}\", in);\n                payload->set_${member}(in[\"${member}\"]);\n")
       string(APPEND CURATOR_SERIALIZER_SETTERS "                    \{\"${member}\", payload.get_${member}()\},\n")
     endforeach()
-  endif()
-  configure_file(fatcnt/protocols/common/curators/rrp/event.tmpl.hpp.in ${OUTPUT_NAME} @ONLY)
-  configure_file(fatcnt/protocols/common/curators/rrp/curator.tmpl.hpp.in ${OUTPUT_CURATOR_NAME} @ONLY)
+endif()
+configure_file(fatcnt/protocols/common/curators/rrp/event.tmpl.hpp.in ${OUTPUT_NAME} @ONLY)
+configure_file(fatcnt/protocols/common/curators/rrp/curator.tmpl.hpp.in ${OUTPUT_CURATOR_NAME} @ONLY)
 endforeach()
 configure_file(fatcnt/protocols/common/mspcommands.hpp.in fatcnt/protocols/common/mspcommands.hpp @ONLY)
 configure_file(fatcnt/protocols/common/curators/rrp/mspevent.hpp.in fatcnt/protocols/common/curators/rrp/mspevent.hpp)
 configure_file(fatcnt/protocols/common/curators/rrp/rrpcurator.hpp.in fatcnt/protocols/common/curators/rrp/rrpcurator.hpp)
-
 configure_file(fatcnt/protocols/rmultiwii/rmultiwii.hpp.in fatcnt/protocols/rmultiwii/rmultiwii.hpp @ONLY)
+configure_file(fatcnt/events/Event.hpp.in   fatcnt/events/Event.hpp @ONLY)

@@ -31,6 +31,14 @@ cmake --build . --target test
 cpack -G DEB 
 ```
 
+## Memory Leak Test
+
+```
+cd build
+ctest -T memcheck
+view Testing/Temporary/MemoryChecker.*.log
+```
+
 # PUBLISHING
 
 ```
