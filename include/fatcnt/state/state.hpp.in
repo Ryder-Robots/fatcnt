@@ -10,6 +10,10 @@ namespace rrobot {
         public:
             State(RrQueues* queues):
                 _queues(queues) {}
+
+            ~State() {
+                delete(_queues);
+            }
              
             RrQueues* getQueues() override {return _queues;}
 

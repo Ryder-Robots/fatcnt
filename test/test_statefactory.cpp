@@ -40,6 +40,7 @@ TEST(TestStateFactory, TestStateFactoryCreate) {
     EXPECT_EQ(true, state->isRunning());
 
     queue<Event*>* queueUserInterface = state->getQueues()->getQueue(RRP_QUEUES::USER_INTERFACE);
+    delete(state);
 }
 
 int main(int argc, char **argv) {

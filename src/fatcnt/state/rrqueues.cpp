@@ -21,3 +21,16 @@ void RrQueues::setQueue(RRP_QUEUES direction, queue<Event*>* queue, mutex* lock)
     _queues.emplace(direction, queue);
     _locks.emplace(direction, lock);
 }
+
+RrQueues::~RrQueues() {
+    for (auto it = _queues.begin(); it != _queues.end(); ++it) {
+        while(!it->second->empty()) {
+            it->second->pop();
+        }
+        delete(it->second);
+    }
+
+    for (auto it = _locks.begin(); it != _locks.end(); ++it) {
+        delete(it->second);
+    }
+}

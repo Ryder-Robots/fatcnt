@@ -25,6 +25,8 @@ namespace rrobot {
                 QUEUE_WAIT_TIME(queue_wait_time),
                 QUEUE_PROCESS_TIME(queue_process_time) {}
 
+            ~RrQueues();
+
             // maximum events that can be processeed before sleeping, 
             // or written to a queue
             const int QUEUE_LIMIT; 
