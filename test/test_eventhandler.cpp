@@ -65,32 +65,32 @@ class MockState : public StateIface {
 };
 
 TEST_F(TestEventHandler, TestAbstractHandler) {
-    MockConcreteHandler* mockConcreteHandler = new MockConcreteHandler();
-    RrQueues* rrqueues = new RrQueues(100, chrono::milliseconds(500), chrono::milliseconds(500));
+    MockConcreteHandler mockConcreteHandler = MockConcreteHandler();
+    RrQueues rrqueues = RrQueues(100, chrono::milliseconds(500), chrono::milliseconds(500));
 
     mutex* lock1 = new mutex();
     queue<Event*>* q1 = new queue<Event*>();
-    rrqueues->setQueue(RRP_QUEUES::USER_INTERFACE, q1, lock1);
+    rrqueues.setQueue(RRP_QUEUES::USER_INTERFACE, q1, lock1);
 
     mutex* lock2 = new mutex();
     queue<Event*>* q2 = new queue<Event*>();
-    rrqueues->setQueue(RRP_QUEUES::CATEGORIZER, q2, lock2);
+    rrqueues.setQueue(RRP_QUEUES::CATEGORIZER, q2, lock2);
 
-    mockConcreteHandler->init(rrqueues, RRP_QUEUES::USER_INTERFACE, RRP_QUEUES::CATEGORIZER, _env);
+    mockConcreteHandler.init(&rrqueues, RRP_QUEUES::USER_INTERFACE, RRP_QUEUES::CATEGORIZER, _env);
     MockState mockState;
 
     EXPECT_CALL(mockState, isRunning()).WillOnce(Return(true)).WillOnce(Return(false));
+    mockConcreteHandler.handleEvent(&mockConcreteHandler, &mockState);
 
-    mockConcreteHandler->handleEvent(mockConcreteHandler, &mockState);
 }
 
 TEST_F(TestEventHandler, TestInvalidQueue) {
-    MockConcreteHandler* mockConcreteHandler = new MockConcreteHandler();
+    MockConcreteHandler mockConcreteHandler = MockConcreteHandler();
 
-    RrQueues* rrqueues = new RrQueues(100, chrono::milliseconds(500), chrono::milliseconds(500));
+    RrQueues rrqueues = RrQueues(100, chrono::milliseconds(500), chrono::milliseconds(500));
 
     EXPECT_THROW(
-        { mockConcreteHandler->init(rrqueues, RRP_QUEUES::USER_INTERFACE, RRP_QUEUES::CATEGORIZER, _env); },
+        { mockConcreteHandler.init(&rrqueues, RRP_QUEUES::USER_INTERFACE, RRP_QUEUES::CATEGORIZER, _env); },
         QueueDoesNotExit);
 }
 

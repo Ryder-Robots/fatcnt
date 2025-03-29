@@ -28,7 +28,6 @@ class Event {
         : _command(command), 
           _direction(direction) {}
 
-    // TODO:  payload should only be freed using deconstructor. This file needs to be configured.
     ~Event() {
         if (hasPayload()) {
             switch(_command) {
@@ -36,6 +35,9 @@ class Event {
                 default:
                     delete(reinterpret_cast<msp_none*>(_payload));
             }
+
+            // avoid null pointer error, in case delete is called twice.
+            _hasPayload = false;
         }
     }
 
