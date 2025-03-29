@@ -31,6 +31,11 @@ void FatController::signalHandler(int signum) {
                 tmain->join();
                 dlog_main << dlib::LINFO << "exiting program";
             }
+            delete(tmain);
+        }
+
+        if (state != nullptr) {
+            delete(state);
         }
     }
     

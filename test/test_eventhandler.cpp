@@ -30,7 +30,7 @@ class TestEventHandler : public ::testing::Test {
     }
 
     void TearDown() override {
-        // Teardown code
+        delete(_env);
     }
 
     Environment* _env;
