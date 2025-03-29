@@ -75,8 +75,8 @@ TEST(TestRrpCurator, TestSerialize) {
 
 TEST(TestRrpCurator, TestGeneratedDeserialize) {
     json inbound = {{"key", "test"}};
-    msp_authkey_curator *curator = new msp_authkey_curator();
-    Event* event = curator->deserialize(inbound);
+    msp_authkey_curator curator = msp_authkey_curator();
+    Event* event = curator.deserialize(inbound);
 
     EXPECT_EQ(MSPCOMMANDS::MSP_AUTHKEY, event->getCommand());
     EXPECT_EQ(MSPDIRECTION::EXTERNAL_IN, event->getDirection());
