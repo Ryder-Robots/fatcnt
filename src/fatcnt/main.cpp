@@ -84,11 +84,11 @@ int FatController::run(int argc, char *argv[]) {
         _mapper->init(&environment, state, stateManager);
 
         dlog_main << dlib::LINFO << "creating catagorizer";
-        RrCatagorizer* catagorizer = new RrCatagorizer();
-        catagorizer->init(state, &environment, _mapper, stateManager);
+        RrCatagorizer catagorizer = RrCatagorizer();
+        catagorizer.init(state, &environment, _mapper, stateManager);
 
         dlog_main << dlib::LINFO << "starting application";
-        std::thread t = std::thread(RrCatagorizer::handleEvent, catagorizer, state);
+        std::thread t = std::thread(RrCatagorizer::handleEvent, &catagorizer, state);
 
         tmain = &t;
         while (!t.joinable()) {
