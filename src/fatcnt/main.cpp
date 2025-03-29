@@ -7,6 +7,7 @@ dlib::logger dlog_main("rr_robot_main");
 
 StateIface* volatile state = nullptr;
 thread* volatile tmain = nullptr;
+StateManagerIface* volatile sm = nullptr;
 
 
 /**
@@ -36,6 +37,10 @@ void FatController::signalHandler(int signum) {
 
         if (state != nullptr) {
             delete(state);
+        }
+
+        if (sm != nullptr) {
+            delete(sm);
         }
     }
     
@@ -81,6 +86,7 @@ int FatController::run(int argc, char *argv[]) {
         dlog_main << dlib::LINFO << "creating state";
         state = StateFactory::createState(environment, _mapper->queueNames());
         StateManagerIface* stateManager = new StateManager(state, &environment);
+        sm = stateManager;
         _mapper->init(&environment, state, stateManager);
 
         dlog_main << dlib::LINFO << "creating catagorizer";
